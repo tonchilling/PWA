@@ -1,0 +1,217 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html class="no-js css-menubar" lang="en">
+
+<!-- Mirrored from getbootstrapadmin.com/remark/base/pages/login-v3.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 28 Oct 2018 11:17:33 GMT -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+    <meta name="description" content="bootstrap admin template">
+    <meta name="author" content="">
+
+    <title>PWA Login | PWA Smart 1662</title>
+
+    <link rel="apple-touch-icon" href="~/Content/assets/images/apple-touch-icon.png">
+    <link rel="shortcut icon" href="~/Content/assets/images/favicon.ico">
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Styles.Render("~/Content/assets")
+
+
+
+
+
+
+    <script>
+        var gotoUrl = '@Url.Action("Index", "Incident")';
+        var VerifyUrl = '@Url.Action("VerifyLogin", "User")';
+
+          var LinkUrl = '@Url.Action("Action", "Controller")';
+
+    </script>
+
+    <style type="text/css">
+        .alert {
+            position: absolute;
+            z-index: 1400;
+            bottom: 2%;
+            margin: 0px auto;
+            text-align: center;
+            display: none;
+            min-width: 200px;
+        }
+
+        .loader-overlay {
+            opacity: 0.9;
+        }
+        
+        .page-login-v3:before {
+            position: fixed;
+            top: 0;
+            left: 0;
+            content: "";
+            width: 100%;
+            height: 100%;
+            background-position: center top;
+            -webkit-background-size: cover;
+            background-size: cover;
+            z-index: -1;
+            background: #3e8ef7;
+            background-image: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzYyYThlYSIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMxNTcxYjEiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
+            background-image: -webkit-gradient(linear,left top,left bottom,from(#3e8ef7),to(#0b69e3));
+            background-image: -webkit-linear-gradient(top,#3e8ef7 0,#0b69e3 100%);
+            background-image: -o-linear-gradient(top,#3e8ef7 0,#0b69e3 100%);
+            background-image: linear-gradient(to bottom,#3e8ef7 0,#0b69e3 100%);
+            background-repeat: repeat-x;
+        }
+    </style>
+
+    <script src="~/Content/assets/vendor/breakpoints/breakpoints.min599c.js?v4.0.2"></script>
+
+    <script>
+        Breakpoints();
+    </script>
+</head>
+<body class="animsition page-login-v3 layout-full">
+    <!--[if lt IE 8]>
+          <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+      <![endif]-->
+    <!-- Page -->
+    <div class="page vertical-align text-center" data-animsition-in="fade-in" data-animsition-out="fade-out">
+        
+        <div class="page-content vertical-align-middle animation-slide-top animation-duration-1">
+            <div class="panel">
+                <div class="panel-body">
+                    <div class="brand">
+                        <img class="brand-img" src="~/Content/assets/images/logo-colored.png" alt="...">
+                        <h2 class="brand-text font-size-18">PWA Smart 1662</h2>
+                    </div>
+                    <form method="post" id="frmLogin" action="#">
+                        <div class="form-group form-material floating" data-plugin="formMaterial">
+                            <input type="text" class="form-control" name="text" id="txtUser" />
+                            <label class="floating-label">User name</label>
+                        </div>
+                        <div class="form-group form-material floating" data-plugin="formMaterial">
+                            <input type="password" class="form-control" name="password" id="txtPassword" />
+                            <label class="floating-label">Password</label>
+                        </div>
+                        <div class="form-group clearfix">
+                            <div class="checkbox-custom checkbox-inline checkbox-primary checkbox-lg float-left">
+                                <input type="checkbox" id="inputCheckbox" name="remember">
+                                <label for="inputCheckbox">จำรหัสผ่าน</label>
+                            </div>
+                            <a class="float-right" href="forgot-password.html">ลืมรหัสผ่าน?</a>
+                        </div>
+
+                        <button class="btn btn-primary btn-block btn-lg mt-40" id="btnLogin">
+                            เข้าสู่ระบบ
+                        </button>
+                        <br />
+                        <div class="form-group">
+                            <div class="checkbox-custom checkbox-inline checkbox-primary checkbox-lg float-left">
+                                <input type="checkbox" id="cb_nonEmp" name="cb_nonEmp">
+                                <label for="cb_nonEmp">ไม่ใช่พนักงาน กปภ.</label>
+                            </div>
+                        </div>
+                    </form>
+                    
+                    
+                </div>
+            </div>
+
+            <footer class="page-copyright page-copyright-inverse">
+                <p>PWA Smart 1662</p>
+                <p>© 2020. All RIGHT RESERVED.</p>
+                <!--<div class="social">
+                  <a class="btn btn-icon btn-pure" href="javascript:void(0)">
+                    <i class="icon bd-twitter" aria-hidden="true"></i>
+                  </a>
+                  <a class="btn btn-icon btn-pure" href="javascript:void(0)">
+                    <i class="icon bd-facebook" aria-hidden="true"></i>
+                  </a>
+                  <a class="btn btn-icon btn-pure" href="javascript:void(0)">
+                    <i class="icon bd-google-plus" aria-hidden="true"></i>
+                  </a>
+                </div>-->
+            </footer>
+
+        </div>
+    </div>
+    <div id="alertMsg" class="alert alert-success" data-alert="alert">Now Update your Search</div>
+
+
+    <script src="~/Content/assets/vendor/babel-external-helpers/babel-external-helpers599c.js?v4.0.2"></script>
+
+    <!-- End Page -->
+    <!-- Script     -->
+
+    <script src="~/Content/assets/vendor/jquery/jquery.min599c.js?v4.0.2"></script>
+    <script src="~/Content/assets/vendor/popper-js/umd/popper.min599c.js?v4.0.2"></script>
+    <script src="~/Content/assets/vendor/bootstrap/bootstrap.min599c.js?v4.0.2"></script>
+    <script src="~/Content/assets/vendor/animsition/animsition.min599c.js?v4.0.2"></script>
+    <script src="~/Content/assets/vendor/mousewheel/jquery.mousewheel599c.js?v4.0.2"></script>
+    <script src="~/Content/assets/vendor/asscrollbar/jquery-asScrollbar.min599c.js?v4.0.2"></script>
+    <script src="~/Content/assets/vendor/asscrollable/jquery-asScrollable.min599c.js?v4.0.2"></script>
+    <script src="~/Content/assets/vendor/ashoverscroll/jquery-asHoverScroll.min599c.js?v4.0.2"></script>
+
+
+    <script src="~/Content/assets/vendor/switchery/switchery.min599c.js?v4.0.2"></script>
+    <script src="~/Content/assets/vendor/intro-js/intro.min599c.js?v4.0.2"></script>
+    <script src="~/Content/assets/vendor/screenfull/screenfull599c.js?v4.0.2"></script>
+    <script src="~/Content/assets/vendor/slidepanel/jquery-slidePanel.min599c.js?v4.0.2"></script>
+
+
+
+
+
+    <script src="~/Content/assets/js/Component.min599c.js?v4.0.21"></script>
+    <script src="~/Content/assets/js/Plugin.min599c.js?v4.0.2"></script>
+    <script src="~/Content/assets/js/Base.min599c.js?v4.0.2"></script>
+    <script src="~/Content/assets/js/Config.min599c.js?v4.0.2"></script>
+
+    <script src="~/Content/assets/js/Section/Menubar.min599c.js?v4.0.2"></script>
+    <script src="~/Content/assets/js/Section/GridMenu.min599c.js?v4.0.2"></script>
+    <script src="~/Content/assets/js/Section/Sidebar.min599c.js?v4.0.2"></script>
+    <script src="~/Content/assets/js/Section/PageAside.min599c.js?v4.0.2"></script>
+    <script src="~/Content/assets/js/Plugin/menu.min599c.js?v4.0.2"></script>
+
+
+    <script src="~/Content/assets/js/config/colors.min599c.js?v4.0.2"></script>
+    <script src="~/Content/assets/js/config/tour.min599c.js?v4.0.2"></script>
+
+
+
+    <script src="~/Content/assets/js/Site.min599c.js?v4.0.2"></script>
+    <script src="~/Content/assets/js/Plugin/asscrollable.min599c.js?v4.0.2"></script>
+    <script src="~/Content/assets/js/Plugin/slidepanel.min599c.js?v4.0.2"></script>
+    <script src="~/Content/assets/js/Plugin/switchery.min599c.js?v4.0.2"></script>
+    <script src="~/Content/assets/js/Plugin/jquery-placeholder.min599c.js?v4.0.2"></script>
+    <script src="~/Content/assets/js/Plugin/material.min599c.js?v4.0.2"></script>
+
+
+
+    <script>
+        Config.set('assets', 'assets');
+        var Site = window.Site;
+
+    
+        
+    </script>
+
+
+    <script src="~/Scripts/View/User/Login.js?ver=1.8888"></script>
+
+
+</body>
+
+
+<!-- Mirrored from getbootstrapadmin.com/remark/base/pages/login-v3.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 28 Oct 2018 11:17:34 GMT -->
+</html>
+

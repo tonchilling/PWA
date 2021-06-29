@@ -1,0 +1,3576 @@
+﻿@using Pwa.FrameWork.Dao.EF.Smart1662;
+@using Pwa.FrameWork.Dto;
+@using Pwa.FrameWork.Dto.Smart1662;
+@using Pwa.FrameWork.Dto.Smart1662.Incident
+@using Pwa.FrameWork.Dto.Utils;
+@using Pwa.Web.Controllers;
+@{
+    <script>
+        console.log((new Date()).getTime());
+    </script>
+
+    ViewBag.Title = "รับเรื่องร้องเรียน";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    UserInfoDto currentUser = (UserInfoDto)ViewBag.CurrentUser;
+
+    string ba_code = "";
+    string b_type_code = "";
+    using (Smart1662Entities db = new Smart1662Entities())
+    {
+        if (Model == null)
+        {
+            ba_code = currentUser.Ba;
+        }
+        else
+        {
+            ba_code = Model.BracnchNo;
+        }
+        b_type_code = db.SysBranch.Where(f => f.Code == ba_code).Select(f => f.TypeCode).FirstOrDefault();
+    }
+
+
+    var controller = ((BaseController)ViewContext.Controller);
+
+    List<DropDownlistDto> SysBranchs = (List<DropDownlistDto>
+    )ViewBag.SysBranchs;
+
+    List<DropDownlistDto> SysChannels = (List<DropDownlistDto>
+    )ViewBag.SysChannels;
+
+    List<DropDownlistDto> Employees = (List<DropDownlistDto>
+    )ViewBag.Employees;
+
+    List<DropDownlistDto> Tumbols = (List<DropDownlistDto>
+    )ViewBag.Tumbols;
+
+    var incidentTypes = ViewBag.incidentTypes;
+
+
+
+    List<DropDownlistDto> Titles = (List<DropDownlistDto>
+    )ViewBag.Titles;
+    FileDto fileDto = null;
+
+    var geoSearchToken = ViewBag.GeoSearchToken;
+}
+
+@section Scripts
+{
+    <!-- -->
+    <script src="~/Scripts/moment-with-locales.js"></script>
+    <script src="~/Scripts/bootstrap-datetimepicker.min.js"></script>
+    <link href="~/Content/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+    <style type="text/css">
+        .popover {
+            max-width: 200%;
+        }
+    </style>
+
+    <script type="text/javascript">
+        var updateInsertMessageUrl = '@Url.Action("InsertMessage", "Incident")'
+        var GetCustomerUrl = '@Url.Action("GetCustomer", "Incident")';
+        var GetCustomerByAddressUrl = '@Url.Action("GetCustomerByAddress", "Incident")';
+        var GetEmployees = '@Url.Action("GetEmployees", "Incident")';
+        var GetCustomerNameAndCodeUrl = '@Url.Action("GetCustomerNameAndCode", "Incident")';
+        var GetCustomerEffect = '@Url.Action("GetCustomerEffect", "Incident")';
+
+        var _incidentTypes = @Html.Raw(Json.Encode(ViewBag.IncidentTypes)) ;
+        var _provinces = @Html.Raw(Json.Encode(ViewBag.Provinces)) ;
+        var _distincts = @Html.Raw(Json.Encode(ViewBag.Distincts)) ;
+        var _subdistincts = @Html.Raw(Json.Encode(ViewBag.SubDistincts)) ;
+        var _pageInfo = @Html.Raw(Json.Encode(ViewBag.PageInfo)) ;
+        var _currUser = @Html.Raw(Json.Encode(ViewBag.CurrUser)) ;
+        var PwaIncidentID =  '@(Model!= null && Model.PwaIncidentID != null ? Model.PwaIncidentID.ToString() : "")';
+        var incidentStyle = L.Icon.extend({
+            options: {
+                iconSize: [27, 27],
+                iconAnchor: [38, 86],
+                popupAnchor: [-20, -80]
+            }
+        });
+
+    </script>
+
+    <style>
+
+        .chkSLA {
+            padding-top: 30px;
+        }
+
+
+
+        .tab-content {
+            padding-top: 15px;
+        }
+
+        .modal-open > .select2-container {
+            z-index: 1700;
+        }
+
+
+        .fullScreen {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 17000;
+        }
+
+        .mapfull {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+        }
+
+        .btnStreetView {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            left: 20px;
+            top: 320px;
+            padding: 10px;
+            z-index: 400;
+            border: none;
+            background-size: cover;
+            background-image: url("/Content/assets/images/street-view.png");
+        }
+
+        .btnExpandMap {
+            position: absolute;
+            right: 20px;
+            bottom: 20px;
+            padding: 10px;
+            z-index: 400;
+        }
+
+        .mapdefault {
+            height: 800px;
+            width: 100%;
+        }
+
+        #streetPanorama {
+            left: 20px;
+            top: 5px;
+            width: 300px;
+            height: 300px;
+            position: absolute;
+            z-index: 1000;
+        }
+
+        .upload_item {
+            display: inline-block;
+            margin: 10px 20px 10px 10px;
+            position: relative;
+        }
+
+            .upload_item .thumbnail {
+                height: 96px;
+            }
+
+            .upload_item i.btnDeletefile {
+                position: absolute;
+                top: -5px;
+                right: -5px;
+                border-radius: 50%;
+                background: #fff;
+                padding: 4px;
+                font-size: 1.2rem;
+                border: solid 1px #000;
+            }
+    </style>
+
+}
+
+
+@model IncidentDisplayDto
+
+<form id="frmReceiveIncident" action="#" class="" role="form" autocomplete="on" novalidate>
+    <input type="hidden" name="comment_id" id="comment_id" />
+    <div class="container">
+        <div class="row" data-plugin="matchHeight" data-by-row="true">
+            <div class="col-xxl-12" style="position:relative;">
+                <div class="row">
+                    <div class="col-xxl-12">
+
+
+                        <input type="hidden" id="hddPwaIncidentID" value="@(Model !=null  ? Model.PwaIncidentID.ToString() :"")" />
+                        <input type="hidden" id="hddInformID" value="@(Model !=null  ? Model.InformID.ToString() :"")" />
+                        <input type="hidden" id="hddReasonReOpen" value="" />
+
+                        <!-- Contacts Content -->
+                        <div class="panel panel-primary panel-line">
+
+                            <!-- Contacts Content Header -->
+                            <div class="panel-heading">
+                                <h1 class="panel-title">รายการร้องเรียน > เพิ่ม/แก้ไข </h1>
+                                <div class="page-header-actions">
+
+                                </div>
+                            </div>
+
+                            <!-- Contacts Content -->
+                            <div class="panel-body" data-plugin="selectable">
+                                <div class="row">
+                                    <div class="col-md-4 col-lg-4 panel-title">ผู้แจ้ง</div>
+
+                                    <div class="col-md-8 col-lg-8 panel-title" style="text-align:right;">
+                                        <label>ข้อร้องเรียนของกปภ.</label>
+                                        <div class="txtBranch" style="display:inline;">
+                                            @foreach (DropDownlistDto it in SysBranchs)
+                                            {
+                                                if (it.Value == (Model != null ? Model.BracnchNo : ""))
+                                                {
+                                                    @it.Text
+                                                }
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-2 col-lg-2">
+                                        <div class="form-group">
+                                            <label for="ddlTitle">คำนำหน้า</label>
+                                            <select id="ddlTitle" class="select2">
+                                                <option value="0">กรุณาเลือก</option>
+                                                @foreach (DropDownlistDto it in ViewBag.Titles)
+                                                {
+                                                    <option value="@it.Value" @(it.Value == (Model != null ? Model.Title : "") ? "selected" : "")>@it.Text </option>
+                                                }
+                                            </select>
+
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 col-lg-4">
+                                        <div class="form-group ">
+                                            <label for="txtCustomer" id="lblCustomer">ชื่อ-สกุล <span style="color:red;font-size:20px;line-height:1;">*</span></label>
+                                            <div class="input-group autocomplete">
+                                                <input id="txtCustomer" class="form-control txtCustomer" autocomplete="off" value="@(Model != null ? Model.CustomerName : "")" />
+
+                                                <input id="hddCustomerID" type="hidden" value="@(Model != null ? Model.CustomerID : "")" />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3 col-lg-3">
+                                        <label for="txtTelephone">เบอร์โทรศัพท์</label>
+                                        <div class="input-group autocomplete">
+                                            <input type="text" class="form-control" id="txtTelephone" name="txtTelephone"
+                                                   value="@(Model != null ? Model.Telephone : "")"
+                                                   placeholder="" required />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-lg-3">
+
+                                        <div class="form-group autocomplete">
+                                            <label for="txtCustCode">รหัสผู้ใช้น้ำ</label>
+                                            <div class="input-group">
+                                                <input id="txtCustCode" class="form-control txtCustCode" autocomplete="off" value="@(Model != null ? Model.CustCode : "")" />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    @*<div class="col-md-2 col-lg-2">
+            <div class="form-group autocomplete">
+                <label for="txtTelephone">บ้านเลขที่</label>
+                <div class="input-group">
+                    <input type="text" class="form-control" id="txtAddressNo" name="txtAddressNo"
+                           value="@(Model != null ? Model.Address_no : "")"
+                           placeholder="" required />
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-2 col-lg-2">
+            <label for="txtTelephone">หมู่ที่</label>
+            <div class="input-group">
+                <input type="text" class="form-control" id="txtVillageNo" name="txtVillageNo"
+                       value="@(Model != null ? Model.Village_no : "")"
+                       placeholder="" required />
+            </div>
+        </div>
+
+        <div class="col-md-4 col-lg-4">
+            <label for="txtTelephone">หมู่บ้าน/อาคาร</label>
+            <div class="input-group">
+                <input type="text" class="form-control" id="txtVillageBuilding" name="txtVillageBuilding"
+                       value="@(Model != null ? Model.Building : "")"
+                       placeholder="" required />
+            </div>
+        </div>
+
+        <div class="col-md-2 col-lg-2">
+            <label for="txtTelephone">ซอย</label>
+            <div class="input-group">
+                <input type="text" class="form-control" id="txtSoi" name="txtSoi"
+                       value="@(Model != null ? Model.Soi : "")"
+                       placeholder="" required />
+            </div>
+        </div>
+
+        <div class="col-md-2 col-lg-2">
+            <label for="txtTelephone">ถนน</label>
+            <div class="input-group">
+                <input type="text" class="form-control" id="txtRoad" name="txtRoad"
+                       value="@(Model != null ? Model.Road : "")"
+                       placeholder="" required />
+            </div>
+        </div>
+
+        <div class="col-md-8 col-lg-4">
+            <div class="form-group">
+                <label class="ddlSubDistrict" for="ddlSubDistrict">ตำบล</label>
+                <div class="autocomplete">
+
+
+                    <input type="text" class="form-control txtTumbol" autocomplete="off" id="txtTumbol" value="@(Model != null ? Model.SubDistrictText : "")" name="" placeholder="ตำบล...">
+                    <input type="hidden" id="hddTumbolCode" value="@(Model != null ? Model.SubDistrict : "")" />
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 col-lg-4">
+            <div class="form-group">
+                <label for="txtAmphur">อำเภอ</label>
+                <div class="autocomplete">
+                    <input type="text" class="form-control txtAmphur" id="txtAmphur" value="@(Model != null ? Model.DistrictText : "")" name="" placeholder="อำเภอ...">
+                    <input type="hidden" id="hddAmphurCode" value="@(Model != null ? Model.District : "")" />
+
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 col-lg-4 ">
+            <div class="form-group">
+                <label for="txtProvince">จังหวัด</label>
+                <div class="autocomplete">
+
+
+                    <input type="text" class="form-control txtProvince" id="txtProvince" value="@(Model != null ? Model.ProvinceText : "")" name="" placeholder="จังหวัด...">
+                    <input type="hidden" id="hddProvinceCode" value="@(Model != null ? Model.Province : "")" />
+
+                </div>
+
+            </div>
+        </div>*@
+                                    <div class="col-md-2 col-lg-2">
+                                        <div class="form-group">
+                                            <label for="ddlInformChannelID" id="lblInformChannelID">ช่องทางการแจ้ง <span style="color:red;font-size:20px;line-height:1;">*</span></label>
+                                            <select id="ddlInformChannelID" class="select2">
+                                                <option value="0">ช่องทาง</option>
+                                                @foreach (DropDownlistDto it in SysChannels)
+                                                {
+
+                                                    if (Request["c"] == "SocialGISC")
+                                                    {
+                                                        <option value="@it.Value" @Html.Raw(it.Text == Request["post_channel"] ? "selected='selected'" : "")>@it.Text </option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@it.Value" @(it.Value == (Model != null ? Model.InformChannelID : "") ? "selected" : "")>@it.Text </option>
+                                                    }
+                                                }
+                                            </select>
+
+
+
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 col-lg-4">
+                                        <div class="form-group">
+                                            <label for="txtInformReference" id="lblInformReference">รายละเอียดช่องทางการแจ้ง</label>
+                                            <input type="text" class="form-control" id="txtInformReference"
+                                                   value="@(Model != null ? Model.InformReference : "")" placeholder="" />
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3 col-lg-3">
+
+                                        <label for="dtpReceiveCaseDate" id="lblReceiveCaseDate">วันเวลาที่รับแจ้ง <span style="color:red;font-size:20px;line-height:1;">*</span></label>
+
+                                        <div class='input-group date incdatetime' id='dtpReceiveCaseDate'>
+                                            <input type='text' class="form-control" id="txtReceivedCaseDate" value="@(Model !=null  ? Model.ReceivedCaseDate :Converting.DateOfdd_MM_yyyyTH_withTime(DateTime.Now)) " />
+                                            <span class="input-group-addon">
+                                                <span class="glyphicon glyphicon-calendar"></span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-lg-3">
+                                        <div class="form-group">
+                                            <label for="ddlPwaInformReceiver" id="lblPwaInformReceiver">ผู้รับแจ้ง <span style="color:red;font-size:20px;line-height:1;">*</span></label>
+                                            <select class="ddlPwaInformReceiver select2"
+                                                    id="ddlPwaInformReceiver"
+                                                    tabindex="-98">
+                                                <option value="0">ผู้รับแจ้ง</option>
+                                                @foreach (DropDownlistDto it in Employees)
+                                                {
+                                                    <option value="@it.Value" @(it.Value == (Model != null ? Model.PwaInformReceiver : currentUser.UserLogin) ? "selected" : "")>@it.Text </option>
+                                                }
+
+                                            </select>
+
+                                        </div>
+
+
+                                    </div>
+
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 col-lg-6"></div>
+
+                                    <div class="col-md-3 col-lg-3">
+
+
+                                        <label for="dtpCompletedCaseDate">วันเวลาที่เสร็จ</label>
+
+
+                                        <div class='input-group  completedatetime' id='dtpCompletedCaseDate' onkeypress="return false" onclick="return false">
+                                            <input type='text' class="form-control readonly" autocomplete="off" id="txtCompletedCaseDate" value="@(Model !=null  ? Model.CompletedCaseDate : "") " disabled="disabled" />
+
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3 col-lg-3">
+                                        <div class="form-group">
+                                            <label id="lblStatus">สถานะ</label>
+                                            <div onkeypress="return false" onclick="return false">
+                                                <input class="form-control readonly"  value="@(Model != null ? Model.IncidentStatusName : "")" readonly />
+                                                <input type="hidden" id="ddlIncidentStatus" value="@(Model !=null  ? Model.IncidentStatus.ToString() :"") " />
+                                            </div>
+
+                                            </div>
+
+                                        </div>
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xxl-12">
+                        <!-- Contacts Content -->
+                        <div class="panel panel-primary panel-line">
+                            <div class="panel-heading">
+                                <div class="panel-title">การรับแจ้งร้องเรียน</div>
+                            </div>
+                            <!-- Contacts Content -->
+                            <div class="panel-body" data-plugin="selectable">
+
+                                <div class="row">
+
+                                    <div class="col-md-3 col-lg-3">
+                                        <div class="form-group ">
+                                            <label for="txtIncidentNo">เลขที่รับแจ้ง</label>
+                                            <input type="text" id="PwaIncidentNo" class="form-control"
+                                                   placeholder="เลขที่รับแจ้ง"
+                                                   value="@(Model !=null  ? Model.PwaIncidentNo :"") "
+                                                   readonly />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-lg-3">
+
+                                        <div class="form-group">
+                                            <label for="ddlBranch">สาขา</label>
+                                            <select id="ddlBranch" class="select2" v-model="incident.BracnchNo">
+
+                                                @foreach (DropDownlistDto it in SysBranchs)
+                                                {
+                                                    <option value="@it.Value" @(it.Value == (Model != null ? Model.BracnchNo : "") ? "selected" : "")>@it.Text </option>
+                                                }
+
+                                            </select>
+
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 col-lg-2">
+                                        <div class="form-group chkSLA">
+                                            <input type="checkbox" class="icheckbox-primary" id="chkSLA"
+                                                   @(((Model != null && Model.Sla) || (Model == null && b_type_code == "4") ? "checked" : ""))
+                                                   data-checkbox-class="icheckbox_flat-blue " />
+                                            <label for="inputUnchecked">ยกเว้น SLA</label>
+                                        </div>
+
+                                    </div>
+                                    <div class="col-md-4 col-lg-4">
+                                        <div class="form-group">
+                                            <label for="" class="lblSlaDetail" id="lblSlaDetail">เหตุผล</label>
+                                            <select id="ddlSlaDetail" class="select2" v-model="incident.SlaDetail">
+                                                <option value="0">เหตุผล</option>
+                                                @foreach (DropDownlistDto it in ViewBag.Reasons)
+                                                {
+                                                    <option value="@it.Value" @(it.Value == (Model != null ? Model.SlaDetail : "") ? "selected" : "")>@it.Text </option>
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-3 col-lg-3">
+                                        <div class="form-group">
+
+                                            <label for="ddlPwaIncidentTypeID" id="lblPwaIncidentTypeID">ประเภทการรับแจ้ง <span style="color:red;font-size:20px;line-height:1;">*</span></label>
+                                            <select id="ddlPwaIncidentTypeID" class="select2">
+                                                <option value="0">ประเภทรับแจ้ง</option>
+                                                @{
+                                                    @*using (Smart1662Entities db = new Smart1662Entities())
+                                                        {
+                                                            SysRequestType[] cbo_request_type = db.SysRequestType.OrderBy(f => f.OrderSeq).ToArray();
+                                                            foreach (var rt in cbo_request_type)
+                                                            {
+                                                                <option value="@rt.Id" @(rt.Id == (Model != null ? Model.PwaIncidentTypeID.Trim() : "") ? "selected" : "")>@rt.Name </option>
+                                                            }
+                                                        }*@
+                                                    foreach (DropDownlistDto it in ViewBag.sysRequestTypes)
+                                                    {
+                                                        <option value="@it.Value" @(it.Value == (Model != null ? Model.PwaIncidentTypeID.Trim() : "") ? "selected" : "")>@it.Text </option>
+                                                    }
+                                                }
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+
+
+
+                                    <div class="col-md-3 col-lg-3">
+                                        <div class="form-group">
+                                            <input type="hidden" id="hddPwaIncidentGroupID" value="@(Model !=null  ? Model.PwaIncidentGroupID :"") " />
+                                            <label for="ddlPwaIncidentGroupID" id="lblPwaIncidentGroupID">ด้านการร้องเรียน <span style="color:red;font-size:20px;line-height:1;">*</span></label>
+                                            <select id="ddlPwaIncidentGroupID" class="select2">
+                                                <option value="0">ประเภทการร้องเรียน</option>
+                                            </select>
+                                        </div>
+
+
+                                    </div>
+                                    <div class="col-md-6 col-lg-6">
+                                        <div class="form-group">
+                                            <input type="hidden" id="hddCaseTitle" value="@(Model !=null  ? Model.CaseTitle :"") " />
+                                            <label for="ddlCaseTitle" id="lblCaseTitle">หัวข้อการร้องเรียน <span style="color:red;font-size:20px;line-height:1;">*</span></label>
+                                            <select id="ddlCaseTitle" class="select2" tabindex="-98">
+                                                <option></option>
+                                            </select>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="panel-title-line" style="padding-bottom:5px; margin:10px 0; color:blue; font-size:1.2rem; border-bottom:solid 1px blue;">บริเวณที่เกิดเหตุ</div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-2 col-lg-2">
+                                        <div class="form-group autocomplete">
+                                            <label for="txtAddressNo">บ้านเลขที่</label>
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" id="txtAddressNo" name="txtAddressNo"
+                                                       value="@(Model != null ? Model.Address_no : "")"
+                                                       placeholder="" required />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-2 col-lg-2">
+                                        <label for="txtTelephone">หมู่ที่</label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" id="txtVillageNo" name="txtVillageNo"
+                                                   value="@(Model != null ? Model.Village_no : "")"
+                                                   placeholder="" required />
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4 col-lg-4">
+                                        <label for="txtTelephone">หมู่บ้าน/อาคาร</label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" id="txtVillageBuilding" name="txtVillageBuilding"
+                                                   value="@(Model != null ? Model.Building : "")"
+                                                   placeholder="" required />
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-2 col-lg-2">
+                                        <label for="txtTelephone">ซอย</label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" id="txtSoi" name="txtSoi"
+                                                   value="@(Model != null ? Model.Soi : "")"
+                                                   placeholder="" required />
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-2 col-lg-2">
+                                        <label for="txtTelephone">ถนน</label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" id="txtRoad" name="txtRoad"
+                                                   value="@(Model != null ? Model.Road : "")"
+                                                   placeholder="" required />
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-8 col-lg-4">
+                                        <div class="form-group">
+                                            <label class="ddlSubDistrict" for="ddlSubDistrict">ตำบล</label>
+                                            <div class="autocomplete">
+
+
+                                                <input type="text" class="form-control txtTumbol" autocomplete="off" id="txtTumbol" value="@(Model != null ? Model.SubDistrictText : "")" name="" placeholder="ตำบล...">
+                                                <input type="hidden" id="hddTumbolCode" value="@(Model != null ? Model.SubDistrict : "")" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 col-lg-4">
+                                        <div class="form-group">
+                                            <label for="txtAmphur">อำเภอ</label>
+                                            <div class="autocomplete">
+                                                <input type="text" class="form-control txtAmphur" id="txtAmphur" value="@(Model != null ? Model.DistrictText : "")" name="" placeholder="อำเภอ...">
+                                                <input type="hidden" id="hddAmphurCode" value="@(Model != null ? Model.District : "")" />
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 col-lg-4 ">
+                                        <div class="form-group">
+                                            <label for="txtProvince">จังหวัด</label>
+                                            <div class="autocomplete">
+
+
+                                                <input type="text" class="form-control txtProvince" id="txtProvince" value="@(Model != null ? Model.ProvinceText : "")" name="" placeholder="จังหวัด...">
+                                                <input type="hidden" id="hddProvinceCode" value="@(Model != null ? Model.Province : "")" />
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-12 col-lg-8">
+                                        <div class="form-group">
+                                            <label for="txtIncidentAddress">สถานที่ใกล้เคียง</label>
+                                            <div class="input-group">
+                                                <input type="hidden" id="hdCaseLatitude" value="@(Model !=null  ? Model.CaseLatitude : "")" />
+                                                <input type="hidden" id="hdCaseLongtitude" value="@(Model !=null  ? Model.CaseLongtitude : "")" />
+                                                <input type="text" class="form-control" id="txtIncidentAddress"
+                                                       name="txtIncidentAddress" placeholder=""
+                                                       value="@(Model !=null  ? Model.PwsIncidentAddress : "")" />
+                                                <img src="/Content/assets/images/map.png" style="height:2.573rem" class="btnAddMap" />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-12 col-lg-12">
+
+                                        <div class="form-group">
+
+                                            <label for="">รายละเอียดการรับแจ้ง</label>
+                                            <textarea type="text" class="form-control"
+                                                      data-iconlibrary="fa"
+                                                      rows="5" id="txtCaseDetail"
+                                                      name="address" placeholder="รายละเอียด" value="">@(Model !=null  ? Model.CaseDetail : "")</textarea>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="row" style="margin-left: 5px;">
+                                                <div class="col-12">
+                                                    <label class="file-upload btn btn-info btn-outline">
+                                                        เลือกไฟล์
+                                                    </label>
+                                                    <br />
+                                                    <br />
+                                                    <div id="pnl_upload_tools" style="display:none;">
+                                                        <input type="file" class="upload" name="upload" data-idx="1" />
+                                                        <input type="file" class="upload" name="upload" data-idx="2" />
+                                                        <input type="file" class="upload" name="upload" data-idx="3" />
+                                                        <input type="file" class="upload" name="upload" data-idx="4" />
+                                                        <input type="file" class="upload" name="upload" data-idx="5" />
+                                                        <input type="file" class="upload" name="upload" data-idx="6" />
+                                                        <input type="file" class="upload" name="upload" data-idx="7" />
+                                                        <input type="file" class="upload" name="upload" data-idx="8" />
+                                                        <input type="file" class="upload" name="upload" data-idx="9" />
+                                                        <input type="file" class="upload" name="upload" data-idx="10" />
+                                                    </div>
+                                                </div>
+                                                <div class="col-12">
+                                                    <div class="row display_upload">
+                                                        @if (Model != null
+                                                            && Model.Files != null
+                                                            && Model.Files.Count > 0
+                                                             //&& Model.Files.Find(o => o.No == "1") != null
+                                                             )
+                                                        {
+                                                            List<FileDto> _files = Model.Files.Where(o => "1" == "1").ToList();
+
+                                                            foreach (var _fileDto in _files)
+                                                            {
+                                                                <div class="upload_item" data-id="@_fileDto.FileID">
+                                                                    <a target="_blank" href="@Url.Content(_fileDto.HtmlFile)">
+                                                                        <img src="@Url.Content(_fileDto.HtmlFile)" onerror="this.src='@Url.Content("~/Content/assets/images/icon_file.png")'"
+                                                                             @*data-toggle="popover"*@
+                                                                             data-html="true"
+                                                                             data-content="<img src='@Url.Content(_fileDto.HtmlFile)' style='width:100%'></img>"
+                                                                             class="thumbnail" />
+                                                                    </a>
+                                                                    <i class="glyphicon glyphicon-remove icon-2x text-primary btnDeletefile vertical-align-middle" data="@_fileDto.FileID"></i>
+                                                                </div>
+                                                            }
+                                                        }
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        </div>
+
+
+                    </div>
+                    <div class="col-xxl-12">
+                        <div class="panel panel-success panel-line" style="border:0.5px solid #11c26d">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">การแก้ไขปัญหา</h3>
+                            </div>
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-md-12 col-lg-12">
+                                        <div class="form-group">
+                                            <label for="txtResolvedDetail" id="lblResolvedDetail">อธิบายวิธีการแก้ไข</label>
+                                            <textarea type="text" class="form-control"
+                                                      data-iconlibrary="fa"
+                                                      rows="5"
+                                                      id="txtResolvedDetail"
+                                                      name="address" placeholder="รายละเอียด">@(Model !=null  ? Model.ResolvedDetail : "")</textarea>
+                                            @{
+                                                #region ยกเลิก Upload รูป (มีเฉพาะตอนแจ้งปัญหา)
+                                            }
+                                            @*@if (Model != null && Model.Files != null && Model.Files.Count > 0 && Model.Files.Find(o => o.No == "2") != null)
+                                                {
+                                                    fileDto = Model.Files.Find(o => o.No == "2");
+                                                    <div class="d-flex">
+
+
+                                                        <label class="file-upload btn btn-success btn-outline invisible">
+                                                            เลือกไฟล์ <input type="file" id="fResolveImage" style="min-height: 0;" />
+                                                        </label>
+                                                        <img src="@Url.Content(fileDto.HtmlFile)"
+                                                             data-toggle="popover"
+                                                             data-html="true"
+                                                             data-content="<img src='@Url.Content(fileDto.HtmlFile)' style='width:100%'></img>"
+                                                             class="thumbnail" />
+
+                                                        <i class="glyphicon glyphicon-remove icon-2x text-danger btnDeletefile vertical-align-middle" data="@fileDto.FileID"></i>
+                                                    </div>
+                                                }
+                                                else
+                                                {
+
+
+                                                    <label class="file-upload btn btn-success btn-outline invisible">
+                                                        เลือกไฟล์ <input type="file" id="fResolveImage" style="min-height: 0;" />
+                                                    </label>
+                                                }*@
+                                            @{
+                                                #endregion
+                                            }
+                                        </div>
+                                    </div>
+                                    @*<div class="col-md-3 col-lg-3">
+                                            <div class="form-group">
+                                                <label for="txtIncidentNo">ผู้บันทึก</label>
+
+                                                <select class="ddlRecorder readonly select2"
+                                                        id="ddlRecorder"
+                                                        tabindex="-98">
+                                                    <option value="0">เลือก</option>
+                                                    @foreach (DropDownlistDto it in Employees)
+                                                    {
+                                                        if (it.Value == (Model != null ? Model.PwaInformReceiver : currentUser.UserLogin))
+                                                        {
+                                                            <option value="@it.Value" @(it.Value == (Model != null ? Model.PwaInformReceiver : currentUser.UserLogin) ? "selected" : "")>@it.Text </option>
+                                                        }
+                                                    }
+                                                </select>
+
+                                            </div>
+
+
+                                        </div>
+                                        <div class="col-md-3 col-lg-3">
+                                            <div class="form-group">
+                                                <label for="txtIncidentNo">วันเวลาที่บันทึก</label>
+
+                                                <input type="text" class="form-control readonly" onclick="return false" onfocus="return false" onkeypress="return false"
+                                                       id="txtIncidentRecordDate" placeholder="วันที่บันทึก"
+                                                       value="@(Model !=null  ? Model.RecordDate : DateTime.Now.ToString("dd/MM/yyyy HH:mm"))">
+                                            </div>
+
+                                        </div>*@
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <!--3837-->
+                    @{
+                        if (ViewBag.Follows_RejectHistory)
+                        {
+                            <div class="col-xxl-12 text-center">
+                                <div class="row">
+                                    <div class="col-md-6 col-lg-6">
+                                        <div class="panel panel-success panel-line" style="border:0.5px solid #11c26d;display:none" id="pnlFollow">
+                                            <div class="panel-heading text-left">
+                                                <h3 class="panel-title">รายการติดตาม</h3>
+                                            </div>
+                                            <div class="panel-body">
+                                                <div class="row">
+                                                    <div class="col-md-12 col-lg-12">
+                                                        <div class="table-responsive " id="divFollowResult">
+                                                            <table class="table table-striped" data-animate="fade">
+                                                                <thead>
+                                                                    <tr>
+
+                                                                        <th class="" scope="col">วันเวลา</th>
+                                                                        <th class="" scope="col">ช่องทางการติดตาม</th>
+                                                                        <th class="" scope="col">รายละเอียด</th>
+                                                                </thead>
+                                                                <tbody>
+                                                                    @if (ViewBag.Follows != null)
+                                                                    {
+                                                                        foreach (var item in ViewBag.Follows)
+                                                                        {
+                                                                            <tr>
+                                                                                <td>@item.Date</td>
+                                                                                <td>@item.Channel</td>
+                                                                                <td class="text-left">@item.Detail</td>
+                                                                            </tr>
+
+
+                                                                        }
+                                                                    }
+
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6">
+                                        <div class="panel panel-success panel-line" style="border:0.5px solid #11c26d;display:none" id="pnlReject">
+                                            <div class="panel-heading text-left">
+                                                <h3 class="panel-title">รายการส่งเรื่องกลับ</h3>
+                                            </div>
+                                            <div class="panel-body">
+                                                <div class="row">
+                                                    <div class="col-md-12 col-lg-12">
+                                                        <div class="table-responsive " id="divFollowResult">
+                                                            <table class="table table-striped" data-animate="fade">
+                                                                <thead>
+                                                                    <tr>
+
+                                                                        <th class="" scope="col">วันเวลา</th>
+                                                                        <th class="" scope="col">สาขา</th>
+                                                                        <th class="" scope="col">รายละเอียดการส่งกลับ</th>
+                                                                </thead>
+                                                                <tbody>
+                                                                    @if (ViewBag.RejectHistory != null)
+                                                                    {
+                                                                        foreach (var item in ViewBag.RejectHistory)
+                                                                        {
+                                                                            <tr>
+                                                                                <td>@item.Date</td>
+                                                                                <td>@item.Branch</td>
+                                                                                <td class="text-left">@item.Detail</td>
+                                                                            </tr>
+
+
+                                                                        }
+                                                                    }
+
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+
+                    @{
+                        if (Model != null)
+                        {
+
+                            <div class="col-xxl-12">
+                                @*<div class="panel panel-success panel-line" style="border:0.5px solid #11c26d">*@
+                                <div>
+                                    @*<div class="panel-heading">
+                                            <h3 class="panel-title">รายละเอียดการบันทึก</h3>
+                                        </div>*@
+                                    <div class="panel-body">
+                                        <div class="row">
+                                            <div class="col-md-3 col-lg-3">
+                                                <div class="form-group">
+                                                    <label for="txtIncidentNo">ผู้บันทึก</label>
+                                                    <input type="text" class="form-control readonly" readonly
+                                                           id="" placeholder="สร้างโดย"
+                                                           value="@(Model != null ? Model.CreateBy : "")">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3 col-lg-3">
+                                                <div class="form-group">
+                                                    <label for="txtIncidentNo">วันเวลาที่บันทึก</label>
+                                                    <input type="text" class="form-control readonly" readonly
+                                                           id="" placeholder="วันที่สร้าง"
+                                                           value="@{
+                                                               if (Model != null && Model.CreateDatetime.HasValue)
+                                                               {
+                                                                   int year = Model.CreateDatetime.Value.Year;
+                                                                   if (year < 2500) { year += 543; }
+                                                                   string date = Model.CreateDatetime.Value.ToString("dd/MM/" + year + " HH:mm");
+                                                                   date = date.Replace("-", "/");
+                                                                   Write(Html.Raw(date));
+                                                               }
+                                                                   }">
+                                                </div>
+
+
+                                            </div>
+
+
+                                            <div class="col-md-3 col-lg-3">
+                                                <div class="form-group">
+                                                    <label for="txtIncidentNo">ผู้บันทึก</label>
+                                                    <input type="text" class="form-control readonly" readonly
+                                                           id="" placeholder="อัพเดทโดย"
+                                                           value="@(Model != null ? Model.UpdateBy : "")">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3 col-lg-3">
+                                                <div class="form-group">
+                                                    <label for="txtIncidentNo">วันเวลาที่บันทึก</label>
+                                                    <input type="text" class="form-control readonly" readonly
+                                                           id="" placeholder="วันที่อัพเดท"
+                                                           value="@{
+                                                               if (Model != null && Model.UpdateDatetime.HasValue)
+                                                               {
+                                                                   int year = Model.UpdateDatetime.Value.Year;
+                                                                   if (year < 2500) { year += 543; }
+                                                                   string date = Model.UpdateDatetime.Value.ToString("dd/MM/" + year + " HH:mm");
+                                                                   date = date.Replace("-", "/");
+                                                                   Write(Html.Raw(date));
+                                                               }
+                                                                   }">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+                </div>
+                @{
+                    if (ViewBag.WFA != null && (bool)ViewBag.WFA)
+                    {
+                        <div style="position:absolute; top:0; left:0; right:0; bottom:0; z-index:8;"></div>
+                    }
+                }
+            </div>
+            @{
+                if (ViewBag.WFA != null && (bool)ViewBag.WFA)
+                {
+                    <div class="col-xxl-12">
+                        <div class="panel panel-success panel-line" style="border:0.5px solid #11c26d">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">บันทึกผลการพิจารณา</h3>
+                            </div>
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-md-12 col-lg-12">
+                                        <div class="form-group">
+                                            <label for="" id="lbl_approval">ผลการพิจารณา</label>
+                                            <div>
+                                                <label class="radio-inline"><input type="radio" name="approval" value="1" />อนุมัติ</label>
+                                                <label class="radio-inline"><input type="radio" name="approval" value="0" />ไม่อนุมัติ</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 col-lg-12">
+                                        <div class="form-group">
+                                            <label for="" id="lbl_reason">เหตุผล</label>
+                                            <input type="text" class="form-control" name="action_reason" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-lg-3">
+                                        <div class="form-group">
+                                            <label for="">ผู้อนุมัติ</label>
+                                            <input type="text" class="form-control" readonly />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-lg-3">
+                                        <div class="form-group">
+                                            <label for="">วันเวลาที่อนุมัติ</label>
+                                            <input type="text" class="form-control" readonly />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col-xxl-12 text-center">
+                        <button type="button" class="btn btn-success" id="btn_approve">บันทึกผลการพิจารณา</button>
+                    </div>
+
+                    <script>
+                        $('#btn_approve').click(function () {
+                            var pass = true;
+                            $('#lbl_approval').removeClass('error');
+                            $('#lbl_reason').removeClass('error');
+
+                            if ($('input[name="approval"]:checked').length != 1) {
+                                $('#lbl_approval').addClass('error');
+                                pass = false;
+                            }
+
+                            if ($('input[name="approval"]:checked').val() == '0' && $.trim($('input[name="action_reason"]').val()) == '') {
+                                $('#lbl_reason').addClass('error');
+                                pass = false;
+                            }
+
+                            if (!pass) {
+                                return false;
+                            }
+                            else {
+                                // บันทึกอนุมัติ
+                                $.post('@Url.Content("~/Incident/ActionApproval")', {
+                                    id : '@ViewBag.RequestID',
+                                    incident_id: PwaIncidentID,
+                                    reason: $('input[name="action_reason"]').val(),
+                                    action: $('input[name="approval"]:checked').val(),
+                                    tm: (new Date()).getTime()
+                                }, function (response) {
+                                    var data = response;
+                                    if (data.Success) {
+                                        PwaManager.PwaWaiting(false);
+                                        swal(
+                                            {
+                                                title: "สำเร็จ!",
+                                                text: (_pageInfo.Mode != 'EDIT') ? "บันทึกข้อมูลสำเร็จ เลขที่รับแจ้ง '" + data.IncidentNo + "'" : 'บันทึกข้อมูลสำเร็จ',
+                                                timer: 2000
+                                            });
+
+                                        setTimeout(function () {
+                                            document.location.href = getBaseUrl() + '/Incident/index'
+                                        }, 2000);
+                                    } else {
+                                        PwaManager.PwaWaiting(false);
+                                        swal(
+                                            {
+                                                title: "ไม่สำเร็จสำเร็จ!",
+                                                text: 'บันทึกข้อมูลไม่สำเร็จ ' + data.Message,
+                                                timer: 5000
+                                            });
+                                    }
+                                });
+                            }
+                        });
+                    </script>
+                }
+            }
+            <div class="col-xxl-12 text-center">
+                <div class="row">
+                    @{
+                        if (ViewBag.WFA != null && (bool)ViewBag.WFA)
+                        {
+                            <div class="col-md-12 col-lg-12">
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="col-md-12 col-lg-12">
+                                @{
+                                    if (controller.CurrentUser.Ba != "1001")
+                                    {
+                                        <button type="button" class="btn btn-danger" id="bttReject" style="display:none">ส่งกลับส่วนกลาง</button>
+                                        <button type="button" class="btn btn-success" id="bttBranchReceiveCase" style="display:none">รับเรื่อง</button>
+                                    }
+                                }
+                                <button type="button" class="btn btn-success " id="bttIncCloseCase" style="display:none">ปิดเรื่อง</button>
+                                <button type="button" class="btn btn-info" id="bttIncReceiveCaseForProcessOutOfFix" style="display:none">บันทึกรับแจ้ง เพื่อรอตรวจสอบ</button>
+                                <button type="button" class="btn btn-primary btnSave" id="bttIncReceiveCase" style="display:none">บันทึกรับแจ้ง</button>
+                                <button type="button" class="btn btn-primary " id="bttIncEditSave" style="display:none">บันทึก</button>
+                                <button type="button" class="btn btn-danger " id="btnReOpen" style="display:none">ขออนุมัติแก้ไข</button>
+                                <!--<button type="button" class="btn btn-outline btn-default">ยกเลิก</button>-->
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</form>
+
+<div class="modal modal-primary  fade" id="mdReject" aria-hidden="true" aria-labelledby="mdAddCustomer" role="dialog">
+    <div class="modal-dialog modal-simple">
+        <div class="modal-content">
+            <div class="modal-header modal-primary">
+                <button type="button" class="close" aria-hidden="true" data-dismiss="modal">×</button>
+                <h4 class="modal-title">ส่งกลับส่วนกลาง</h4>
+            </div>
+            <div class="modal-body" style="padding-top:10px">
+                <div role="row">
+                    <div class="col-md-12 col-lg-12">
+                        <div class="form-group rejectReason" style="display:block">
+                            <label for="">เหตุผลในการส่งกลับส่วนกลาง</label>
+                            <input type="text" class="form-control" id="txtRejectReason"
+                                   name="txtRejectReason" placeholder="เหตุผลการส่งกลับ" value="" />
+
+                        </div>
+                    </div>
+                </div>
+                <div role="row">
+                    <div class="col-md-12 col-lg-12">
+                        <button type="button" id="bttRejectSave" class="btn btn-primary ">บันทึก</button>
+                        <button type="button" id="bttRejectCancel" class="btn btn-default">ยกเลิก</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal modal-primary  fade" id="mdAddCustomer" aria-hidden="true" aria-labelledby="mdAddCustomer"
+     role="dialog" tabindex="-1">
+    <div class="modal-dialog modal-simple">
+        <div class="modal-content">
+            <div class="modal-header modal-primary">
+                <button type="button" class="close" aria-hidden="true" data-dismiss="modal">×</button>
+                <h4 class="modal-title"> ผู้แจ้งร้องเรียน</h4>
+            </div>
+            <div class="modal-body" style="padding-top:10px">
+
+                <div class="row">
+                    <div class="col-md-3 col-lg-3">
+                        <div class="form-group">
+                            <select data-plugin="selectpicker" class="selectpicker" tabindex="-98">
+                                <option>นาย</option>
+                                <option>นาง</option>
+                                <option>นางสาว</option>
+                            </select>
+
+                        </div>
+
+                    </div>
+                    <div class="col-md-4 col-lg-4">
+                        <div class="form-group ">
+                            <input type="text" class="form-control" name="name" placeholder="ชื่อ" />
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-lg-5">
+                        <div class="form-group">
+                            <input type="text" class="form-control" name="phone" placeholder="นามสกุล" />
+                        </div>
+                    </div>
+
+
+
+
+                </div>
+                <div class="row">
+
+                    <div class="col-md-4 col-lg-4">
+                        <div class="form-group">
+                            <input type="text" class="form-control" name="Line" placeholder="เบอร์โทร" />
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-lg-4">
+                        <div class="form-group">
+                            <input type="text" class="form-control" name="address" placeholder="รหัสผู้ใช้น้ำ" />
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-lg-4">
+                        <div class="form-group">
+                            <input type="text" class="form-control" name="address" placeholder="รหัสมิเตอร์" />
+                        </div>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-md-12 col-lg-12">
+
+                        <textarea type="text" class="form-control" name="desc" placeholder="ที่อยู่"></textarea>
+
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <!--    <button class="btn btn-primary" data-dismiss="modal" type="submit">Save</button>
+
+                <a class="btn btn-sm btn-white" data-dismiss="modal" href="javascript:void(0)">Cancel</a>-->
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal modal-primary  fade" id="mdMap" aria-hidden="true" aria-labelledby="mdMap"
+     role="dialog" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+
+        <div class="modal-content ">
+            <div class="modal-header modal-primary">
+                <button type="button" class="close" aria-hidden="true" data-dismiss="modal">×</button>
+                <h4 class="modal-title">เลือกพื้นที่ผลกระทบ</h4>
+            </div>
+            <div class="modal-body" style="padding-top:10px">
+                <div class="row">
+                    <div class="col-md-4">
+
+                    </div>
+                    <div class="col-md-8">
+
+                        <div class="form-group">
+                            <div class="input-search autocomplete">
+                                <input type="text" class="form-control txtSearch" name="" placeholder="ค้นหาพื้นที่...">
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="row">
+                            <div class="panel panel-primary panel-line" style="border:0.5px solid #3e8ef7">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">ค้นหาข้อร้องเรียน</h3>
+                                </div>
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="col-md-12 col-lg-12">
+                                            <div class="form-group ddlProviceSearch">
+                                                <label for="ddlProviceSearch">จังหวัด</label>
+                                                <select id="ddlProviceSearch">
+                                                    <option value="0">กรุณาเลือก</option>
+                                                    @foreach (LocationDto it in ViewBag.Provinces)
+                                                    {
+                                                        <option value="@it.Value" @(it.Value == (Model != null ? Model.Province : "") ? "selected" : "")>@it.Text </option>
+                                                    }
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12 col-lg-12">
+                                            <div class="form-group">
+                                                <label for="txtDetailSearch">เบอร์โทรศัพท์</label>
+                                                <input type="text" class="form-control" id="txtDetailSearch" name="txtDetailSearch" />
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12 col-lg-12">
+                                            <div class="form-group">
+                                                <label for="txtArea">บริเวณ</label>
+                                                <input type="text" class="form-control" id="txtAreaSearch" name="txtArea" />
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 col-lg-6">
+                                            <div class="form-group">
+                                                <label for="txtSartDateSearch">ช่วงวันที่</label>
+                                                <input type='text' class="form-control datetime" id="txtSartDateSearch"
+                                                       value="@DateTime.Now.ToString("dd/MM/yyyy",new System.Globalization.CultureInfo("th-TH"))"
+                                                       placeholder="จากวันที่" />
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 col-lg-6">
+                                            <div class="form-group">
+                                                <label for="txtEndDateSearch">ถึงวันที่</label>
+                                                <input type='text' class="form-control datetime" id="txtEndDateSearch"
+                                                       value="@DateTime.Now.ToString("dd/MM/yyyy",new System.Globalization.CultureInfo("th-TH"))"
+                                                       placeholder="ถึงวันที่" />
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12 col-lg-12">
+                                            <div class="form-group">
+
+                                                <select id="ddlStatusSearch" class="selectpicker" tabindex="1500">
+                                                    <option value="">ทั้งหมด</option>
+                                                    <option value="1,2">ยังไม่เสร็จ</option>
+                                                    <option value="3">เสร็จแล้ว</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-xl-12">
+                                            <div class=" form-group">
+                                                <button class="btn btn-outline-primary btnSearchIncident">ค้นหา</button>
+                                                <button class="btn btn-outline-default">ล้างข้อมูล</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="table-responsive " id="divResult">
+                                <table class="table table-striped" data-animate="fade">
+                                    <thead>
+                                        <tr>
+
+                                            <th class="" scope="col">วันเวลาที่รับแจ้ง</th>
+                                            <th class="" scope="col">เลขที่รับแจ้ง</th>
+                                            <th class="" scope="col">รายละเอียด</th>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>30/7/2563</td>
+                                            <td>S202007020002</td>
+                                            <td>ท่อรั่ว</td>
+                                        </tr>
+
+                                    </tbody>
+                                </table>
+                            </div>
+
+
+                        </div>
+                    </div>
+                    <div class="col-md-9">
+                        <div class="mapsection">
+                            <div id="mapid" class="mapdefault"></div>
+
+
+                            <button class="btn btn-outline-success btnExpandMap">Full Map</button>
+                            <button class="btn btn-outline-default btnStreetView">
+                                @*<img src="~/Content/assets/images/street-view.png" width="50" height="50"">*@
+                            </button>
+                            <div id="streetPanorama" class="streetPanorama hidden"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+
+    console.log('a @controller.CurrentUser.Ba');
+
+    //$('[data-toggle="popover"]').popover({
+    //    container: 'body'
+    //});
+
+    var typingTimer;                //timer identifier
+    var doneTypingInterval = 2000;  //time in ms, 5 second for example
+    var objSearch;
+    var meterMaker;
+    var locationSearch = [
+        "ActionScript",
+        "AppleScript",
+        "Asp",
+        "BASIC",
+        "C",
+        "C++",
+        "Clojure",
+        "COBOL",
+        "ColdFusion",
+        "Erlang",
+        "Fortran",
+        "Groovy",
+        "Haskell",
+        "Java",
+        "JavaScript",
+        "Lisp",
+        "Perl",
+        "PHP",
+        "Python",
+        "Ruby",
+        "Scala",
+        "Scheme"
+    ];
+
+    var currentUrl = getBaseUrl();
+    var map = L.map('mapid').setView([13, 100], 6);
+    var lalong;
+    var keepDeleteFiles = [];
+    var countries = ["Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Anguilla", "Antigua &amp; Barbuda", "Argentina", "Armenia", "Aruba", "Australia", "Austria", "Azerbaijan", "Bahamas", "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium", "Belize", "Benin", "Bermuda", "Bhutan", "Bolivia", "Bosnia &amp; Herzegovina", "Botswana", "Brazil", "British Virgin Islands", "Brunei", "Bulgaria", "Burkina Faso", "Burundi", "Cambodia", "Cameroon", "Canada", "Cape Verde", "Cayman Islands", "Central Arfrican Republic", "Chad", "Chile", "China", "Colombia", "Congo", "Cook Islands", "Costa Rica", "Cote D Ivoire", "Croatia", "Cuba", "Curacao", "Cyprus", "Czech Republic", "Denmark", "Djibouti", "Dominica", "Dominican Republic", "Ecuador", "Egypt", "El Salvador", "Equatorial Guinea", "Eritrea", "Estonia", "Ethiopia", "Falkland Islands", "Faroe Islands", "Fiji", "Finland", "France", "French Polynesia", "French West Indies", "Gabon", "Gambia", "Georgia", "Germany", "Ghana", "Gibraltar", "Greece", "Greenland", "Grenada", "Guam", "Guatemala", "Guernsey", "Guinea", "Guinea Bissau", "Guyana", "Haiti", "Honduras", "Hong Kong", "Hungary", "Iceland", "India", "Indonesia", "Iran", "Iraq", "Ireland", "Isle of Man", "Israel", "Italy", "Jamaica", "Japan", "Jersey", "Jordan", "Kazakhstan", "Kenya", "Kiribati", "Kosovo", "Kuwait", "Kyrgyzstan", "Laos", "Latvia", "Lebanon", "Lesotho", "Liberia", "Libya", "Liechtenstein", "Lithuania", "Luxembourg", "Macau", "Macedonia", "Madagascar", "Malawi", "Malaysia", "Maldives", "Mali", "Malta", "Marshall Islands", "Mauritania", "Mauritius", "Mexico", "Micronesia", "Moldova", "Monaco", "Mongolia", "Montenegro", "Montserrat", "Morocco", "Mozambique", "Myanmar", "Namibia", "Nauro", "Nepal", "Netherlands", "Netherlands Antilles", "New Caledonia", "New Zealand", "Nicaragua", "Niger", "Nigeria", "North Korea", "Norway", "Oman", "Pakistan", "Palau", "Palestine", "Panama", "Papua New Guinea", "Paraguay", "Peru", "Philippines", "Poland", "Portugal", "Puerto Rico", "Qatar", "Reunion", "Romania", "Russia", "Rwanda", "Saint Pierre &amp; Miquelon", "Samoa", "San Marino", "Sao Tome and Principe", "Saudi Arabia", "Senegal", "Serbia", "Seychelles", "Sierra Leone", "Singapore", "Slovakia", "Slovenia", "Solomon Islands", "Somalia", "South Africa", "South Korea", "South Sudan", "Spain", "Sri Lanka", "St Kitts &amp; Nevis", "St Lucia", "St Vincent", "Sudan", "Suriname", "Swaziland", "Sweden", "Switzerland", "Syria", "Taiwan", "Tajikistan", "Tanzania", "Thailand", "Timor L'Este", "Togo", "Tonga", "Trinidad &amp; Tobago", "Tunisia", "Turkey", "Turkmenistan", "Turks &amp; Caicos", "Tuvalu", "Uganda", "Ukraine", "United Arab Emirates", "United Kingdom", "United States of America", "Uruguay", "Uzbekistan", "Vanuatu", "Vatican City", "Venezuela", "Vietnam", "Virgin Islands (US)", "Yemen", "Zambia", "Zimbabwe"];
+
+    var geoSearchLayer;
+    var branchLayers;
+    var editableLayers;
+    var incidentLayers;
+    var incidentStyle = L.Icon.extend({
+        options: {
+            iconSize: [27, 27],
+        }
+    });
+    var branchStyle = L.Icon.extend({
+        options: {
+            iconSize: [27, 27]
+        }
+    });
+
+    var AreaLayerGroup;
+    var incidentMaker = new incidentStyle({ iconUrl: getBaseUrl() + '/icon/incident.png' });
+    var BranchMaker = new branchStyle({ iconUrl: getBaseUrl() + '/icon/pwabranch.png' });
+
+    function _format_datetime(data) {
+        var d = data;
+        var tmp = d.split('T');
+        var date = tmp[0].split('/');
+        if (date.length < 3) { date = tmp[0].split('-'); }
+
+        var time = tmp[1].split(':');
+        var year = parseInt(date[0]);
+        if (year < 2500) { year += 543; }
+        var day = date[2];// parseInt(date[2]);
+        var month = date[1];// parseInt(date[1]);
+        var result = day + '/' + month + '/' + year + ' ' + time[0] + ':' + time[1];
+
+        return result;
+    }
+
+        let GeoSearch = {
+            token: '@geoSearchToken',
+        search: (searchKey, onSuccess) => {
+            let searchData = {
+                keyword: searchKey,
+                key: GeoSearch.token,
+                maxResult: 20
+            }
+            console.log(searchData);
+
+            /**/
+            $.ajax({
+
+                url: "https://geosearch.cdg.co.th/g/search/autocomplete",
+                data: searchData,
+                type: "POST",
+                dataType: "json",
+
+                error: function (request, status, error) {
+
+                    console.log(request);
+                },
+                success: function (data) {
+                    console.log(data);
+                    onSuccess(data);
+                }
+            });
+
+
+
+
+        },
+        getDetail: (key, onSuccess) => {
+            let searchData = {
+                locationid: key,
+                key: GeoSearch.token
+            }
+
+            /**/
+            $.ajax({
+
+                url: "https://geosearch.cdg.co.th/g/search/details",
+                data: searchData,
+                type: "POST",
+                dataType: "json",
+
+                error: function (request, status, error) {
+
+                    console.log(request);
+                },
+                success: function (data) {
+                    console.log(data);
+                    onSuccess(data);
+                }
+            });
+
+
+
+
+        }
+    }
+
+
+    var PageController = {
+        init: function () {
+            $(document).ready(function () {
+
+
+                $('.file-upload').file_upload();
+                PageController.LoadMap();
+                PageController.LoadEvent();
+                if ($("#hddPwaIncidentID").val() != "") {
+                    $('#pnlFollow').css("display", "block");
+                    $('#pnlReject').show();
+
+                    $('#ddlProvince').trigger("change");
+
+                }
+
+
+                let customerCode = $('#txtCustCode').val();
+                let province = $('#hddProvinceCode').val();
+
+                PageController.SearchIncident(customerCode, province, '', '', null, null)
+                /*      $('#ddlPwaIncidentTypeID').empty();
+                      $.each(_incidentTypes, function (i, item) {
+                          $('#ddlPwaIncidentTypeID').append($('<option>', {
+                              value: item.ID,
+                              text: item.Name
+                          }));
+                      });*/
+
+                $(".select2").select2({ width: '100%' });
+                $("#ddlProviceSearch").select2({
+                    dropdownParent: $("#mdMap"), width: '100%'
+                });
+                $(".marker").markdown({
+                    autofocus: false,
+                    height: 120,
+                    iconlibrary: 'fa',
+                    onShow: function (e) {
+                        //e.hideButtons('cmdPreview');
+                        e.change(e);
+                    }
+                });
+                $(".datetime").datepicker()
+                $('.clockpicker').clockpicker();
+                $(".incdatetime").datetimepicker({
+                    format: "DD/MM/YYYY HH:mm",
+                    showTodayButton: false,
+                    tooltips: {
+                        today: "วันนี้",
+                        selectTime: "เลือกเวลา"
+                    },
+                    locale: "th",
+                });
+
+                @*$(".incdatetime").on("dp.change", function (e) {
+                    var year = e.date.format('YYYY');
+                    var oldYear = e.oldDate.format('YYYY');
+
+                    if (oldYear - year > 542)
+                    {
+                        $("#txtCompletedCaseDate").val(e.date.format('DD/MM/YYYY HH:mm'))
+                    }
+
+                    console.log(e.date.format('DD/MM/YYYY HH:mm'));
+                });*@
+
+                $(IncidentMenu).addClass("active");
+
+                //dp.change
+
+                //Fix ChristYear Issue
+                setTimeout(function () {
+                    if (_pageInfo.Mode != 'EDIT') {
+                        $("#txtCompletedCaseDate").val('');
+                    }
+
+
+                }, 1000);
+            });
+        },
+        LoadEvent: function () {
+
+            PageController.OnIncidentTypeChange();
+
+            $(document).on("click", ".btnStreetView", function (e) {
+                if ($("#streetPanorama").hasClass("hidden")) {
+                    $("#streetPanorama").removeClass("hidden")
+                } else {
+                    $("#streetPanorama").addClass("hidden")
+                }
+            });
+
+            $(document).on("click", "#chkSLA", function (e) {
+                if (!$(this).is(':checked')) {
+                    $("#ddlSlaDetail").val(0).trigger("change");
+                }
+
+            });
+            $(document).on("click", ".btnSearchIncident", function (e) {
+                //   let customerCode = $('#ddlCustCode').val();
+                let province = $('#ddlProviceSearch').val();
+                let area = $('#txtAreaSearch').val();
+                let startDate = $('#txtSartDateSearch').val();
+                let endDate = $('#txtEndDateSearch').val();
+                let status = $('#ddlStatusSearch').val();
+                //customer, provinceId, detail, area, startDate, endDate
+                PageController.SearchIncident("", province, "", area, status, startDate, endDate);
+
+                //PageController.SearchIncident();
+            });
+
+            $(document).on("change", "#ddlPwaIncidentTypeID", function (e) {
+                PageController.OnIncidentTypeChange();
+            });
+            $(document).on("change", "#ddlPwaIncidentGroupID", function (e) {
+                PageController.OnIncidentCategoryChange();
+            });
+            $(document).on("change", "#ddlBranch", function (e) {
+                var str2 = $("#ddlBranch option:selected").text();
+                console.log(str2)
+                $(".txtBranch").html(str2);
+
+                PwaManager.pwaMapPWABranchAndPipe(map, $(this).val(), AreaLayerGroup, null, true);
+
+
+            });
+
+            var str2 = $("#ddlBranch option:selected").text();
+            console.log(str2)
+            $(".txtBranch").html(str2);
+
+            $('#ddlProvince').change(function () {
+                PageController.OnProvinceChange();
+            });
+
+            $('#ddlDistrict').change(function () {
+                PageController.OnDistrictChange();
+            });
+
+            $('#ddlSlaDetail').change(function () {
+                PageController.OnSlaDetailChange();
+            });
+
+            $('.txtProvince').on('input', function () {
+
+                objSearch = _provinces.filter(function (obj, i) {
+                    return obj.Text.indexOf($(".txtProvince").val()) > -1;
+                });
+                PwaManager.PwaAutoComplete($(".txtProvince"), objSearch, (val) => {
+                    $("#hddProvinceCode").val(val);
+                    PageController.SetLocation(val, null, null)
+                });
+            });
+
+            $(document).on('keypress', '#txtAddressNo', function () {
+                if ('@b_type_code' == '4') {
+                    if (event.keyCode === 13) {
+                        var data = {
+                            CustomerName: "",
+                            CustomerCode: "",
+                            BACode: "@ba_code",
+                            AreaCode: $('#txtAddressNo').val(),
+                            SearchType: "A"
+                        }
+
+                        meterMaker = null;
+                        PwaManager.PwaPost(GetCustomerNameAndCodeUrl, data, function (resObj) {
+                            PwaManager.PwaButonAutoComplete($('#txtAddressNo'), resObj, (val) => {
+                                alert(val);
+                                //alert(JSON.stringify(resObj));
+                                if (resObj[0].Active == "ws_api") {
+                                    // If Got data from cis services
+                                    $("#txtAddress").val(resObj[0].address_no);
+                                    $("#txtCustCode").val(resObj[0].CustCode);
+                                    $("#txtCustomer").val(resObj[0].CustomerName);
+                                    $("#hddCustomerID").val(resObj[0].CustId);
+                                    PageController.SearchCustomer(resObj[0].CustId, resObj[0].CustCode, null, "ws_api");
+                                } else {
+                                    $("#hddCustomerID").val(val);
+                                    PageController.SearchCustomer(null, val, null, "A");
+                                }
+                            }, "fa-user-circle-o text-primary");
+
+                        });
+                        return false;
+                    } else {
+                        return true;
+                    }
+                }
+            });
+
+            $(document).on('keypress', '#txtTelephone', function () {
+                if (event.keyCode === 13) {
+                    var data = {
+                        CustomerName: "",
+                        CustomerCode: "",
+                        BACode: "@ba_code",
+                        Telephone: $('#txtTelephone').val(),
+                        SearchType: "T"
+                    }
+
+                    meterMaker = null;
+                    PwaManager.PwaPost(GetCustomerNameAndCodeUrl, data, function (resObj) {
+                        PwaManager.PwaButonAutoComplete($('#txtTelephone'), resObj, (val) => {
+                            if (resObj[0].Active == "ws_api") {
+                                // If Got data from cis services
+                                $("#txtAddress").val(resObj[0].address_no);
+                                $("#txtCustCode").val(resObj[0].CustCode);
+                                $("#txtCustomer").val(resObj[0].CustomerName);
+                                $("#hddCustomerID").val(resObj[0].CustId);
+                                PageController.SearchCustomer(resObj[0].CustId, resObj[0].CustCode, null, "ws_api");
+                            } else {
+                                $("#hddCustomerID").val(val);
+                                //$("#txtCustCode").val(resObj[0].CustCode);
+                                //$("#txtCustomer").val(resObj[0].CustomerName);
+                                PageController.SearchCustomer(null, val, null, "C");
+                            }
+                        }, "fa-user-circle-o text-primary");
+
+                    });
+                    return false;
+                } else {
+                    return true;
+                }
+            });
+
+            $(document).on('keypress', '#txtCustomer', function () {
+                if (event.keyCode === 13) {
+                    var data = {
+                        CustomerName: $("#txtCustomer").val(),
+                        CustomerCode: "",
+                        BACode: "@ba_code",
+                        SearchType: "N"
+                    }
+
+                    meterMaker = null;
+                    PwaManager.PwaPost(GetCustomerNameAndCodeUrl, data, function (resObj) {
+                        PwaManager.PwaButonAutoComplete($('.txtCustomer'), resObj, (val) => {
+                            if (resObj[0].Active == "ws_api") {
+                                // If Got data from cis services
+                                $("#txtAddress").val(resObj[0].address_no);
+                                $("#txtCustCode").val(resObj[0].CustCode);
+                                $("#txtCustomer").val(resObj[0].CustomerName);
+                                $("#hddCustomerID").val(resObj[0].CustId);
+                                PageController.SearchCustomer(resObj[0].CustId, resObj[0].CustCode, null, "ws_api");
+                            } else {
+                                $("#hddCustomerID").val(val);
+                                //$("#txtCustCode").val(resObj[0].CustCode);
+                                //$("#txtCustomer").val(resObj[0].CustomerName);
+                                PageController.SearchCustomer(null, val, null, "C");
+                            }
+                            }, "fa-user-circle-o text-primary");
+
+                    });
+                    return false;
+                } else {
+                    return true;
+                }
+
+
+            });
+
+            $(document).on('keypress', '#txtCustCode', function () {
+                if (event.keyCode === 13) {
+                    var data = {
+                        CustomerName: "",
+                        CustomerCode: $("#txtCustCode").val(),
+                        BACode: "@ba_code",
+                        SearchType: "C"
+                    }
+                    meterMaker = null;
+
+                    PwaManager.PwaPost(GetCustomerNameAndCodeUrl, data, function (resObj) {
+                        if (resObj != null && resObj.length > 0) {
+                            PwaManager.PwaButonAutoComplete($('#txtCustCode'), resObj, (val) => {
+                                if (resObj[0].Active == "ws_api") {
+                                    // If Got data from cis services
+                                    $("#txtAddress").val(resObj[0].address_no);
+                                    $("#txtCustCode").val(resObj[0].CustCode);
+                                    $("#txtCustomer").val(resObj[0].CustomerName);
+                                    $("#hddCustomerID").val(resObj[0].CustId);
+                                    PageController.SearchCustomer(resObj[0].CustId, resObj[0].CustCode, null, "ws_api");
+                                } else {
+                                    $("#hddCustomerID").val(val);
+                                    PageController.SearchCustomer(null, val, null, "C");
+                                }
+                            }, "fa-user-circle-o text-primary");
+
+
+                        } else {
+                            $('.txtCustCode').val('');
+                        }
+                    });
+
+                    return false;
+                } else {
+                    return true;
+                }
+
+            });
+
+            //$(document).on('keypress', '#txtTelephone', function () {
+            //    if (event.keyCode === 13) {
+            //        var data = {
+            //            CustomerName: "",
+            //            CustomerCode: "",
+            //            Telephone: $("#txtTelephone").val(),
+            //            SearchType: "T"
+            //        }
+            //        meterMaker = null;
+            //        PwaManager.PwaPost(GetCustomerNameAndCodeUrl, data, function (resObj) {
+            //            PwaManager.PwaButonAutoComplete($('#txtTelephone'), resObj, (val) => {
+            //                $("#txtTelephone").val(val);
+            //                PageController.SearchCustomer(null, null, val, "T");
+            //            }, "fa-user-circle-o text-primary");
+
+            //        });
+
+
+
+            //        return false;
+            //    } else {
+            //        return true;
+            //    }
+
+            //});
+
+            $('.txtAmphur').on('input', function () {
+                objSearch = _distincts.filter(function (obj, i) {
+                    return obj.Text.indexOf($(".txtAmphur").val()) > -1;
+                });
+
+                PwaManager.PwaAutoComplete($(".txtAmphur"), objSearch, (districtId) => {
+                    $("#hddAmphurCode").val(districtId);
+
+                    PageController.SetLocation(null, districtId, null)
+                });
+            });
+
+            $('.txtTumbol').on('input', function () {
+                @*$("#ddlSubDistrict").removeClass("error");*@
+
+                objSearch = _subdistincts.filter(function (obj, i) {
+                    return obj.Text.indexOf($(".txtTumbol").val()) > -1;
+                });
+                PwaManager.PwaAutoComplete($(".txtTumbol"), objSearch, (subDistrictId) => {
+                    $("#hddTumbolCode").val(subDistrictId);
+
+                    PageController.SetLocation(null, null, subDistrictId)
+                });
+            });
+            $('.txtSearch').focus(function () { $(this).select(); });
+            $('.txtSearch').on('input', function () {
+                GeoSearch.search(this.value, (data) => {
+                    var list = [];
+
+                    if (data == null || data == '') {
+                        return;
+                    }
+
+                    $.each(data.data, function (i, item) {
+                        list.push({
+                            'Text': item.FormattedAddress,
+                            'Value': item.LocationID
+                        })
+                    });
+                    console.log(list);
+                    PwaManager.PwaAutoComplete($(".txtSearch"), list, (val) => {
+
+
+                        GeoSearch.getDetail(val, (result) => {
+                            if (result.success) {
+                                let lat_long = '';
+                                let lat = '';
+                                let long = '';
+
+                                editableLayers.clearLayers();
+                                for (let key in result.data) {
+                                    if (key == 'LAT_LON' && result.data.hasOwnProperty(key)) {
+                                        lat_long = result.data[key];
+                                    }
+                                }
+
+                                if (lat_long != null && lat_long != '') {
+                                    var splitResult = lat_long.split(',');
+                                    lat = splitResult[0];
+                                    long = splitResult[1];
+                                    editableLayers.addLayer(L.marker([lat * 1, long * 1]).addTo(map)).bindPopup(this.value);
+                                    $('#txtIncidentAddress').val(this.value);
+                                    $('#hdCaseLatitude').val(lat);
+                                    $('#hdCaseLongtitude').val(long);
+                                    PwaManager.PwaGetBranchByLaLong(lat, long, branchLayers, $("#ddlBranch"), false);
+                                    PwaManager.pwaMapStreetView("streetPanorama", lat * 1, long * 1);
+                                    map.setView([lat * 1, long * 1], 17);
+
+
+                                }
+
+                            }
+                        });
+
+                    });
+
+                });
+
+            });
+            $('#txtAddress').focus(function () { $(this).select(); });
+            $('#txtAddress').on('input', function () {
+                var tumbol = $(".txtTumbol").val();
+                var amphur = $(".txtAmphur").val();
+                var province = $(".txtProvince").val();
+
+                console.log('tumbol = ' + tumbol);
+                @*if ((tumbol != '') && (tumbol != null)) {*@
+                    @*$("#ddlSubDistrict").removeClass("error");*@
+                GeoSearch.search(this.value, (data) => {
+                    var list = [];
+                    console.log('Search Finished data = ' + data);
+
+                    if (data == null || data == '' || data.search('error') > 0) {
+                        if (this.value == "test") {
+                            $('#txtAddress').val("28/5 หมู่2 ซ. ถ. รหัสไปรษณีย์ 77120");
+                            PageController.SearchCustomer(null,null,null,{}, 'addr')
+                        }
+                        return;
+                    }
+
+                    $.each(data.data, function (i, item) {
+                        list.push({
+                            'Text': item.FormattedAddress,
+                            'Value': item.LocationID
+                        })
+                    });
+                    PwaManager.PwaAutoComplete($("#txtAddress"), list, (val) => {
+                        GeoSearch.getDetail(val, (result) => {
+                            if (result.success) {
+                                $('#txtAddress').val(this.value);
+                                PageController.SearchCustomer(this.value, null)
+                            }
+                        });
+                    });
+                });
+               @* } else {
+                    swal(
+                        {
+                            title: "กรุณาเลือกตำบล อำเภอ จังหวัด เพื่อใช้ระบบค้นหาที่อยู่",
+                            text: "",
+                            type: "warning",
+                            timer: 1500
+                        });
+                }*@
+            });
+
+            $(".btnAddCustomer").on("click", function () {
+                $("#mdAddCustomer").modal("show");
+            })
+            $(document).on('change', '#ddlCustomer', function (e) {
+                if ($(this).val() != null && $(this).val() != "") {
+                    //   $("#ddlCustCode").unbind('change');
+
+
+                    PageController.SearchCustomer($(this).val(), null);
+                }
+            });
+
+            $(document).on('change', '#ddlCustCode', function (e) {
+                if ($(this).val() != null && $(this).val() != "") {
+                    //  $("#ddlCustomer").unbind('change');
+
+
+                    //    SearchCustomer(null, $(this).val());
+                }
+            });
+
+            /*
+            $(document).on('click', '.btnSave', function (e) {
+
+                PageController.SaveData();
+
+                return false;
+            });
+            */
+
+            $('#bttIncEditSave').click(function (e) {
+                PageController.SaveData();
+            });
+
+            $('#bttIncCloseCase').click(function (e) {
+                // Check SLA
+                if ('@(Model  == null ? 0 : 1)' == '1' && !$('#chkSLA').is(':checked')) {
+                    var sla = $('#ddlCaseTitle').find('option:selected').attr('sla');
+                    //alert(sla);
+                    if (sla != '0' && sla != null && sla != undefined) {
+                        var tmp = (new Date('@(Model == null ? null : (DateTime?)Model.StartSLADate)')).addDays(sla);
+                        //alert(tmp);
+                        if (tmp < new Date()) {
+
+                            //////////////////////////////
+                            /// บังคัยใส่ เหตุผลเพราะเกิน SLA ///
+                            //////////////////////////////
+
+                            @{
+                                SysOverSlaReason[] r;
+
+                                using(Smart1662Entities db = new Smart1662Entities())
+                                { r = db.SysOverSlaReason.Where(f => f.Status == 1).OrderBy(f => f.OrderSeq).ToArray(); }
+
+                                string r_option = "<option value='' selected>กรุณาระบุสาเหตุ</option>";
+                                for(int i = 0; i < r.Length; i++)
+                                {
+                                    r_option += "<option value='" + r[i].OverSlaId + "'>" + r[i].OverSlaDesc + "</option>";
+                                }
+                            }
+
+                            var r_option = "@Html.Raw(r_option)";
+                            swal({
+                                html: true,
+                                title: '<i>ระบุสาเหตุที่ปิดเรื่องล่าช้า</i>',
+                                text: '<select id="reason_sla" style="font-size:1rem; color:#000;">' + r_option + '</select><br /><input type="text" id="reason_sla_txt" style="font-size:1rem; display:none;width:100%; margin-top:10px; color:#000;" placeholder="กรุณาระบุสาเหตุ" value="" />',
+                                confirmButtonText: 'ปิดเรื่อง',
+                                closeOnConfirm: false,
+                                showCancelButton: true
+                            }, function (response) {
+                                if (response) {
+                                    // Confirm ปิด เรื่อง
+                                    if ($('#reason_sla').val() == '') {
+                                        alert('กรุณาระบุสาเหตุ');
+                                        return false;
+                                    }
+
+                                    if ($('#reason_sla').val() == 14 && $.trim($('#reason_sla_txt').val()) == '') {
+                                        alert('กรุณาระบุสาเหตุ');
+                                        return false;
+                                    }
+
+                                    incCloseCase();
+                                }
+
+
+                            });
+
+                            //alert(tmp < new Date());
+                        }
+                        else {
+                            incCloseCase();
+                        }
+                    }
+                    else {
+                        incCloseCase();
+                    }
+                }
+                else {
+                    incCloseCase();
+                }
+            });
+
+            $('#bttIncReceiveCase').click(function (e) {
+                incCloseCase
+                incReceiveCase();
+            });
+
+            $('#bttIncReceiveCaseForProcessOutOfFix').click(function (e) {
+                incReceiveCaseForProcessOutOfFix();
+            });
+
+            $('#btnReOpen').click(function (e) {
+                incReOpenCase();
+            });
+
+            $(document).on('click', '.btnDeletefile', function (e) {
+                var $this = $(this);
+                swal({
+                    title: "ยืนยันการลบไฟล์ข้อมูลที่เลือก",
+                    showCancelButton: true,
+                    closeOnConfirm: true,
+                }, function () {
+                        var focus = $this.parents('.upload_item:first');
+                        if (focus.attr('data-id') != undefined && focus.attr('data-id') != null && focus.attr('data-id') != '') { // รูปเก่า
+                            var photo = focus.attr('data-id');
+                            $.post('@Url.Content("~/Incident/DeletePhoto")', {
+                                id: photo,
+                                tm: (new Date()).getTime()
+                            }, function (response) {
+                                    if (response == '1') {
+                                        focus.remove();
+                                    }
+                                    else {
+                                        alert('บันทึกข้อมูลไม่สำเร็จ ' + response);
+                                    }
+                            });
+
+                        } else {
+                            var idx = focus.attr('data-input-id');
+
+                            var input = $('.upload[data-idx="' + idx + '"]')[0];
+                            input.value = ''
+                            if (!/safari/i.test(navigator.userAgent)) {
+                                input.type = ''
+                                input.type = 'file'
+                            }
+                            focus.remove();
+                        }
+                });
+                //if ($(this).attr('data') != null) {
+                //    let objProcessFile = {};
+                //    objProcessFile.FileID = $(this).attr('data');
+                //    objProcessFile.PwaIncidentID = $("#hddPwaIncidentID").val();
+                //    objProcessFile.HtmlFile = $(this).closest("div").find("img").attr("src");
+                //    keepDeleteFiles.push(objProcessFile);
+                //    $(this).closest("div").find("img").remove();
+                //    $(this).closest("div").find("label.file-upload").removeClass("invisible");
+                //    $(this).remove();
+
+                //}
+            });
+            $(document).on("show.bs.modal", "#mdMap", function () {
+                setTimeout(function () {
+                    document.getElementById('mdMap').style.display = 'block';
+                    map.invalidateSize();
+
+                    if (meterMaker != null) {
+                        meterMaker.openPopup();
+
+                        map.setView(meterMaker.getLatLng(), 17);
+                        PwaManager.pwaMapStreetView("streetPanorama", meterMaker.getLatLng().lat, meterMaker.getLatLng().lng);
+                    } else {
+
+                        PwaManager.pwaMapStreetView("streetPanorama");
+                    }
+                }, 10);
+            });
+            $(document).on("click", ".btnAddMap", function () {
+
+                $("#mdMap").modal("show");
+
+            });
+
+            $(document).on("click", ".btnExpandMap", function () {
+                if ($("#mapid").hasClass("mapfull")) {
+                    $(this).text("Full Size");
+                    $(".mapsection").removeClass("fullScreen");
+                    $("#mapid").removeClass("mapfull")
+                } else {
+                    $(this).text("Normal Size");
+                    $(".mapsection").addClass("fullScreen");
+                    $("#mapid").addClass("mapfull")
+                }
+
+
+                setTimeout(function () {
+
+                    map.invalidateSize();
+                }, 10);
+            });
+
+
+
+
+
+            $('#bttReject').click(function (e) {
+                $('#txtRejectReason').val('');
+                $('#mdReject').modal('show');
+
+            });
+
+            $('#bttRejectSave').click(function (e) {
+                PageController.RejectCase();
+
+            });
+
+            $('#bttRejectCancel').click(function (e) {
+
+                $('#mdReject').modal('hide');
+
+            });
+
+            $('#bttBranchReceiveCase').click(function (e) {
+
+                PwaManager.PwaConfirm("รับเรื่อง", "คุณต้องการรับเรื่องใช่หรือไม่", function (isConfirm) {
+                    if (isConfirm) {
+                        PageController.BranchReceiveCase();
+                    }
+
+                    swal.close();
+                });
+            });
+
+
+            if (_pageInfo.Mode == 'EDIT' && _pageInfo.EditModel.ProcessStatus == 1) {
+                $('#bttReject').show();
+                $('#bttBranchReceiveCase').show();
+
+
+            }
+
+            if (_pageInfo.Mode != 'EDIT' ) {
+
+                if ('@Request["c"]' != 'SocialGISC') {
+                    $('#txtCaseDetail').val('');
+                }
+                $('#txtResolvedDetail').val('');
+
+
+            }
+
+            if (_pageInfo.Mode == 'EDIT' && _pageInfo.EditModel.ProcessStatus == 10) {
+
+                $("#txtCompletedCaseDate").attr("disabled", "disabled");
+
+
+            }
+
+            if (_pageInfo.Mode == 'EDIT' &&  (_pageInfo.EditModel.ProcessStatus == 2)) {
+                $('#bttBranchReceiveCase').show();
+                //$('#bttIncReceiveCaseForProcessOutOfFix').show(); พี่อ้อยให้เอาออก 2020 08 10 17:25
+
+            }
+
+            if (_pageInfo.Mode != 'EDIT') {
+                $('#bttIncCloseCase').show();
+                $('#bttIncReceiveCase').show();
+                if (!_currUser.IsCallCenter) {
+                   //$('#bttIncReceiveCaseForProcessOutOfFix').show(); พี่อ้อยให้เอาออก 2020 08 10 17:25
+                }
+            } else {
+                $('#bttIncEditSave').show();
+            }
+
+            //$('#bttIncCloseCase').show();
+
+            //กรณีที่ทำเสร็จ
+            if (_pageInfo.Mode == 'EDIT') {
+                var model = _pageInfo.EditModel;
+                if (model != null) {
+                    console.log('ProcessStatus = ', _pageInfo.EditModel.ProcessStatus)
+                    if (_pageInfo.EditModel.ProcessStatus == 10 || _pageInfo.EditModel.ProcessStatus == 11) {
+                        $('#bttIncCloseCase').hide();
+                        $('#bttIncEditSave').hide();
+                        $('#btnReOpen').show();
+                    } else if (_pageInfo.EditModel.ProcessStatus <= 4 || _pageInfo.EditModel.ProcessStatus == 12) {
+                        //พี่อ้อย Request มาว่าอยากให้ปิดเรื่อง
+                        $('#bttIncCloseCase').show();
+                    }
+                }
+            }
+
+        },
+        OnIncidentTypeChange: function () {
+            let incType = $('#ddlPwaIncidentTypeID').val() * 1;
+            let target = (_incidentTypes !=null ? _incidentTypes.find(inc => inc.ID == incType) : null);
+            console.log(_incidentTypes)
+            if (target != null) {
+                $('#ddlPwaIncidentGroupID').html("");
+                $('#ddlPwaIncidentGroupID').append($('<option>', {
+                   e: "",
+                    text: "กรุณาเลือก"
+                }));
+                $.each(target.Categories, function (i, item) {
+                    $('#ddlPwaIncidentGroupID').append($('<option>', {
+                        value: item.ID,
+                        text: item.Name
+                    }));
+                });
+
+                if ($("#hddPwaIncidentGroupID").val() != "") {
+                    $('#ddlPwaIncidentGroupID').val($("#hddPwaIncidentGroupID").val().trim()).trigger("change");
+                    $("#hddPwaIncidentGroupID").val("");
+                } else {
+                    $('#ddlPwaIncidentGroupID').val("").trigger("change");
+                }
+
+
+
+                /*$('#ddlIncidentCategory').selectpicker('refresh');*/
+                PageController.OnIncidentCategoryChange();
+            }
+        },
+        OnIncidentCategoryChange: function () {
+            let incType = $('#ddlPwaIncidentTypeID').val() * 1;
+            let target = (_incidentTypes!=null ? _incidentTypes.find(inc => inc.ID == incType) : null);
+            console.log(_incidentTypes)
+            if (target != null) {
+                let incCategory = $('#ddlPwaIncidentGroupID').val() * 1;
+                let targetCategory = target.Categories.find(inc => inc.ID == incCategory);
+
+
+                $('#ddlCaseTitle').html("");
+
+                $('#ddlCaseTitle').append($('<option>', {
+                    value: "",
+                    text: "กรุณาเลือก"
+                }));
+                if (targetCategory != null)
+                    $.each(targetCategory.Subjects, function (i, item) {
+                        $('#ddlCaseTitle').append($('<option>', {
+                            value: item.ID,
+                            text: item.Name,
+                            sla: item.SLA
+                        }));
+                    });
+
+                if ($("#hddCaseTitle").val() != "") {
+                    $('#ddlCaseTitle').val($("#hddCaseTitle").val().trim()).trigger("change");
+                    $("#hddCaseTitle").val('');
+                }
+                else {
+                    $('#ddlCaseTitle').val("").trigger("change");
+
+                }
+            }
+            /*$('#ddlIncidentTitle').selectpicker('refresh');*/
+
+
+
+
+        },
+        OnProvinceChange: function () {
+            var province = $('#ddlProvince').val();
+            PageController.GetAjaxData('DISTRICT', province, (data) => {
+
+                if (data.length > 0) {
+                    $('#ddlDistrict').html("");
+                    $.each(data, function (i, item) {
+                        $('#ddlDistrict').append($('<option>', {
+                            value: item.ID,
+                            text: item.Name
+                        }));
+                    });
+                    $('#ddlDistrict').selectpicker('refresh');
+                    PageController.OnDistrictChange();
+                }
+
+            }, (error => {
+                alert(error.responseText);
+            }));
+        },
+        SetLocation: function (ProvinceId, DistinctId, SubDistrictId) {
+            var objLocation;
+            $("#hddTumbolCode").val('');
+            $("#hddAmphurCode").val('');
+            $("#hddProvinceCode").val('');
+
+
+
+            if (SubDistrictId != null) {
+                objLocation = _subdistincts.filter(function (obj, i) {
+                    return obj.Value == SubDistrictId;
+                });
+                $(".txtTumbol").val('');
+                $(".txtAmphur").val('');
+                $(".txtProvince").val('');
+                $("#hddTumbolCode").val(SubDistrictId);
+
+                if (objLocation != null && objLocation.length > 0) {
+                    $(".txtTumbol").val(objLocation[0].Text.split('>')[0]);
+                    $("#hddAmphurCode").val(objLocation[0].DistrictID);
+                    objLocation = _distincts.filter(function (obj, i) {
+                        return obj.Value == $("#hddAmphurCode").val();
+                    });
+                    $(".txtAmphur").val(objLocation[0].Text);
+                    $("#hddProvinceCode").val(objLocation[0].ProvinceID);
+                    objLocation = _provinces.filter(function (obj, i) {
+                        return obj.Value == $("#hddProvinceCode").val();
+                    });
+                    $(".txtProvince").val(objLocation[0].Text);
+
+
+                }
+            } else if (DistinctId != null) {
+                objLocation = _distincts.filter(function (obj, i) {
+                    return obj.DistrictID == DistinctId;
+                });
+
+                $(".txtTumbol").val('');
+
+                $(".txtProvince").val('');
+
+                if (objLocation != null && objLocation.length > 0) {
+                    $("#hddProvinceCode").val(objLocation[0].ProvinceID);
+                    objLocation = _provinces.filter(function (obj, i) {
+                        return obj.ProvinceID == $("#hddProvinceCode").val();
+                    });
+                    $(".txtProvince").val(objLocation[0].Text);
+                }
+
+            }
+            else if (ProvinceId != null) {
+                $(".txtTumbol").val('');
+                $(".txtAmphur").val('');
+
+            }
+
+
+
+        },
+        RejectCase: function () {
+
+            var data = {
+                'PwaIncidentID': $("#hddPwaIncidentID").val(),
+                'BranchNo': PageController.GetIdBySelect2($("#ddlBranch")),
+                'AccountNo': '',
+                'IncidentStatus': '4',
+                'IncidentStatusDetail': $('#txtRejectReason').val()
+            }
+
+            $.ajax({
+
+                url: getBaseUrl() + '/api/Incident/UpdateIncidentStatus',
+                data: data,
+                type: "POST",
+                dataType: "json",
+                error: function (request, status, error) {
+                    alert(request.responseText);
+                },
+                success: function (data) {
+
+                    PwaManager.PwaWaiting(false);
+                    swal(
+                        {
+                            title: "สำเร็จ!",
+                            text: "บันทึกข้อมูลเรียบร้อย!",
+                            timer: 1500
+                        });
+
+                    setTimeout(function () {
+                        document.location.href = getBaseUrl() + '/Incident/index'
+                    }, 1500);
+                }
+            });
+
+
+
+        },
+        BranchReceiveCase: function () {
+
+
+            var data = {
+                'PwaIncidentID': $("#hddPwaIncidentID").val(),
+                'BranchNo': PageController.GetIdBySelect2($("#ddlBranch")),
+                'AccountNo': '',
+                'IncidentStatus': '3',
+                'IncidentStatusDetail': ''
+            }
+
+            $.ajax({
+
+                url: getBaseUrl() + '/api/Incident/UpdateIncidentStatus',
+                data: data,
+                type: "POST",
+                dataType: "json",
+                error: function (request, status, error) {
+                    alert(request.responseText);
+                },
+                success: function (data) {
+
+                    PwaManager.PwaWaiting(false);
+                    swal(
+                        {
+                            title: "สำเร็จ!",
+                            text: "บันทึกข้อมูลเรียบร้อย!",
+                            timer: 1500
+                        });
+
+                    setTimeout(function () {
+                        document.location.href = getBaseUrl() + '/Incident/index'
+                    }, 1500);
+                }
+            });
+        },
+        OnSlaDetailChange: function () {
+            var slaDetailIndex = $('#ddlSlaDetail').val();
+            console.log('OnSlaDetailChange , slaDetailIndex = ' + slaDetailIndex);
+            if (slaDetailIndex > 0) {
+                $("#chkSLA").checked = true;
+            }
+        },
+        OnDistrictChange: function () {
+            var district = $('#ddlDistrict').val();
+            PageController.GetAjaxData('SUBDISTRICT', district, (data) => {
+
+
+                if (data.length > 0) {
+                    $('#ddlSubDistrict').html("");
+                    $.each(data, function (i, item) {
+                        $('#ddlSubDistrict').append($('<option>', {
+                            value: item.ID,
+                            text: item.Name
+                        }));
+                    });
+                    $('#ddlSubDistrict').selectpicker('refresh');
+                }
+
+            }, (error => {
+                alert(error.responseText);
+            }));
+        },
+        Validate: function () {
+            var isPass = true;
+            // if ($("#chkSLA").is(':checked') && $("#ddlSlaDetail").val() == "0") {
+            //    $(".lblSlaDetail").addClass("error");
+            //    isPass = false;
+            //} else {
+            //    $(".lblSlaDetail").removeClass("error");
+            //}
+
+           // Comment เนื่องจาก Tide Build ไม่ได้
+           @* $("#lblResolvedDetail").removeClass("error");
+            if ($("#txtResolvedDetail").val().trim() == "") {
+                $("#lblResolvedDetail").addClass("error");
+                isPass = false;
+            }*@
+
+            $("#lblCustomer").removeClass("error");
+            if ($("#txtCustomer").val() == '' || $("#txtCustomer").val() == null) {
+                $("#lblCustomer").addClass("error");
+                isPass = false;
+            }
+
+            $("#lblInformChannelID").removeClass("error");
+            if ($("#ddlInformChannelID").val() == "0" || $("#ddlInformChannelID").val() == null || $("#ddlInformChannelID").val() == '') {
+                $("#lblInformChannelID").addClass("error");
+                isPass = false;
+            }
+
+            //$("#lblInformReference").removeClass("error");
+            //if ($("#txtInformReference").val() == '' || $("#txtInformReference").val() == null) {
+            //    $("#lblInformReference").addClass("error");
+            //    isPass = false;
+            //}
+
+            $("#lblPwaIncidentTypeID").removeClass("error");
+            if ($("#ddlPwaIncidentTypeID").val() == '0' || $("#ddlPwaIncidentTypeID").val() == '' || $("#ddlPwaIncidentTypeID").val() == null) {
+                $("#lblPwaIncidentTypeID").addClass("error");
+                isPass = false;
+            }
+
+            $("#lblPwaIncidentGroupID").removeClass("error");
+            if ($("#ddlPwaIncidentGroupID").val() == "0" || $("#ddlPwaIncidentGroupID").val() == null || $("#ddlPwaIncidentGroupID").val() == '') {
+                $("#lblPwaIncidentGroupID").addClass("error");
+                isPass = false;
+            }
+
+            $("#lblCaseTitle").removeClass("error");
+            if ('@b_type_code' == '4' && $('#ddlPwaIncidentGroupID').val() == '2') // ท่อแตกท่อรั่ว
+            { }
+            else {
+                if (($("#ddlCaseTitle").val() == "0" || $("#ddlCaseTitle").val() == null || $("#ddlCaseTitle").val() == '')) {
+                    $("#lblCaseTitle").addClass("error");
+                    isPass = false;
+                }
+            }
+
+
+
+            $("#lblInformReference").removeClass("error");
+            if ($("#ddlInformChannelID").val() != "0" && $("#txtInformReference").val().trim() == "") {
+                if ($("#ddlInformChannelID").val() >= 3) {
+                    $("#lblInformReference").addClass("error");
+                    isPass = false;
+                }
+
+            } else {
+                $("#lblInformReference").removeClass("error");
+            }
+
+            $('#lblSlaDetail').removeClass("error");
+            if ($('#chkSLA').is(':checked')) {
+                if ('@b_type_code' != '4') {
+                    if ($('#ddlSlaDetail').val() != "0" || $('#ddlSlaDetail').val() != null || $('#ddlSlaDetail').val() != "") {
+                        $("#lblSlaDetail").addClass("error");
+                        isPass = false;
+                    }
+                }
+            }
+
+
+            $("#lblResolvedDetail").removeClass("error");
+            if ($('#ddlIncidentStatus').val() == '10') {
+                if ($("#txtResolvedDetail").val() == null || $("#txtResolvedDetail").val() == '') {
+                    $("#lblResolvedDetail").addClass("error");
+                    isPass = false;
+                }
+            }
+
+            if (!isPass) {
+                swal(
+                    {
+                        title: "กรุณากรอกข้อมุลให้ครบถ้วน!",
+                        text: "",
+                        type: "warning",
+                        timer: 1500
+                    });
+            }
+
+            return isPass;
+        },
+        GetAjaxData: function (module, parentid, onSuccess, onError) {
+
+            var pData = { 'Module': module, 'ParentID': parentid };
+
+            $.ajax({
+
+                url: getBaseUrl() + 'api/Incident/GetData/',
+                data: pData,
+                type: "POST",
+                dataType: "json",
+                error: function (request, status, error) {
+                    onError(request);
+                },
+                success: function (data) {
+                    onSuccess(data);
+                }
+            });
+        },
+        SearchCustomer: function (CustomerId, CustomerCode, Telephone, SearchType) {
+            var obj = {}
+            var url = GetCustomerUrl;
+            console.log('SearchCustomer : CustomerId ' + CustomerId + ", SearchType " + SearchType)
+            console.log('SearchCustomer : CustomerCode ' + CustomerCode + ", Telephone " + Telephone)
+            if (SearchType == 'addr') {
+                obj.AddressNo = '28/5';
+                obj.VillageNo = '2';
+                obj.Zipcode = '77120';
+                obj.BACode = PageController.GetIdBySelect2($("#ddlBranch"));
+                url = GetCustomerByAddressUrl;
+            } else if (SearchType == 'ws_api')
+            {
+                obj.CustomerId = CustomerId;
+                obj.CustomerCode = CustomerCode;
+            }
+            else
+            {
+                obj.CustomerId = CustomerId;
+                obj.CustomerCode = CustomerCode;
+                obj.Telephone = Telephone;
+                obj.BACode = (CustomerCode != null && CustomerCode.length > 8) ? CustomerCode.substring(0, 4)  : PageController.GetIdBySelect2($("#ddlBranch"));
+            }
+
+            PwaManager.PwaPost(GetCustomerEffect, obj, function (resObj2) {
+                console.log("GetCustomerEffect")
+                console.log(resObj2)
+
+                if (resObj2.Result != null
+                    && resObj2.Result.CustCode != null) {
+
+                    PwaManager.PwaPost(url, obj, function (resObj) {
+                        console.log('GetCustomer')
+                        console.log(resObj)
+                        //console.log(resObj.MeterInfo)
+                        if (resObj != null) {
+                            //$("#txtAddress").val(resObj.address_no);
+
+                            $("#txtAddressNo").val(resObj.address_no);
+                            $("#txtVillageNo").val(resObj.village_no);
+                            $("#txtVillageBuilding").val(resObj.building);
+                            $("#txtSoi").val(resObj.soi);
+                            $("#txtRoad").val(resObj.road);
+
+                            if (SearchType == "A") {
+                                if ($.trim($("#txtTelephone").val()) == '') { $("#txtTelephone").val(resObj.tel); }
+                                if ($.trim($("#txtCustCode").val()) == '') { $("#txtCustCode").val(resObj.CustCode); }
+                                if ($.trim($("#txtCustomer").val()) == '') {
+                                    $("#txtCustomer").val(resObj.CustomerName);
+                                    $("#hddCustomerID").val(resObj.CustId);
+                                }
+                            }
+                            else {
+                                $("#txtTelephone").val(resObj.tel);
+                                $("#txtCustCode").val(resObj.CustCode);
+                                $("#txtCustomer").val(resObj.CustomerName);
+                                $("#hddCustomerID").val(resObj.CustId);
+                            }
+                            $("#ddlBranch").val(resObj.CustCode.substring(0, 4)).trigger('change');
+                            $("#ddlTitle").val(resObj.Title).trigger('change');
+
+                            $("#txtProvince").val(resObj.ProvinceName);
+                            $("#hddProvinceCode").val(resObj.ProvinceCode);
+
+                            $("#txtAmphur").val(resObj.AmphurName);
+                            $("#hddAmphur").val(resObj.AmphurCode);
+                            $("#hddAmphurCode").val(resObj.AmphurCode);
+
+                            $("#txtTumbol").val(resObj.TumbolName);
+                            $("#hddTumbol").val(resObj.TumbolCode);
+                            $("#hddTumbolCode").val(resObj.TumbolCode);
+
+
+
+                            if (resObj.MeterInfo != null && resObj.MeterInfo.Shape != null) {
+                                PwaManager.PwaConfirm("จุดเกิดเหตุ", "จุดเกิดเหตุใช่บริเวณที่พักอาศัยผู้แจ้งใช่หรือไม่", function (isConfirm) {
+
+                                    if (isConfirm) {
+
+                                        let incidentAddress = `${$('#txtAddress').val()}  ${$('#txtTumbol').val()}  ${$('#txtAmphur').val()}  ${$('#txtProvince').val()}`;
+                                        $('#txtIncidentAddress').val(incidentAddress);
+
+                                        var meterLaLang;
+
+                                        editableLayers.clearLayers();
+                                        if (resObj.MeterInfo != null && resObj.MeterInfo.Shape != null && resObj.MeterInfo.Shape.geometry != null)
+                                            resObj.MeterInfo.Shape.geometry.coordinates = resObj.MeterInfo.Shape.geometry.coordinates[0];
+                                        var html = "<table>";
+                                        html += "<tr>";
+                                        html += "<td>รหัสผู้ใช้น้ำ : </td>";
+                                        html += "<td>" + resObj.CustCode + "</td>";
+                                        html += "</tr>";
+                                        html += "<tr>";
+                                        html += "<td>รหัสมิเตอร์ : </td>";
+                                        html += "<td>" + resObj.MeterInfo.meterno + "</td>";
+                                        html += "</tr>";
+                                        html += "<tr>";
+                                        html += "<td>ชื่อผู้ใช้น้ำ :</td>";
+                                        html += "<td>" + resObj.CustomerName + "</td>";
+                                        html += "</tr>";
+
+                                        html += "</table>";
+                                        L.geoJson(resObj.MeterInfo.Shape, {
+                                            pointToLayer: function (feature, latlng) {
+                                                meterLaLang = latlng;
+                                                var smallIcon = new L.Icon({
+                                                    iconSize: [32, 32],
+
+                                                    iconUrl: currentUrl + '/icon/user.png'
+                                                });
+                                                return L.marker(latlng, { icon: smallIcon });
+                                            }
+                                        });
+                                        meterMaker = L.marker(meterLaLang, {});
+
+                                        $('#hdCaseLatitude').val(meterMaker.getLatLng().lat);
+                                        $('#hdCaseLongtitude').val(meterMaker.getLatLng().lng);
+                                        PwaManager.pwaMapStreetView("streetPanorama", meterMaker.getLatLng().lat, meterMaker.getLatLng().lng);
+                                        editableLayers.addLayer(meterMaker).addTo(map);
+                                        meterMaker.bindPopup(html);
+
+                                        map.setView(meterLaLang, 17);
+                                        swal.close();
+                                    } else {
+                                        swal.close();
+                                    }
+
+                                });
+                            }
+                        }
+                    });
+
+                    PwaManager.PwaAlert(resObj2.Result.CustomerName + " เป็นผู้ใช้น้ำที่มีผลกระทบจากซ่อม", "สถานที่ : " + resObj2.Result.Location + " \n สถานะ : " + resObj2.Result.IncidentStatus, function (isConfirm) {
+
+                        if (isConfirm) {
+                        } else {
+                            swal.close();
+                        }
+                    });
+
+                } else {
+                    PwaManager.PwaPost(url, obj, function (resObj) {
+                        console.log('GetCustomer')
+                        console.log(resObj)
+                        //console.log(resObj.MeterInfo)
+                        if (resObj != null) {
+                            //$("#txtAddress").val(resObj.address_no);
+
+                            $("#txtAddressNo").val(resObj.address_no);
+                            $("#txtVillageNo").val(resObj.village_no);
+                            $("#txtVillageBuilding").val(resObj.building);
+                            $("#txtSoi").val(resObj.soi);
+                            $("#txtRoad").val(resObj.road);
+
+                            if (SearchType == "A") {
+                                if ($.trim($("#txtTelephone").val()) == '') { $("#txtTelephone").val(resObj.tel); }
+                                if ($.trim($("#txtCustCode").val()) == '') { $("#txtCustCode").val(resObj.CustCode); }
+                                if ($.trim($("#txtCustomer").val()) == '') {
+                                    $("#txtCustomer").val(resObj.CustomerName);
+                                    $("#hddCustomerID").val(resObj.CustId);
+                                }
+                            }
+                            else {
+                                $("#txtTelephone").val(resObj.tel);
+                                $("#txtCustCode").val(resObj.CustCode);
+                                $("#txtCustomer").val(resObj.CustomerName);
+                                $("#hddCustomerID").val(resObj.CustId);
+                            }
+
+                            //$("#txtTelephone").val(resObj.tel)
+                            //$("#txtCustCode").val(resObj.CustCode);
+                            //$("#txtCustomer").val(resObj.CustomerName);
+                            //$("#hddCustomerID").val(resObj.CustId);
+
+                            $("#ddlBranch").val(resObj.CustCode.substring(0, 4)).trigger('change');
+                            $("#ddlTitle").val(resObj.Title).trigger('change');
+
+                            $("#txtProvince").val(resObj.ProvinceName);
+                            $("#hddProvinceCode").val(resObj.ProvinceCode);
+
+                            $("#txtAmphur").val(resObj.AmphurName);
+                            $("#hddAmphur").val(resObj.AmphurCode);
+                            $("#hddAmphurCode").val(resObj.AmphurCode);
+
+                            $("#txtTumbol").val(resObj.TumbolName);
+                            $("#hddTumbol").val(resObj.TumbolCode);
+                            $("#hddTumbolCode").val(resObj.TumbolCode);
+
+
+
+                            if (resObj.MeterInfo != null && resObj.MeterInfo.Shape != null) {
+                                PwaManager.PwaConfirm("จุดเกิดเหตุ", "จุดเกิดเหตุใช่บริเวณที่พักอาศัยผู้แจ้งใช่หรือไม่", function (isConfirm) {
+
+                                    if (isConfirm) {
+
+                                        let incidentAddress = `${$('#txtAddress').val()}  ${$('#txtTumbol').val()}  ${$('#txtAmphur').val()}  ${$('#txtProvince').val()}`;
+                                        $('#txtIncidentAddress').val(incidentAddress);
+
+                                        var meterLaLang;
+
+                                        editableLayers.clearLayers();
+                                        if (resObj.MeterInfo != null && resObj.MeterInfo.Shape != null && resObj.MeterInfo.Shape.geometry != null)
+                                            resObj.MeterInfo.Shape.geometry.coordinates = resObj.MeterInfo.Shape.geometry.coordinates[0];
+                                        var html = "<table>";
+                                        html += "<tr>";
+                                        html += "<td>รหัสผู้ใช้น้ำ : </td>";
+                                        html += "<td>" + resObj.CustCode + "</td>";
+                                        html += "</tr>";
+                                        html += "<tr>";
+                                        html += "<td>รหัสมิเตอร์ : </td>";
+                                        html += "<td>" + resObj.MeterInfo.meterno + "</td>";
+                                        html += "</tr>";
+                                        html += "<tr>";
+                                        html += "<td>ชื่อผู้ใช้น้ำ :</td>";
+                                        html += "<td>" + resObj.CustomerName + "</td>";
+                                        html += "</tr>";
+
+                                        html += "</table>";
+                                        L.geoJson(resObj.MeterInfo.Shape, {
+                                            pointToLayer: function (feature, latlng) {
+                                                meterLaLang = latlng;
+                                                var smallIcon = new L.Icon({
+                                                    iconSize: [32, 32],
+
+                                                    iconUrl: currentUrl + '/icon/user.png'
+                                                });
+                                                return L.marker(latlng, { icon: smallIcon });
+                                            }
+                                        });
+                                        meterMaker = L.marker(meterLaLang, {});
+
+                                        $('#hdCaseLatitude').val(meterMaker.getLatLng().lat);
+                                        $('#hdCaseLongtitude').val(meterMaker.getLatLng().lng);
+                                        PwaManager.pwaMapStreetView("streetPanorama", meterMaker.getLatLng().lat, meterMaker.getLatLng().lng);
+                                        editableLayers.addLayer(meterMaker).addTo(map);
+                                        meterMaker.bindPopup(html);
+
+                                        map.setView(meterLaLang, 17);
+                                        swal.close();
+                                    } else {
+                                        swal.close();
+                                    }
+
+                                });
+                            }
+                        }
+                    });
+
+                }
+            }, function (error) {
+                console.log(error)
+                });
+        },
+        GetIdBySelect2: function (obj) {
+            var result = obj!=null ?  (obj.select2("data") != null && obj.select2("data").length > 0 ? obj.select2("data")[0].id : null) : "";
+            return result;
+        },
+        GetIdBySelect2: function (obj, def) {
+            var result = obj.select2("data") != null && obj.select2("data").length > 0 ? obj.select2("data")[0].id : def;
+            return result;
+        },
+        RequestEdit: function () {
+            if ($.trim($('#hddReasonReOpen').val()) == '') {
+                //swal(
+                //    {
+                //        title: "กรุณากรอกข้อมุลให้ครบถ้วน!",
+                //        text: "",
+                //        type: "warning",
+                //        timer: 1500
+                //    });
+
+                //alert('กรุณาระบุเหตุผลที่ขอแก้ไข');
+                //return;
+            }
+            else {
+                $('.sweet-alert').hide();
+                $('.sweet-overlay').hide();
+                $.post('@Url.Content("~/Incident/RequestEdit")', {
+                    id: '@Html.Raw(Model != null ? Model.PwaIncidentID.ToString() : "0")',
+                    reason: $('#hddReasonReOpen').val(),
+                    tm: (new Date()).getTime()
+                }, function (response) {
+                    var data = response;
+                    if (data.Success) {
+                        PwaManager.PwaWaiting(false);
+                        swal(
+                            {
+                                title: "สำเร็จ!",
+                                text: (_pageInfo.Mode != 'EDIT') ? "บันทึกข้อมูลสำเร็จ เลขที่รับแจ้ง '" + data.IncidentNo + "'" : 'บันทึกข้อมูลสำเร็จ',
+                                timer: 2000
+                            });
+
+                            setTimeout(function () {
+                                document.location.href = getBaseUrl() + '/Incident/index'
+                            }, 2000);
+                        } else {
+                            PwaManager.PwaWaiting(false);
+                            swal(
+                                {
+                                    title: "ไม่สำเร็จสำเร็จ!",
+                                    text: 'บันทึกข้อมูลไม่สำเร็จ ' + data.Message,
+                                    timer: 5000
+                                });
+                        }
+                    });
+
+            }
+        },
+        SaveData: function () {
+
+            var submitUrl = "";
+
+            var formData = new FormData();
+
+            if (PageController.Validate()) {
+
+                formData.append("model", JSON.stringify(PageController.GetData()));
+
+                formData.append('reason_sla', $('#reason_sla').val());
+                formData.append('reason_sla_txt', $.trim($('#reason_sla_txt').val()));
+
+                var count = 1;
+                for (var i = 0; i < $('#pnl_upload_tools .upload').length; i++) {
+                    var input = $('#pnl_upload_tools .upload').eq(i)[0];
+                    if (input.files && input.files[0]) {
+                        var file_param_name = "files_" + count++;
+                        formData.append(file_param_name, input.files[0]);
+                    }
+                }
+
+                ////////////////////////////
+                /// ยกเลิก Upload รูปแบบเดิม ///
+                ////////////////////////////
+                //if ($("#fIncidentImage")[0] != null) {
+                //    ;
+                //    var i = 0;
+                //    debugger;
+                //    for (const file in $("#fIncidentImage")[0].files) {
+
+                //        var fileParamesName = "files" + i;
+                //        formData.append(fileParamesName, $("#fIncidentImage")[0].files[i]);
+                //        i = i + 1;
+
+                //    }
+
+                //}
+
+                //if ($("#fResolveImage")[0] != null)
+                //    formData.append("file2", $("#fResolveImage")[0].files[0]);
+                ////////////////////////////
+                /// สิ้นสุด Upload รูปแบบเดิม ///
+                ////////////////////////////
+
+                PwaManager.PwaWaiting(true);
+                submitUrl = getBaseUrl() + '/api/Incident/AddIncident';
+                if ($("#hddPwaIncidentID").val().length > 0) {
+                    submitUrl = getBaseUrl() + '/api/Incident/SaveEditIncident';
+                }
+
+                var br = PageController.GetIdBySelect2($("#ddlBranch"));
+                if ($("#PwaIncidentNo").val() != '' && br != '') {
+                    PwaManager.PwaPost(updateInsertMessageUrl, { 'PwaIncidentNo': $("#PwaIncidentNo").val(), 'BranchNo': br }, function () {})
+                }
+
+                $.ajax({
+                    url: submitUrl,
+                    data: formData,
+                    type: "POST",
+                    //dataType: "json",
+                    processData: false,
+                    contentType: false,
+                    error: function (request, status, error) {
+                        alert(request.responseText);
+                    },
+                    success: function (data) {
+
+
+                        if (data.Success) {
+                            PwaManager.PwaWaiting(false);
+                            swal(
+                                {
+                                    title: "สำเร็จ!",
+                                    text: (_pageInfo.Mode != 'EDIT') ? "บันทึกข้อมูลสำเร็จ เลขที่รับแจ้ง '" + data.IncidentNo + "'" : 'บันทึกข้อมูลสำเร็จ',
+                                    timer: 2000
+                                });
+
+                            setTimeout(function () {
+                                document.location.href = getBaseUrl() + '/Incident/index'
+                            }, 2000);
+                        } else {
+                            PwaManager.PwaWaiting(false);
+                            swal(
+                                {
+                                    title: "ไม่สำเร็จสำเร็จ!",
+                                    text: 'บันทึกข้อมูลไม่สำเร็จ ' + data.Message,
+                                    timer: 5000
+                                });
+
+
+
+                        }
+
+
+                    }
+                });
+
+            }
+        },
+
+        GetData: function () {
+
+            var FirstName = $("#txtCustomer").val() != "" ? $("#txtCustomer").val().split(' ')[0] : "";
+            var LastName = $("#txtCustomer").val() != "" && $("#txtCustomer").val().split(' ').length > 1 ? $("#txtCustomer").val().split(' ')[1] : "";
+            var Incident = {
+                PwaIncidentID: $("#hddPwaIncidentID").val(),
+                PwaIncidentNo: $("#PwaIncidentNo").val(),
+
+                PwaInformReceiver: PageController.GetIdBySelect2($("#ddlPwaInformReceiver")),
+                PwaInformDate: null,
+
+                PwaIncidentTypeID: PageController.GetIdBySelect2($("#ddlPwaIncidentTypeID")),
+                PwaIncidentGroupID: PageController.GetIdBySelect2($("#ddlPwaIncidentGroupID")),
+                PwaInformChannel: PageController.GetIdBySelect2($("#ddlInformChannelID")),
+                CaseTitle: PageController.GetIdBySelect2($("#ddlCaseTitle")),
+                CaseTitleDetail: "",
+                CaseDetail: $("textarea#txtCaseDetail").val(),
+                ResolvedDetail: $("textarea#txtResolvedDetail").val(),
+                Sla: $("#chkSLA").is(':checked'),
+                SlaDetail: PageController.GetIdBySelect2($("#ddlSlaDetail")),
+                ReceivedCaseDate: $("#txtReceivedCaseDate").val(),
+                CompletedCaseDate: $("#txtCompletedCaseDate").val(),
+                CaseLatitude: $('#hdCaseLatitude').val(),
+                CaseLongtitude: $('#hdCaseLongtitude').val(),
+                BracnchNo: PageController.GetIdBySelect2($("#ddlBranch")),
+                BranchNo: PageController.GetIdBySelect2($("#ddlBranch")),
+                //Recorder: PageController.GetIdBySelect2($("#ddlRecorder")),
+                Recorder: $("#ddlRecorder").val(),
+                RecordDate: $("#txtIncidentRecordDate").val(),
+                IncidentStatus: $('#ddlIncidentStatus').val(),
+                IsCallenter: _currUser.IsCallCenter,
+                /*IncidentStatus: 1,*/
+                User: _currUser,
+                ImageFile: '',
+
+                ProvinceID: $("#hddProvinceCode").val(),
+                DistrictID: $("#hddAmphurCode").val(),
+                SubDistrictID: $("#hddTumbolCode").val(),
+                AddressNo: $("#txtAddressNo").val(),
+                VillageNo: $("#txtVillageNo").val(),
+                VillageBuilding: $("#txtVillageBuilding").val(),
+                Soi: $("#txtSoi").val(),
+                Road: $("#txtRoad").val(),
+
+                PwsIncidentAddress: $("#txtAddressNo").val() + ($.trim($("#txtVillageNo").val()) != '' ? ' หมู่ที่ ' + $.trim($("#txtVillageNo").val()) : '') + ($.trim($("#txtVillageBuilding").val()) != '' ? ' หมู่บ้าน/อาคาร ' + $.trim($("#txtVillageBuilding").val()) : '') + ($.trim($("#txtSoi").val()) != '' ? ' ซอย ' + $.trim($("#txtSoi").val()) : '') + ($.trim($("#txtRoad").val()) != '' ? ' ถนน ' + $.trim($("#txtRoad").val()) : '') + ($.trim($("#txtTumbol").val()) != '' ? ' ' + $.trim($("#txtTumbol").val()) : '') + ($.trim($("#txtAmphur").val()) != '' ? ' ' + $.trim($("#txtAmphur").val()) : '') + ($.trim($("#txtProvince").val()) != '' ? ' ' + $.trim($("#txtProvince").val()) : ''),
+
+                NearLocate: $("#txtIncidentAddress").val(),
+
+
+                Reason: $("#hddReasonReOpen").val(),
+                CommentID: $('#comment_id').val()
+            }
+            Incident.Informers = [];
+            Incident.Informers.push({
+                InformerID: $("#hddInformID").val(),
+                CustomerID: $("#hddCustomerID").val(),
+                Title: PageController.GetIdBySelect2($("#ddlTitle")),
+                FirstName: FirstName,
+                LastName: LastName,
+                MeterNo: "",
+                Telephone: $("#txtTelephone").val(),
+                InformChannelID: PageController.GetIdBySelect2($("#ddlInformChannelID")),
+                InformReference: $("#txtInformReference").val().trim(),
+                CustCode: $("#txtCustCode").val(),
+
+                //CustomerAddress: $("textarea#txtAddress").val(),
+
+                //Province: $("#hddProvinceCode").val(),
+                //District: $("#hddAmphurCode").val(),
+                //SubDistrict: $("#hddTumbolCode").val(),
+                //AddressNo: $("#txtAddressNo").val(),
+                //VillageNo: $("#txtVillageNo").val(),
+                //VillageBuilding: $("#txtVillageBuilding").val(),
+                //Soi: $("#txtSoi").val(),
+                //Road: $("#txtRoad").val()
+            });
+
+            return Incident;
+        },
+        LoadMap: function () {
+
+        var    googleStreets = L.tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
+                maxZoom: 20,
+                subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+        }).addTo(map);
+            var scaleControl = new L.control.scale({
+                position: 'bottomright'
+            }).addTo(map);
+
+            PwaManager.PwaMapAddLayerControl(map);
+
+
+
+       //
+
+            //  WMSUrl = WMSUrl + "&CQL_FILTER=pwa_code=5542017";
+          //  WMSUrl = WMSUrl + "&CQL_FILTER=pwa_code=" + (_currUser.WW_CODE != null && _currUser.WW_CODE!="" ? "5542017"  :  _currUser.WW_CODE);
+                   WMSUrl = WMSUrl + "&CQL_FILTER=pwa_code=5531011";
+       //     WMSUrl = WMSUrl + "&CQL_FILTER=pwa_code=5542017";
+
+            var wmsLayer = L.tileLayer.wms(WMSUrl, {
+                layers: 'PG_WEBGIS:bldgall',
+                transparent: true,
+                format: 'image/png'
+            }).addTo(map);
+
+
+            branchLayers = new L.FeatureGroup();
+
+            incidentLayers = new L.FeatureGroup();
+            editableLayers = new L.FeatureGroup();
+            AreaLayerGroup = new L.FeatureGroup();
+
+
+            map.addLayer(editableLayers);
+            map.addLayer(branchLayers);
+            map.addLayer(incidentLayers);
+            map.addLayer(AreaLayerGroup);
+
+            if ($('#hdCaseLatitude').val().length > 0) {
+                meterMaker = L.marker([$('#hdCaseLatitude').val() * 1, $('#hdCaseLongtitude').val() * 1]);
+                editableLayers.addLayer(meterMaker);
+            }
+
+            var options = {
+                position: 'topright',
+                draw: {
+                    polyline: false,
+                    polygon: false,
+
+                    circle: false, // Turns off this drawing tool
+                    rectangle: false,
+                    marker: true
+                },
+
+                edit: {
+                    featureGroup: editableLayers, //REQUIRED!!
+                    remove: true
+                }
+            };
+
+
+
+            var drawControl = new L.Control.Draw(options);
+            map.addControl(drawControl);
+
+            PwaManager.pwaMapPWABranchAndPipe(map, $("#ddlBranch").val(), AreaLayerGroup, null, true);
+
+            map.on(L.Draw.Event.CREATED, function (e) {
+                editableLayers.clearLayers();
+                branchLayers.clearLayers();
+                var type = e.layerType,
+                    layer = e.layer;
+
+                var lalong = layer.getLatLng();
+                map.setView(lalong, 17);
+                PwaManager.pwaMapStreetView("streetPanorama",lalong.lat, lalong.lng);
+
+
+                try {
+
+
+                    //   map.addLayer(editableLayers);
+
+                    $('#hdCaseLatitude').val(lalong.lat);
+                    $('#hdCaseLongtitude').val(lalong.lng);
+                    PwaManager.PwaGetBranchByLaLong(lalong.lat, lalong.lng, branchLayers, $("#ddlBranch"),false);
+                    /*     $.get(BranchUrl, data, function (data, status) {
+
+                             branchLayers.addLayer(L.marker([$('#hdCaseLatitude').val() * 1, $('#hdCaseLongtitude').val() * 1]));
+
+                         });*/
+
+
+
+                    //branchLayers
+
+
+
+
+                } catch (e) {
+                    alert(e.message);
+                }
+
+                editableLayers.addLayer(layer);
+            });
+
+            map.on(L.Draw.Event.EDITED, function (e) {
+                var layers = e.layers;
+                layers.eachLayer(function (layer) {
+
+                    latlngs = layer.getLatLng();
+                    $('#hdCaseLatitude').val(latlngs.lat);
+                    $('#hdCaseLongtitude').val(latlngs.lng);
+
+                });
+
+            });
+            /*    var wmsLayer = L.tileLayer.wms(WMSUrl, {
+                       layers: 'PG_WEBGIS:pipeall',
+                       transparent: true,
+                       format: 'image/png'
+                   }).addTo(map);
+
+
+             /*      var reg_zone = L.titleLayer.betterWms(wms_host_orcl, {
+                       Layers: 'PWA_GIS:ZONE',
+                       transparent: true,
+                       format: 'image/png',
+                       opacity: 0.2
+                   });*/
+
+
+
+
+            /*        var meter_all = L.titleLayter.betterWms(wms_host, {
+                        layers: 'PG_WEBGIS:meterall',
+                        format: 'image/png',
+                    });
+                    */
+
+        },
+        SearchIncident: function (customer, provinceId, detail, area, status, startDate, endDate) {
+
+            var criteria = {
+                CustomerNo: customer,
+                ProvinceID: provinceId,
+                Detail: detail,
+                Area: area,
+                Status: status,
+                StartDate: startDate,
+                EndDate: endDate,
+
+            };
+
+
+            if (incidentLayers != null) {
+                incidentLayers.clearLayers();
+            }
+            PwaManager.PwaWaiting(true);
+            $.ajax({
+
+                url: getBaseUrl() + '/api/Incident/SearchBranchIncidents',
+                data: criteria,
+                type: "POST",
+                dataType: "json",
+
+                error: function (request, status, error) {
+                    alert(request.responseText);
+                },
+                success: function (data) {
+
+                    $('#divResult').html('');
+                    var html = '<table class="table table-striped table table-hover" data-animate="fade">';
+                    html += '    <thead>';
+                    html += '            <tr>';
+
+                    html += '                <th class="" scope="col">วันเวลาที่รับแจ้ง</th>';
+                    html += '                <th class="" scope="col">เลขที่รับแจ้ง</th>';
+                    html += '                <th class="" scope="col">รายละเอียด</th>';
+                    html += '                        </thead>';
+                    html += '            <tbody>';
+                    if (data.Result != null && data.Result.Incidents != null && data.Result.Incidents.length > 0) {
+                        $.each(data.Result.Incidents, function (index, item) {
+                            html += '                <tr>';
+                            html += '                    <td>' + _format_datetime(item.ReceivedCaseDate) + '</td>';
+                            html += '                    <td>' + item.PwaIncidentNo + '</td>';
+                            html += '                    <td>' + item.FirstName + '  ' + item.LastName + '</td>';
+                            html += '                </tr>';
+                        });
+
+                    }
+                    html += '     </table>';
+                    $('#divResult').append(html);
+
+                    $('#divResult  table').DataTable({ "searching": false, "bLengthChange": false, "pageLength": 5 });
+
+                    PwaManager.PwaWaiting(false);
+
+                    if (data.Result != null && data.Result.Incidents != null && data.Result.Incidents.length > 0) {
+                        $.each(data.Result.Incidents, function (index, item) {
+                            if (item.CaseLatitude != null && item.CaseLatitude != "" &&
+                                item.CaseLongtitude != null && item.CaseLongtitude != ""
+                            ) {
+
+                                var msg = `<b>เลขที่รับแจ้ง :  ${item.PwaIncidentNo}</b><br /><b>สาเหตุ :  ${item.RequestCategory}</b><br /><b>รายละเอียด :  ${item.RequestCategorySubject}</b><br />`;
+                                msg += `<b>ชื่อผู้แจ้ง :  ${item.FirstName} ${item.LastName}</b><br /><b>เบอร์โทรศัพท์ :  ${item.Telephone}</b><br /><b>วัน-เวลาที่รับแจ้ง :  ${_format_datetime(item.ReceivedCaseDate)}</b><br />`;
+                                msg += `<b>สถานะของการดำเนินการ :  ${item.status_name_th}</b><br /><b>กปภ.สาขาที่รับผิดชอบ :  ${item.BranchName}</b><br />`;
+                                //  incidentLayers.addLayer(L.marker([13, 100], {}));
+                                try {
+                                    incidentLayers.addLayer(L.marker([item.CaseLatitude * 1, item.CaseLongtitude * 1], { icon: getIcondByIncStatus(item.ProcessStage) }).addTo(map)
+                                        .bindPopup(msg)).openPopup();
+                                } catch (ex) { }
+                                finally {}
+
+
+
+                            }
+                        });
+
+
+                    }
+
+
+
+                }
+            });
+        },
+        GetPipeOfBanch: function () {
+            $.ajax({
+                type: 'GET',
+                url: 'http://192.168.41.41:8080/geoserver/STAGING/wfs?service=WFS&version=1.1.0&request=GetFeature&typename=osm:GetLandOfRegions&SORTBY=ParcelWAHPriceMax%20DESC&outputFormat=application/json&srsname=EPSG:4326&'
+                    + 'CQL_FILTER=PeriodID=' + $("#ddlSelectPeriodYear").val(),
+                context: this
+            }).done(function (data) {
+                var format = new ol.format.GeoJSON();
+
+                if (data.features != null && data.features.length > 0) {
+                    var jsonObjs = format.readFeatures(data);
+                    this.addFeatures(jsonObjs);
+                    btnSelect = 'btnRegion';
+                    PageController.setRankValue(jsonObjs);
+                    PageController.LoadLand(jsonObjs);
+                    var view = map.getView();
+
+                    map.getView().setZoom(6);
+                    setTimeout(function () {
+                        waitingDialog.hide();
+                    }, 400);
+                } else {
+                    PageController.LoadLand(null);
+                    setTimeout(function () {
+                        waitingDialog.hide();
+                        swal("Failed", "ไม่พบข้อมูล!", "error");
+                    }, 400);
+
+
+                }
+            }).fail(function (jqXHR, textStatus) {
+                setTimeout(function () {
+                    waitingDialog.hide();
+                    swal("Failed", "ไม่สามารถใช้งานแผนที่ได้", "error");
+                }, 400);
+            });
+        }
+    }
+
+    function delay(callback, ms) {
+        var timer = 0;
+        return function () {
+            var context = this, args = arguments;
+            clearTimeout(timer);
+            timer = setTimeout(function () {
+                callback.apply(context, args);
+            }, ms || 0);
+        };
+    }
+
+    function incCloseCase() {
+        $('#ddlIncidentStatus').val('10');
+        PageController.SaveData();
+    }
+
+    function incReceiveCase() {
+
+        let status = (_currUser.IsCallCenter) ? '1' : '2';
+        $('#ddlIncidentStatus').val(status);
+        PageController.SaveData();
+    }
+
+    function incReceiveCaseForProcessOutOfFix() {
+
+        let status = (_currUser.IsCallCenter) ? '12' : '12';
+        $('#ddlIncidentStatus').val(status);
+        PageController.SaveData();
+    }
+
+    function incReOpenCase() {
+        swal({
+            title: "ขออนุมัติแก้ไข",
+            type: "input",
+            showCancelButton: true,
+            closeOnConfirm: false,
+            inputPlaceholder: "เหตุผล"
+        }, function (inputValue) {
+                if (inputValue === false) return false;
+
+                if (inputValue == "") {
+                    alert('กรุณาระบุเหตุผลที่ขอแก้ไข');
+                    return false
+                }
+
+                $('#ddlIncidentStatus').val('9');
+                $('#hddReasonReOpen').val(inputValue);
+
+                //PageController.SaveData();
+                PageController.RequestEdit();
+                //swal("Nice!", "You wrote: " + inputValue, "success");
+        });
+
+    }
+
+    function getCustomerEffect(customerCode, onSuccess) {
+        $.ajax({
+            url: getBaseUrl() + "api/Incident/GetEffectCustomer/" + customerCode,
+            type: "get",
+            contentType: "application/json",
+            error: function (request, status, error) {
+                console.log(request);
+            },
+            success: function (data) {
+                console.log(data);
+
+               onSuccess(data);
+            }
+        });
+    }
+
+
+    function getIcondByIncStatus(status) {
+        status = status * 1;
+
+        var iconPath = '/icon/incident.png';
+
+        if (status <= 2) {
+            iconPath = '/icon/redicon.png';
+        }
+        else if (status >= 3 && status <= 9) {
+            iconPath = '/icon/yellowicon.png';
+        }
+        else if (status == 10) {
+            iconPath = '/icon/greenicon.png';
+        }
+
+        else {
+            return iconPath = '/icon/pwa2.png';
+        }
+
+        return new incidentStyle({ iconUrl: getBaseUrl() + iconPath });
+    }
+
+    if ('@Request["c"]' == 'SocialGISC') {
+        var post_date = '@Request["post_date"]';
+        var post_by = '@Request["post_by"]';
+        var post_msg = '@(Request["post_msg"]?.Replace("\r\n", " ").Replace("\n", " ").Replace("\r", " ").Replace("\t", " "))';
+        var msg_type = '@Request["msg_type"]';
+        var post_channel = '@Request["post_channel"]';
+        var ww_code = '@Request["ww_code"]';
+        var comment_id = '@Request["comment_id"]';
+
+        $('#txtCustomer').val(post_by);
+
+        var msg = 'Post: ' + post_date + ' | ' + 'ประเภท: ' + msg_type + ' | ' + post_msg;
+        $('#txtCaseDetail').val(msg);
+
+        $('#comment_id').val(comment_id);
+
+        $.post('@Url.Content("~/Incident/GetBranchForWWCode")', {
+            ww_code: ww_code,
+            tm: (new Date()).getTime()
+        }, function (response) {
+                $('#ddlBranch').val(response);
+                //alert(response);
+        });
+    }
+
+    $('.file-upload').click(function () {
+        _upload_file();
+    });
+
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                //$('#blah').attr('src', e.target.result);
+
+                $('.display_upload').append('<div class="upload_item" data-input-id="' + $(input).attr('data-idx') + '">'
+                    + '<img src="' + e.target.result + '" onerror="this.src=\'@Url.Content("~/Content/assets/images/icon_file.png")\'"'
+                    //+ 'data-toggle="popover"'
+                    + 'data-html="true"'
+                    + 'data-content="<img src=\'' + e.target.result + '\' style=\'width: 100%;\'></img>"'
+                    + 'class="thumbnail" />'
+                    + '<i class="glyphicon glyphicon-remove icon-2x text-danger btnDeletefile vertical-align-middle" data="0" data-idx="' + $(input).attr('data-idx') + '"></i>'
+                    + '</div>');
+            }
+
+            reader.readAsDataURL(input.files[0]); // convert to base64 string
+        }
+    }
+
+    $('#pnl_upload_tools .upload').change(function () {
+        readURL(this);
+    });
+
+    function _upload_file() {
+        var full = true;
+        for (var i = 0; i < $('#pnl_upload_tools input[type="file"]').length; i++) {
+            if ($('#pnl_upload_tools input[type="file"]').eq(i).val() == '') {
+                full = false;
+                console.log($('#pnl_upload_tools input[type="file"]').eq(i).attr('data-idx'));
+                $('#pnl_upload_tools input[type="file"]').eq(i).click();
+                break;
+            }
+        }
+
+        if (full) {
+            alert('ไม่สามารถแนบไฟล์ได้มากกว่านี้');
+        }
+    }
+
+    $(document).on('change', '#reason_sla', function () {
+        if ($(this).val() == 14) {
+            $('#reason_sla_txt').show();
+        }
+    });
+
+    Date.prototype.addDays = function (days) {
+        //alert(this);
+        var date = this; //new Date(this.valueOf());
+        date.setDate(date.getDate() + parseInt(days));
+        //alert(date);
+        return date;
+    }
+
+    $('#ddlCaseTitle').change(function () {
+        if (_pageInfo.Mode != 'EDIT') {
+            if ($(this).find('option:selected').attr('sla') == '0') {
+                $('#bttIncReceiveCase').hide();
+            }
+            else {
+                $('#bttIncReceiveCase').show();
+            }
+        }
+    });
+
+
+
+    PageController.init();
+
+    console.log((new Date()).getTime());
+</script>

@@ -1,0 +1,293 @@
+﻿@using Pwa.FrameWork.Dao.EF.Smart1662;
+@using Pwa.FrameWork.Dto;
+@using Pwa.FrameWork.Dto.Smart1662;
+@using Pwa.FrameWork.Dto.Smart1662.Incident;
+@using Pwa.FrameWork.Bal.Smart1662;
+
+
+@{
+//List<IncidentDto> dataList = (List<IncidentDto>)ViewBag.IncidentList;
+//List<IncidentDto> dataList = new List<IncidentDto>();
+
+    <!-- ViewBag.Title = "PWA Incident | PWA Smart 1662"; -->
+    ViewBag.Title = "TemplateItem";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Scripts
+{
+}
+<style>
+    #mapid {
+        height: 400px;
+        width: 100%;
+    }
+
+    a.btn-sm .icon {
+        margin: 3px 3px 0;
+    }
+</style>
+
+<script>
+    // var GetDataUrl = '@Url.Action("GetData", "Incident")'
+    // var ReceiveUrl = '@Url.Action("Edit", "Incident")'
+    // var FollowUpUrl = '@Url.Action("FollowUp", "Incident")'
+</script>
+
+<!-- Page -->
+<script src="~/Scripts/datepicker/date-eu.js"></script>
+<form id="frmIncident" >
+
+<div class="row" data-plugin="matchHeight" data-by-row="true">
+        <div class="col-xxl-12">
+            <!-- Contacts Content -->
+            <div class="panel panel-primary panel-line">
+                <!-- Contacts Content Header -->
+                <div class="panel-heading">
+                    <h1 class="panel-title">รายการ Template วัสดุอุปกรณ์ที่ใช้ในงานซ่อม</h1>
+                    <div class="page-header-actions">
+                        <form></form>
+                    </div>
+                </div>
+                <!-- Contacts Content -->
+                <div id="contactsContent" class="panel-body" data-plugin="selectable">
+                    <!-- Actions -->
+                    <div class="page-content-actions">
+                    <div class="row">
+                        <div class="col-md-3 col-lg-3">
+                            <div class="form-group">
+                                <label class="pt-3">กปภ.</label>
+                                    <div class="form-group ">
+                                        <select class="ddlBranch" id="ddlBranch" name="branch">
+                                            <option value="">เลือกสาขา</option>
+                                        </select>
+                                    </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-lg-3">
+                            <div class="form-group ">
+                                <label class="pt-3">ชื่อ Template วัสดุอุปกรณ์</label>
+                                <input type="text" class="form-control" id="" placeholder="" />
+                            </div>
+                        </div>        
+                        <div class="row" style="margin-top:8px;">
+                            <div class="col-md-3 col-lg-3">
+                                <div class="pull-right">
+                                    <button type="button" class="btn btn-outline btn-primary btnSearch" data-plugin="btnSearch">ค้นหา</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                    <!-- Contacts -->
+                    <div class="col-xxl-12">
+                        <div class="table-responsive divResult">
+                            <table class="table table-hover" id="tblDisplay" data-animate="fade" data-child="tr">
+                                <thead>
+                                    <tr>
+                                        <th class="" scope="col">ชื่อ Template</th>
+                                        <th class="" scope="col">ลำดับที่</th>
+                                        <th class="" scope="col">รหัสอุปกรณ์</th>
+                                        <th class="" scope="col">รายการ</th>
+                                        <th class="" scope="col">สถานะ</th>
+                                        <th class="" scope="col">วันที่แก้ไขล่าสุด</th>
+                                        <th class="" scope="col">ผู้แก้ไข</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr data-url="panel.tpl">
+                                        <td class="">ซ่อมท่อขนาด 40 มม.</td>
+                                        <td class="">1</td>
+                                        <td class="">54226</td>
+                                        <td class="">แคล้มรัดท่อแยกเกลียวใน PB 40 มม. *3/4</td>
+                                        <td class="">ใช้งาน</td>
+                                        <td class="">11/05/2563 11:30</td>
+                                        <td class="">สมชัย จันทร์ดี</td>
+                                    </tr>
+                                    <tr data-url="panel.tpl">
+                                        <td class=""></td>
+                                        <td class="">2</td>
+                                        <td class="">54254</td>
+                                        <td class="">ข้องอเกลียวนอก PB 20 มม. *3/4</td>
+                                        <td class=""></td>
+                                        <td class=""></td>
+                                        <td class=""></td>
+                                    </tr>
+                                    <tr data-url="panel.tpl">
+                                        <td class=""></td>
+                                        <td class="">3</td>
+                                        <td class="">54211</td>
+                                        <td class="">ข้องอ PB 20*20</td>
+                                        <td class=""></td>
+                                        <td class=""></td>
+                                        <td class=""></td>
+                                    </tr>
+                                    <tr data-url="panel.tpl">
+                                        <td class=""></td>
+                                        <td class="">4</td>
+                                        <td class="">54101</td>
+                                        <td class="">ท่อ PB SDR 13.5 20 มม.</td>
+                                        <td class=""></td>
+                                        <td class=""></td>
+                                        <td class=""></td>
+                                    </tr>
+                                    <tr data-url="panel.tpl">
+                                        <td class=""></td>
+                                        <td class="">5</td>
+                                        <td class="">32198</td>
+                                        <td class="">เทปพันเกลียว</td>
+                                        <td class=""></td>
+                                        <td class=""></td>
+                                        <td class=""></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Contacts 2 -->
+                    
+                    <div class="col-xxl-12" style="border: 0.5px solid #11c26d;">
+                        <div class="col-md-6 col-lg-6">
+                            <div class="form-group ">
+                                <label class="pt-6">ชื่อ Template วัสดุอุปกรณ์</label>
+                                <input type="text" class="form-control" id="" placeholder="" value="ซ่อมท่อขนาด 40 มม." />
+                            </div>
+                        </div>
+                        <div class="col-md-12 col-lg-12">
+                            <div class="table-responsive divResult">
+                                <table class="table table-hover" id="tblDisplay" data-animate="fade" data-child="tr">
+                                    <thead>
+                                        <tr>
+                                            <th class="" scope="col">ลำดับที่</th>
+                                            <th class="" scope="col" style="width: 135px;">รหัสอุปกรณ์</th>
+                                            <th class="" scope="col">รายการ</th>
+                                            <th class="" scope="col">หน่วยนับ</th>
+                                            <th class="" scope="col">ราคาต่อหน่วย (บาท)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr data-url="panel.tpl">
+                                            <td class="">1</td>
+                                            <td>
+                                                <input type="text" class="form-control" id="" placeholder="" value="54226" />
+                                            </td>
+                                            <td class="">แคล้มรัดท่อแยกเกลียวใน PB 40 มม. *3/4</td>
+                                            <td>
+                                                <select class="selectpicker">
+                                                    <option value="">ตัว</option>
+                                                </select>
+                                            </td>
+                                            <td class=""></td>
+                                        </tr>
+                                        <tr data-url="panel.tpl">
+                                            <td class="">2</td>
+                                            <td>
+                                                <input type="text" class="form-control" id="" placeholder="" value="54254" />
+                                            </td>
+                                            <td class="">ข้องอเกลียวนอก PB 20 มม. *3/4</td>
+                                            <td>
+                                                <select class="selectpicker">
+                                                    <option value="">อัน</option>
+                                                </select>
+                                            </td>
+                                            <td class=""></td>
+                                        </tr>
+                                        <tr data-url="panel.tpl">
+                                            <td class="">3</td>
+                                            <td>
+                                                <input type="text" class="form-control" id="" placeholder="" value="54211" />
+                                            </td>
+                                            <td class="">ข้องอ PB 20*20</td>
+                                            <td>
+                                                <select class="selectpicker">
+                                                    <option value="">อัน</option>
+                                                </select>
+                                            </td>
+                                            <td class=""></td>
+                                        </tr>
+                                        <tr data-url="panel.tpl">
+                                            <td class="">4</td>
+                                            <td>
+                                                <input type="text" class="form-control" id="" placeholder="" value="54101" />
+                                            </td>
+                                            <td class="">ท่อ PB SDR 13.5 20 มม.</td>
+                                            <td>
+                                                <select class="selectpicker">
+                                                    <option value="">เมตร</option>
+                                                </select>
+                                            </td>
+                                            <td class=""></td>
+                                        </tr>
+                                        <tr data-url="panel.tpl">
+                                            <td class="">5</td>
+                                            <td>
+                                                <input type="text" class="form-control" id="" placeholder="" value="32198" />
+                                            </td>
+                                            <td class="">เทปพันเกลียว</td>
+                                            <td>
+                                                <select class="selectpicker">
+                                                    <option value="">ม้วน</option>
+                                                </select>
+                                            </td>
+                                            <td class=""></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-6">
+                            <div class="form-group ">
+                                <label class="pt-6">วันที่สร้าง</label>
+                                <input type="text" class="form-control" id="" placeholder="" disabled value="11/05/2563 09:22" />
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-6">
+                            <div class="form-group ">
+                                <label class="pt-6">ผู้สร้าง</label>
+                                <input type="text" class="form-control" id="" placeholder="" disabled value="สมชัย จันทร์ดี" />
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-6">
+                            <div class="form-group ">
+                                <label class="pt-6">วันที่แก้ไขล่าสุด</label>
+                                <input type="text" class="form-control" id="" placeholder="" disabled value="11/05/2563 11:30" />
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-6">
+                            <div class="form-group ">
+                                <label class="pt-6">ผู้ที่แก้ไขล่าสุด</label>
+                                <input type="text" class="form-control" id="" placeholder="" disabled value="สมชัย จันทร์ดี" />
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-6">
+                            <div class="form-group">
+                                    <label class="pt-6">สถานะการใช้งาน</label>
+                                    <select class="selectpicker" id="">
+                                        <option value="">--เลือก--</option>
+                                        <option value="Action">ใช้งาน</option>
+                                        <option value="Inaction">ไม่ใช้งาน</option>
+                                    </select>
+                            </div>
+                        </div>
+                        <div class="col-md-12 col-lg-12" style="text-align: center;">
+                            <button class="btn btn-outline btn-primary btnSave" type="submit">บันทึก</button>
+                            <button class="btn btn-outline btn-default" type="button">ยกเลิก</button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+</div>
+</form>
+
+<script src="~/Content/assets/restaurant.geojson.js?ver=4.00"></script>
+
+
+<script>
+   
+</script>
+<!-- End Add Label Form -->
+<!-- End Page -->
+<!-- Footer -->

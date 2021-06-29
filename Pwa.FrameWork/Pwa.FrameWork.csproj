@@ -1,0 +1,842 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{F3623214-5AA9-4E24-A72F-E8D3FB107B89}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Pwa.FrameWork</RootNamespace>
+    <AssemblyName>Pwa.FrameWork</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="Npgsql, Version=3.2.6.0, Culture=neutral, PublicKeyToken=5d8b90d52f46fda7, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\3rd\Npgsql.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Threading.Tasks.Extensions">
+      <HintPath>..\3rd\System.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Bal\BaseBAL.cs" />
+    <Compile Include="Bal\Data\Employee.cs" />
+    <Compile Include="Bal\Data\Incident.cs" />
+    <Compile Include="Bal\Data\IncidentEditInfo.cs" />
+    <Compile Include="Bal\Data\LoginInfo.cs" />
+    <Compile Include="Bal\Data\ReceiveIncidentCaseInfo.cs" />
+    <Compile Include="Bal\Data\SearchBranchIncidentResult.cs" />
+    <Compile Include="Bal\Data\SubdistrictInfo.cs" />
+    <Compile Include="Bal\IC360\Data\ImportIncident.cs" />
+    <Compile Include="Bal\IC360\Importer.cs" />
+    <Compile Include="Bal\Incident\IncidentManager.cs" />
+    <Compile Include="Bal\Incident\SlaManager.cs" />
+    <Compile Include="Bal\LogBal.cs" />
+    <Compile Include="Bal\IC360\Mapper.cs" />
+    <Compile Include="Bal\PWAGIS\GISManager.cs" />
+    <Compile Include="Bal\PwaSystem.cs" />
+    <Compile Include="Bal\Smart1662\AccountManager.cs" />
+    <Compile Include="Bal\Smart1662\FormManager.cs" />
+    <Compile Include="Bal\Smart1662\IncidentManager.cs" />
+    <Compile Include="Bal\Smart1662\IncidentNotify.cs" />
+    <Compile Include="Bal\Smart1662\IncidentNotifyOtherSystem.cs" />
+    <Compile Include="Bal\Smart1662\PwaRepaireWorkManager.cs" />
+    <Compile Include="Bal\Smart1662\ReportManager.cs" />
+    <Compile Include="Bal\Smart1662\StatusManager.cs" />
+    <Compile Include="Bal\Smart1662\SysAccountBAL.cs" />
+    <Compile Include="Bal\Smart1662\SysAccountManager.cs" />
+    <Compile Include="Bal\Smart1662\PWACustomerManager.cs" />
+    <Compile Include="Bal\Smart1662\SysAreaManager.cs" />
+    <Compile Include="Bal\Smart1662\SysBranchManager.cs" />
+    <Compile Include="Bal\Smart1662\SysChannelManager.cs" />
+    <Compile Include="Bal\Smart1662\SysItemManager.cs" />
+    <Compile Include="Bal\Smart1662\SysMessagesIncidentManager.cs" />
+    <Compile Include="Bal\Smart1662\SysRequestCategoryManager.cs" />
+    <Compile Include="Bal\Smart1662\SysRequestCategorySubjectManager.cs" />
+    <Compile Include="Bal\Smart1662\SysRequestTypeManager.cs" />
+    <Compile Include="Bal\Smart1662\SysUnitManager.cs" />
+    <Compile Include="Bal\Smart1662\TrackingManager.cs" />
+    <Compile Include="Bal\Smart1662\UtilManager.cs" />
+    <Compile Include="Bal\Smart1662\SysRolPermissionManager.cs" />
+    <Compile Include="Bal\Smart1662\SysMenuManager.cs" />
+    <Compile Include="Dao\ADO\DropDownlistDao.cs" />
+    <Compile Include="Dao\ADO\IC360Dao.cs" />
+    <Compile Include="Dao\EF\Smart1662\AppConfig.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\BranchReject.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\CISAmphure.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\CISDistrinct.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\CISProvince.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\CIS_NUM_CUSTOMER.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\CIS_TB_LT_CUSTOMER_GROUP.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\CIS_TB_LT_ORGANIZATION.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\CIS_TB_LT_USETYPE.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\CIS_TB_MS_AMPHUR.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\CIS_TB_MS_DISTRICT.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\CIS_TB_MS_PROVINCE.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\CIS_TB_MS_TITLENAME.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\CIS_TB_TR_CUSADDR_INF.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\CIS_TB_TR_CUSTOMER_INF.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\GetBranch_Result.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\GetIncidentByBranchStatus_Result.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\GetIncidentStatusByIncident_Result.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\GetIncidentStatus_Result.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\GetMenuActive_Result.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\GIS_PIPE_SIZE.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\GIS_PIPE_TYPE.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\IC360Mapping.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\LogErrorIC360.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\MappingCategoryIC360.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\PwaBranchIncident.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\PwaBranchReject.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\PWACustomerInfo.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\PWACustomerInfoMeter.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\PWAEmployee.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\PwaIncident.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\PwaIncidentFollower.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\PwaIncidentGroup.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\PwaIncidentRequestEdit.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\PwaIncidentSmsTrack.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\PwaIncidentType.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\PwaIncidentWorker.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\PwaIncidentWorkingStatus.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\PwaIncident_Files.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\PwaInformChannel.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\PwaInformer.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\PwaRepaireWorkHeader.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\PwaRepaireWork_CloseJob.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\PwaRepaireWork_CloseJob_Files.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\PwaRepaireWork_Effect.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\PwaRepaireWork_Effect_Customers.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\PwaRepaireWork_Effect_Pipelines.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\PwaRepaireWork_Incident.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\PwaRepaireWork_OpenCase.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\PwaRepaireWork_Process.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\PwaRepaireWork_Process_Files.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\PwaRepaireWork_Survey.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\Sequence.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\ShortUrl.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\ShortUrlToken.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\ShotUrlTokenSource.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\Smart1662Db.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Smart1662Db.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\Smart1662Db.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\Smart1662Db.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Smart1662Db.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\sp_Customer_Effect_Find_Result.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\sp_Employee_DropDownlist_Result.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\sp_GetCustomer_IsProcess_Result.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\sp_GetEffectCustomer1_Result.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\sp_GetEffectCustomer_Result.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\sp_GetIncident_GetByColumn_Result.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\sp_GetIncident_SearchCallCenter_Result.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\sp_GetMessagesIncident_BranchNo_Result.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\sp_GetRepairWork_Filter_Result.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\sp_GISPIPESIZE_DropDownlist_Result.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\sp_GISPIPETYPE_DropDownlist_Result.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\sp_helpdiagramdefinition_Result.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\sp_helpdiagrams_Result.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\sp_LocationFull_DropDownlist_Result.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\sp_PipelineSize_DropDownlist_Result.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\sp_PWACustomerCustCode_DropDownlist_Result.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\sp_PWACustomerInfo_DropDownlist_Result.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\sp_PWACustomerInfo_GetByAddress_Result.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\sp_PWACustomerInfo_GetById_Result.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\sp_PWACustomerInfo_GetByName_Result.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\sp_PwaIncidentFollower_GetById_Result.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\sp_PwaIncidentFollower_GetByIncidentNo_Result.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\sp_PwaIncident_Tracking_Result.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\sp_PwaRepaireWorkHeader_GetAll_Result.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\sp_PwaRepaireWorkHeader_Gets_Result.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\sp_PwaRepaireWork_CloseRepair_GetById_Result.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\sp_PwaRepaireWork_EffectShape_Result.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\sp_PwaRepaireWork_Effect_find_Result.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\sp_PwaRepaireWork_OpenRepair_GetById_Result.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\sp_PwaRepaireWork_Requisition_GetById1_Result.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\sp_PwaRepaireWork_Requisition_GetById_Result.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\sp_Report_GUI002_Result.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\sp_Report_GUI006_Result.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\sp_Report_GUI007_Result.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\sp_Report_GUI008_Result.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\sp_Report_GUI009_Result.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\sp_Report_GUI010_Result.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\sp_Report_GUI011_Result.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\sp_Report_GUI012_Result.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\sp_Report_GUI013_Result.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\sp_Report_GUI015_Result.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\sp_Report_GUI016_Result.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\sp_Report_GUI018_Result.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\sp_Report_GUI019_Result.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\sp_Report_GUI020_Result.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\sp_Report_GUI021_Result.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\sp_SysAccount_GetAll_Result.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\sp_SysAccount_GetById_Result.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\sp_SysAccount_GetUserById_Result.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\sp_SysAccount_Login_Result.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\sp_SysAccount_UserLoginExist_Result.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\sp_SysArea_DropDownlist_Result.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\sp_SysBranchReport_DropDownlist1_Result.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\sp_SysBranchReport_DropDownlist_Result.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\sp_SysBranchs_DropDownlist_Result.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\sp_SysBranch_DropDownlist_Result.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\sp_SysBranch_FilterDropDownList_Result.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\sp_SysBranch_Search_Result.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\sp_SysChannelCategory_DropDownlist_Result.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\sp_SysChannel_DropDownlist_Result.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\sp_SysDocumentType_DropDownlist_Result.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\sp_SysItemCodeName_DropDownlist_Result.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\sp_SysItem_DropDownlist_Result.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\sp_SysItem_GetItemByIdAndUnit_Result.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\sp_SysItem_Search_Result.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\sp_SysItem_SetGetAll_Result.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\sp_SysItem_SetItem_HeaderDetail_Result.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\sp_SysItem_SetItem_SetGetSetID_Result.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\sp_SysReason_DropDownlist_Result.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\sp_SysRequestCategorySubject_DropDownlist_Result.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\sp_SysRequestCategory_DropDownlist_Result.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\sp_SysRequestType_DropDownlist_Result.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\sp_SysRolePermission_GetAllMenu_Result.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\sp_SysRole_DropDownlist_Result.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\sp_SysSurface_DropDownlist_Result.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\sp_SysTeam_DropDownlist_Result.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\sp_SysTitle_DropDownlist_Result.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\sp_SysUnit_DropDownlist_Result.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\sp_SysUnit_Search_Result.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\sp_UserAccount_Search_Result.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\SysAccount.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\SysAccountRole.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\SysArea.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\SysBranch.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\SysChannel.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\SysChannelCategory.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\SysConplainant.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\SysDepartment.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\sysdiagrams.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\SysDocumentType.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\SysEmployee.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\SysEnmPrefix.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\SysEnmStatusEmployee.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\SysHoliday.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\SysItem.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\SysItem_Branch.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\SysItem_Set.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\SysItem_SetItem.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\SysMenu.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\SysMenuActive.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\SysMessagesIncident.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\SysOverSlaReason.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\SysPosition.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\SysProblem.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\SysReason.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\SysRepairType.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\SysRequestCategory.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\SysRequestCategorySubject.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\SysRequestType.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\SysRole.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\SysRolePermission.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\SysSite.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\SysSizeOfPipe.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\SysStatus.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\SysSurface.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\SysTeam.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\SysTeamMember.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\SysTitle.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\SysTopic.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\SysUnit.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\SysUnitOfItem.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\SysWorkingStatus.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\test.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\TrnIncident.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\VwIncidentList.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\VwIncidentListV2.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\VwLocation.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\VwPwaBranchReject.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\VwSearchIncident.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\EF\Smart1662\vw_report_gui_002.cs">
+      <DependentUpon>Smart1662Db.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Dao\Repository\Smart1662\ISysHolidayResponsitory.cs" />
+    <Compile Include="Dao\Repository\Smart1662\IFormRespository.cs" />
+    <Compile Include="Dao\Repository\Smart1662\IIC360MappingResponsitory.cs" />
+    <Compile Include="Dao\Repository\Smart1662\IIncidentRepository.cs" />
+    <Compile Include="Dao\Repository\Smart1662\IMeterRespository.cs" />
+    <Compile Include="Dao\Repository\Smart1662\Incident\IncidentRepository.cs" />
+    <Compile Include="Dao\Repository\Smart1662\IPWACustomerTypeRespository.cs" />
+    <Compile Include="Dao\Repository\Smart1662\IPwaIncidentGroupRespository.cs" />
+    <Compile Include="Dao\Repository\Smart1662\IPwaIncidentRespository.cs" />
+    <Compile Include="Dao\Repository\Smart1662\IPwaInformChannelRespository.cs" />
+    <Compile Include="Dao\Repository\Smart1662\IPwaRepaireWorkRepository.cs" />
+    <Compile Include="Dao\Repository\Smart1662\ISysAccountRepository.cs" />
+    <Compile Include="Dao\Repository\Smart1662\ISysAreaRespository.cs" />
+    <Compile Include="Dao\Repository\Smart1662\ISysBranchRespository.cs" />
+    <Compile Include="Dao\Repository\Smart1662\ISysChannelRespository.cs" />
+    <Compile Include="Dao\Repository\Smart1662\ISysCustomerResponsitory.cs" />
+    <Compile Include="Dao\Repository\Smart1662\ISysItemRespository.cs" />
+    <Compile Include="Dao\Repository\Smart1662\ISysMenuRepository.cs" />
+    <Compile Include="Dao\Repository\Smart1662\ISysMessagesIncidentRespository.cs" />
+    <Compile Include="Dao\Repository\Smart1662\ISysRequestCategoryResponsitory.cs" />
+    <Compile Include="Dao\Repository\Smart1662\ISysRequestCategorySubjectResponsitory.cs" />
+    <Compile Include="Dao\Repository\Smart1662\ISysRequestTypeRespository.cs" />
+    <Compile Include="Dao\Repository\Smart1662\ISysRolPermissionRepository.cs" />
+    <Compile Include="Dao\Repository\Smart1662\ISysStatusResponsitory.cs" />
+    <Compile Include="Dao\Repository\Smart1662\ISysUnitRespository.cs" />
+    <Compile Include="Dao\Repository\Smart1662\ITrackingRespository.cs" />
+    <Compile Include="Dao\Repository\Smart1662\Postgres\MeterRespository.cs" />
+    <Compile Include="Dao\Repository\Smart1662\RespositoryFactory.cs" />
+    <Compile Include="Dao\Repository\Smart1662\ShortUrlResponsitory.cs" />
+    <Compile Include="Dao\Repository\Smart1662\SqlServer\FormResponsitory.cs" />
+    <Compile Include="Dao\Repository\Smart1662\SqlServer\IC360MappingResponsitory.cs" />
+    <Compile Include="Dao\Repository\Smart1662\SqlServer\PWACustomerTypeRespository.cs" />
+    <Compile Include="Dao\Repository\Smart1662\SqlServer\PwaIncidentGroupResponsitory.cs" />
+    <Compile Include="Dao\Repository\Smart1662\SqlServer\PwaIncidentResponsitory.cs" />
+    <Compile Include="Dao\Repository\Smart1662\SqlServer\PwaInformChannelRespository.cs" />
+    <Compile Include="Dao\Repository\Smart1662\SqlServer\PwaRepaireWorkResponsitory.cs" />
+    <Compile Include="Dao\Repository\Smart1662\SqlServer\ReportRespository.cs" />
+    <Compile Include="Dao\Repository\Smart1662\SqlServer\SysAccountReponsitory.cs" />
+    <Compile Include="Dao\Repository\Smart1662\SqlServer\SysAreaResponsitory.cs" />
+    <Compile Include="Dao\Repository\Smart1662\SqlServer\SysBranchResponsitory.cs" />
+    <Compile Include="Dao\Repository\Smart1662\SqlServer\SysChannelResponsitory.cs" />
+    <Compile Include="Dao\Repository\Smart1662\SqlServer\SysCustomerResponsitory.cs" />
+    <Compile Include="Dao\Repository\Smart1662\SqlServer\SysHolidayResponsitory.cs" />
+    <Compile Include="Dao\Repository\Smart1662\SqlServer\SysItemResponsitory.cs" />
+    <Compile Include="Dao\Repository\Smart1662\SqlServer\SysMenuResponsitory.cs" />
+    <Compile Include="Dao\Repository\Smart1662\SqlServer\SysMessagesIncidentSqlRepository.cs" />
+    <Compile Include="Dao\Repository\Smart1662\SqlServer\SysRequestCategoryResponsitory.cs" />
+    <Compile Include="Dao\Repository\Smart1662\SqlServer\SysRequestCategorySubjectResponsitory.cs" />
+    <Compile Include="Dao\Repository\Smart1662\SqlServer\SysRequestTypeResponsitory.cs" />
+    <Compile Include="Dao\Repository\Smart1662\SqlServer\SysRolPermissionReponsitory.cs" />
+    <Compile Include="Dao\Repository\Smart1662\SqlServer\SysStatusResponsitory.cs" />
+    <Compile Include="Dao\Repository\Smart1662\SqlServer\SysUnitResponsitory.cs" />
+    <Compile Include="Dao\Repository\Smart1662\SqlServer\TrackingResponsitory.cs" />
+    <Compile Include="Dao\Service\CisServices.cs" />
+    <Compile Include="Dao\Service\PwaLoginService.cs" />
+    <Compile Include="Dao\Smart1662DB.cs" />
+    <Compile Include="Dao\Smart1662DBBase.cs" />
+    <Compile Include="Dao\ADO\LogDao.cs" />
+    <Compile Include="Dao\Smart1662ADO.cs" />
+    <Compile Include="Dao\ADO\SysAccountDao.cs" />
+    <Compile Include="Dao\Smart1662PostgresADO.cs" />
+    <Compile Include="Dao\Smart1662PostgresDBBase.cs" />
+    <Compile Include="Dao\Smart1662PostgresGISCForSocialDB.cs" />
+    <Compile Include="Dao\Smart1662\LogDAO.cs" />
+    <Compile Include="Dao\Smart1662\SysAccountDao.cs" />
+    <Compile Include="Dto\BaseDto.cs" />
+    <Compile Include="Dto\DropDownlistDto.cs" />
+    <Compile Include="Dto\ErrorDto.cs" />
+    <Compile Include="Dto\MenuDto.cs" />
+    <Compile Include="Dto\PWA\PWABranchDTO.cs" />
+    <Compile Include="Dto\PWA\PWAMeterDto.cs" />
+    <Compile Include="Dto\ReportOptionDto.cs" />
+    <Compile Include="Dto\Smart1662\AreaDto.cs" />
+    <Compile Include="Dto\Smart1662\BranchDto.cs" />
+    <Compile Include="Dto\Smart1662\ChannelDto.cs" />
+    <Compile Include="Dto\Smart1662\CustomerEffectDto.cs" />
+    <Compile Include="Dto\Smart1662\FileDto.cs" />
+    <Compile Include="Dto\Smart1662\FormDto.cs" />
+    <Compile Include="Dto\Smart1662\Incident\FollowerDto.cs" />
+    <Compile Include="Dto\Smart1662\Incident\IncidentDto.cs" />
+    <Compile Include="Dto\Smart1662\ItemDto.cs" />
+    <Compile Include="Dto\Smart1662\LocationDto.cs" />
+    <Compile Include="Dto\Smart1662\MenuLayoutDto.cs" />
+    <Compile Include="Dto\Smart1662\PWACustomerDto.cs" />
+    <Compile Include="Dto\Smart1662\RepaireWork\PwaRepiareWorkDto.cs" />
+    <Compile Include="Dto\Smart1662\RequestCategoryDto.cs" />
+    <Compile Include="Dto\Smart1662\RequestCategorySubjectDto.cs" />
+    <Compile Include="Dto\Smart1662\RequestTypeDto.cs" />
+    <Compile Include="Dto\Smart1662\SysMessagesDto.cs" />
+    <Compile Include="Dto\Smart1662\SysPermissionDto.cs" />
+    <Compile Include="Dto\Smart1662\TrackingDto.cs" />
+    <Compile Include="Dto\Smart1662\UnitDto.cs" />
+    <Compile Include="Dto\Smart1662\UserInfoDto.cs" />
+    <Compile Include="Dto\Utils\Converting.cs" />
+    <Compile Include="Dto\SearchDto.cs" />
+    <Compile Include="Dto\Smart1662\SysAccountDto.cs" />
+    <Compile Include="Dto\Utils\DEncrypt.cs" />
+    <Compile Include="Dto\Utils\EmailServices.cs" />
+    <Compile Include="Dto\Utils\FileMng.cs" />
+    <Compile Include="Dto\Utils\GeojsonFeatureDto.cs" />
+    <Compile Include="Dto\Utils\Injection.cs" />
+    <Compile Include="Dto\Utils\LogDTO.cs" />
+    <Compile Include="Extension\ModelExtension.cs" />
+    <Compile Include="Extension\StageExtension.cs" />
+    <Compile Include="obj\Debug\TemporaryGeneratedFile_036C0B5B-1481-4323-8D20-8F5ADCB23D92.cs" />
+    <Compile Include="obj\Debug\TemporaryGeneratedFile_5937a670-0e60-4077-877b-f7221da3dda1.cs" />
+    <Compile Include="obj\Debug\TemporaryGeneratedFile_E7A71F73-0F8D-4B9B-B56E-8E70B10BC5D3.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ShortUrl\Configuration\ShortUrlSettings.cs" />
+    <Compile Include="ShortUrl\Generator\IShortUrlGenerator.cs" />
+    <Compile Include="ShortUrl\Generator\ShortUrlCaseSensitiveDissociateGenerator.cs" />
+    <Compile Include="ShortUrl\Generator\ShortUrlDissociateGenerator.cs" />
+    <Compile Include="ShortUrl\Generator\ShortUrlGeneratorFactory.cs" />
+    <Compile Include="ShortUrl\ShortUrlManager.cs" />
+    <Compile Include="Utilities\JsonHelper.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="bin\Debug\Pwa.FrameWork.dll" />
+    <Content Include="bin\Debug\Pwa.FrameWork.pdb" />
+    <Content Include="Dao\EF\Smart1662\Smart1662Db.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Smart1662Db.Context.cs</LastGenOutput>
+      <DependentUpon>Smart1662Db.edmx</DependentUpon>
+    </Content>
+    <Content Include="Dao\EF\Smart1662\Smart1662Db.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>Smart1662Db.edmx</DependentUpon>
+      <LastGenOutput>Smart1662Db.cs</LastGenOutput>
+    </Content>
+    <Content Include="obj\Debug\Pwa.FrameWork.csproj.FileListAbsolute.txt" />
+    <Content Include="obj\Debug\Pwa.FrameWork.dll" />
+    <Content Include="obj\Debug\Pwa.FrameWork.pdb" />
+  </ItemGroup>
+  <ItemGroup>
+    <EntityDeploy Include="Dao\EF\Smart1662\Smart1662Db.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>Smart1662Db.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <None Include="App.Config" />
+    <None Include="Dao\EF\Smart1662\Smart1662Db.edmx.diagram">
+      <DependentUpon>Smart1662Db.edmx</DependentUpon>
+    </None>
+    <None Include="Dao\Repository\Smart1662\RespositoryFactory.cs.mine" />
+    <None Include="Dao\Repository\Smart1662\RespositoryFactory.cs.r149" />
+    <None Include="Dao\Repository\Smart1662\RespositoryFactory.cs.r186" />
+    <None Include="obj\Debug\DesignTimeResolveAssemblyReferencesInput.cache" />
+    <None Include="obj\Debug\Pwa.FrameWork.csproj.CoreCompileInputs.cache" />
+    <None Include="obj\Debug\Pwa.FrameWork.csprojAssemblyReference.cache" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Api\" />
+    <Folder Include="bin\Release\" />
+    <Folder Include="CisService\" />
+    <Folder Include="Dao\Repository\Smart1662\MySql\" />
+    <Folder Include="obj\Debug\TempPE\" />
+    <Folder Include="Web\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="GUI_009" targetNamespace="http://tempuri.org/GUI_009.xsd" xmlns:mstns="http://tempuri.org/GUI_009.xsd" xmlns="http://tempuri.org/GUI_009.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="GUI_009" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="GUI_009" msprop:Generator_UserDSName="GUI_009">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="GUI_009" msprop:Generator_TableClassName="GUI_009DataTable" msprop:Generator_TableVarName="tableGUI_009" msprop:Generator_TablePropName="_GUI_009" msprop:Generator_RowDeletingName="GUI_009RowDeleting" msprop:Generator_RowChangingName="GUI_009RowChanging" msprop:Generator_RowEvHandlerName="GUI_009RowChangeEventHandler" msprop:Generator_RowDeletedName="GUI_009RowDeleted" msprop:Generator_UserTableName="GUI_009" msprop:Generator_RowChangedName="GUI_009RowChanged" msprop:Generator_RowEvArgName="GUI_009RowChangeEvent" msprop:Generator_RowClassName="GUI_009Row">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="COMPLAINT_TOPIC" msprop:Generator_ColumnVarNameInTable="columnCOMPLAINT_TOPIC" msprop:Generator_ColumnPropNameInRow="COMPLAINT_TOPIC" msprop:Generator_ColumnPropNameInTable="COMPLAINT_TOPICColumn" msprop:Generator_UserColumnName="COMPLAINT_TOPIC" type="xs:string" minOccurs="0" />
+              <xs:element name="C_COMPLAINT" msprop:Generator_ColumnVarNameInTable="columnC_COMPLAINT" msprop:Generator_ColumnPropNameInRow="C_COMPLAINT" msprop:Generator_ColumnPropNameInTable="C_COMPLAINTColumn" msprop:Generator_UserColumnName="C_COMPLAINT" type="xs:string" minOccurs="0" />
+              <xs:element name="COMPLAINT_PERCENTAGE" msprop:Generator_ColumnVarNameInTable="columnCOMPLAINT_PERCENTAGE" msprop:Generator_ColumnPropNameInRow="COMPLAINT_PERCENTAGE" msprop:Generator_ColumnPropNameInTable="COMPLAINT_PERCENTAGEColumn" msprop:Generator_UserColumnName="COMPLAINT_PERCENTAGE" type="xs:string" minOccurs="0" />
+              <xs:element name="SLA_CLOSE" msprop:Generator_ColumnVarNameInTable="columnSLA_CLOSE" msprop:Generator_ColumnPropNameInRow="SLA_CLOSE" msprop:Generator_ColumnPropNameInTable="SLA_CLOSEColumn" msprop:Generator_UserColumnName="SLA_CLOSE" type="xs:string" minOccurs="0" />
+              <xs:element name="SLA_PERCENTAGE" msprop:Generator_ColumnVarNameInTable="columnSLA_PERCENTAGE" msprop:Generator_ColumnPropNameInRow="SLA_PERCENTAGE" msprop:Generator_ColumnPropNameInTable="SLA_PERCENTAGEColumn" msprop:Generator_UserColumnName="SLA_PERCENTAGE" type="xs:string" minOccurs="0" />
+              <xs:element name="SLA_OVER_DUE" msprop:Generator_ColumnVarNameInTable="columnSLA_OVER_DUE" msprop:Generator_ColumnPropNameInRow="SLA_OVER_DUE" msprop:Generator_ColumnPropNameInTable="SLA_OVER_DUEColumn" msprop:Generator_UserColumnName="SLA_OVER_DUE" type="xs:string" minOccurs="0" />
+              <xs:element name="SLA_OVER_DUE_PERCENTAGE" msprop:Generator_ColumnVarNameInTable="columnSLA_OVER_DUE_PERCENTAGE" msprop:Generator_ColumnPropNameInRow="SLA_OVER_DUE_PERCENTAGE" msprop:Generator_ColumnPropNameInTable="SLA_OVER_DUE_PERCENTAGEColumn" msprop:Generator_UserColumnName="SLA_OVER_DUE_PERCENTAGE" type="xs:string" minOccurs="0" />
+              <xs:element name="CATEGORY_ORDER" msprop:Generator_ColumnVarNameInTable="columnCATEGORY_ORDER" msprop:Generator_ColumnPropNameInRow="CATEGORY_ORDER" msprop:Generator_ColumnPropNameInTable="CATEGORY_ORDERColumn" msprop:Generator_UserColumnName="CATEGORY_ORDER" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

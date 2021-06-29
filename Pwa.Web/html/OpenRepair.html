@@ -1,0 +1,280 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <meta charset="UTF-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>พิมพ์ใบเปิดงานซ่อม</title>
+    <style type="text/css">
+        body {
+            font-family: '~/fonts/THSarabunNew.ttf';
+            font-size: 14pt;
+            width: 1024px;
+            padding-left: 20px;
+            padding-right: 20px;
+            padding-top: 20px;
+            margin-top: 20px;
+            background-color: white;
+            line-height: 25px;
+            /* Width 684 */
+        }
+
+        table {
+            font-size: 14pt;
+            width: 100%;
+            line-height: 25px;
+            margin-bottom: 10px;
+            border-color: white;
+            border-bottom-style: solid;
+            background-color: white;
+        }
+
+        table tr td {
+            line-height: 25px;
+        }
+
+        .underline {
+            border-bottom-style: solid;
+            border-color: #b0b0b0;
+            text-align: center;
+            border-bottom: 0.5px;
+        }
+
+        .nonunderline {
+            border: 0 0 1px 0;
+            border-bottom-style: solid;
+            border-color: blue;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div style="width: 100%; padding-left: 40px;padding-right: 40px;">
+        <div>
+            <center>
+                <table style="background-color: white; margin-top:40px;text-align:center;width:100%">
+                    <tr>
+                        <td style="width: 100%; align-content:center;"><img src="{Logo}" width="80" /></td>
+                    </tr>
+                </table>
+            </center>
+        </div>
+        <div style="line-height:50px;  font-family: 'TH Sarabun New'">เรียน หัวหน้างานบริการและควบคุมน้ำสูญเสีย</div>
+        <div>
+            <table>
+                <tr>
+                    <td style="width:10%; font-family: 'TH Sarabun New'"></td>
+                    <td style="width:3%; font-family: 'TH Sarabun New'">วันที่</td>
+                    <td style="width:40%; font-family: 'TH Sarabun New'" class="underline">{OpenRepairDate}</td>
+                    <td style="width:3%; font-family: 'TH Sarabun New'">เวลา</td>
+                    <td style="width:18%; font-family: 'TH Sarabun New'" class="underline">{OpenRepairTime}</td>
+                    <td style="width:2%; font-family: 'TH Sarabun New'">น.</td>
+                </tr>
+            </table>
+        </div>
+        <div>
+            <table>
+                <tr>
+                    <td style="width:4%; font-family: 'TH Sarabun New'">ผู้แจ้ง</td>
+                    <td style="width:40%; font-family: 'TH Sarabun New'" class="underline">{InformalFullName}</td>
+                    <td style="width:9%; font-family: 'TH Sarabun New'">ผู้ใช้น้ำเลขที่</td>
+                    <td style="width:30%; font-family: 'TH Sarabun New'" class="underline">{CustCode}</td>
+                </tr>
+            </table>
+        </div>
+        <div>
+            <table>
+                <tr>
+                    <td style="width:12%; font-family: 'TH Sarabun New'">เบอร์โทรศัพท์</td>
+                    <td style="width:15%; font-family: 'TH Sarabun New'" class="underline">{Tel}</td>
+                    <td style="width:3%; font-family: 'TH Sarabun New'">บ.</td>
+                    <td style="width:30%; font-family: 'TH Sarabun New'" class="underline">{Conpany}</td>
+                    <td style="width:7%; font-family: 'TH Sarabun New'">ห้างร้าน</td>
+                    <td style="width:30%; font-family: 'TH Sarabun New'" class="underline">{ShopStore}</td>
+                </tr>
+            </table>
+        </div>
+        <div>
+            <table>
+                <tr>
+                    <td style="width:8%; font-family: 'TH Sarabun New'">บ้านเลขที่</td>
+                    <td style="width:88%; font-family: 'TH Sarabun New'" class="underline">{HomeNo}</td>
+                </tr>
+            </table>
+        </div>
+        <div>
+            <table>
+                <tr>
+                    <td style="width:100%; font-family: 'TH Sarabun New'" class="underline">&nbsp;</td>
+                </tr>
+            </table>
+        </div>
+        <!--<div>
+        <table>
+            <tr>
+                <td style="width:8%; font-family: 'TH Sarabun New'">บ้านเลขที่</td>
+                <td style="width:30%; font-family: 'TH Sarabun New'" class="underline">{HomeNo}</td>
+                <td style="width:3%; font-family: 'TH Sarabun New'">หมู่</td>
+                <td style="width:21%; font-family: 'TH Sarabun New'" class="underline">{Moo}</td>
+                <td style="width:5%; font-family: 'TH Sarabun New'">ซอย</td>
+                <td style="width:31%; font-family: 'TH Sarabun New'" class="underline">{Soi}</td>
+            </tr>
+        </table>
+    </div>
+    <div>
+        <table>
+            <tr>
+                <td style="width:6%; font-family: 'TH Sarabun New'">หมู่บ้าน</td>
+                <td style="width:40%; font-family: 'TH Sarabun New'" class="underline">{Village}</td>
+                <td style="width:5%; font-family: 'TH Sarabun New'">ถนน</td>
+                <td style="width:42%; font-family: 'TH Sarabun New'" class="underline">{Street}</td>
+            </tr>
+        </table>
+    </div>-->
+        <div>
+            <table>
+                <tr>
+                    <td style="width:5%; font-family: 'TH Sarabun New'">ตำบล</td>
+                    <td style="width:20%; font-family: 'TH Sarabun New'" class="underline">{SubDistrict}</td>
+                    <td style="width:6%; font-family: 'TH Sarabun New'">อำเภอ</td>
+                    <td style="width:26%; font-family: 'TH Sarabun New'" class="underline">{District}</td>
+                    <td style="width:6%; font-family: 'TH Sarabun New'">จังหวัด</td>
+                    <td style="width:32%; font-family: 'TH Sarabun New'" class="underline">{Province}</td>
+                </tr>
+            </table>
+        </div>
+        <div>
+            <table>
+                <tr>
+                    <td style="width:17%; font-family: 'TH Sarabun New'">จุดสังเกตุที่เห็นได้ชัด</td>
+                    <td style="width:79%; font-family: 'TH Sarabun New'" class="underline">{Landmark}</td>
+                </tr>
+            </table>
+        </div>
+        <div>
+            <table>
+                <tr>
+                    <td style="width:10%; font-family: 'TH Sarabun New'"></td>
+                    <td style="width:85%; font-family: 'TH Sarabun New'">**ให้ผู้รับแจ้งสอบถามว่าเคยแจ้งมาหรือไม่ หากมีการแจ้งซ้ำให้ตรวจสอบกับงานที่ผ่านมา</td>
+                </tr>
+            </table>
+        </div>
+        <div>
+            <table>
+                <tr>
+                    <td style="width:10%; font-family: 'TH Sarabun New'">เรื่องที่แจ้ง</td>
+                    <td style="width:15%; font-family: 'TH Sarabun New'">1. &nbsp;<img src="{C1}" width="18" /> &nbsp; ท่อแตก</td>
+                    <td style="width:5%; font-family: 'TH Sarabun New'">ชนิด</td>
+                    <td style="width:25%; font-family: 'TH Sarabun New'" class="underline">{Type}</td>
+                    <td style="width:6%; font-family: 'TH Sarabun New'">ขนาด</td>
+                    <td style="width:25%; font-family: 'TH Sarabun New'" class="underline">{Size}</td>
+                </tr>
+            </table>
+        </div>
+        <div>
+            <table>
+                <tr>
+                    <td style="width:15%; font-family: 'TH Sarabun New'"></td>
+                    <td style="width:20%; font-family: 'TH Sarabun New'">จุดสังเกตุที่เห็นได้ชัด</td>
+                    <td style="width:65%; font-family: 'TH Sarabun New'" class="underline">{LandmarkBroken}</td>
+                </tr>
+            </table>
+        </div>
+        <div>
+            <table>
+                <tr>
+                    <td style="width:10%; font-family: 'TH Sarabun New'">&nbsp;&nbsp;</td>
+                    <td style="width:78%; font-family: 'TH Sarabun New'">2. &nbsp;<img src="{C0}" width="18" /> น้ำไม่ไหล&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="{C0}" width="18" /> น้ำไหลอ่อน</td>
+                </tr>
+            </table>
+        </div>
+        <div>
+            <table>
+                <tr>
+                    <td style="width:10%; font-family: 'TH Sarabun New'">&nbsp;&nbsp;</td>
+                    <td style="width:78%; font-family: 'TH Sarabun New'">3. &nbsp;<img src="{C0}" width="18" /> ข้อต่อ,ขาตั้งมาตรชำรุด&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="{C0}" width="18" /> ประตูน้ำชำรุด</td>
+                </tr>
+            </table>
+        </div>
+        <div>
+            <table>
+                <tr>
+                    <td style="width:10%; font-family: 'TH Sarabun New'">&nbsp;&nbsp;</td>
+                    <td style="width:78%; font-family: 'TH Sarabun New'">4. &nbsp;<img src="{C0}" width="18" /> น้ำขุ่น&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="{C0}" width="18" /> น้ำมีกลิ่น</td>
+                </tr>
+            </table>
+        </div>
+        <div>
+            <table>
+                <tr>
+                    <td style="width:8%; font-family: 'TH Sarabun New'">หมายเหตุ</td>
+                    <td style="width:85%; font-family: 'TH Sarabun New'" class="underline"></td>
+                </tr>
+            </table>
+        </div>
+        <div>
+            <table>
+                <tr>
+                    <td style="width:20%; font-family: 'TH Sarabun New'"> </td>
+                    <td style="width:80%; font-family: 'TH Sarabun New'">ลงชื่อ_____________________________________ผู้รับคำร้องเรียน</td>
+                </tr>
+            </table>
+        </div>
+        <div>เรียน หัวหน้าชุดควบคุมงานซ่อมท่อ</div>
+        <div>
+            <table>
+                <tr>
+                    <td style="width:10%; font-family: 'TH Sarabun New'"> </td>
+                    <td style="width:80%; font-family: 'TH Sarabun New'">*จัดซ่อมโดยด่วน -รายงานผลให้ทราบ -แนบประมาณการซ่อม</td>
+                </tr>
+            </table>
+        </div>
+        <div>
+            <table>
+                <tr>
+                    <td style="width:20%; font-family: 'TH Sarabun New'"> </td>
+                    <td style="width:80%; font-family: 'TH Sarabun New'">ลงชื่อ_____________________________________หัวหน้างานบริการและควบคุมน้ำสูญเสีย</td>
+                </tr>
+            </table>
+        </div>
+        <div>เรียน หัวหน้างานบริการและควบคุมน้ำสูญเสีย</div>
+        <div>
+            <table>
+                <tr>
+                    <td style="width:10%; font-family: 'TH Sarabun New'"> </td>
+                    <td style="width:80%; font-family: 'TH Sarabun New'">ได้ดำเนินการซ่อมท่อและแก้ไขข้อร้องเรียนดังกล่าวข้างต้นเรียบร้อยแล้ว</td>
+                </tr>
+            </table>
+        </div>
+        <div>
+            <table>
+                <tr>
+                    <td style="width:5%; font-family: 'TH Sarabun New'">เมื่อวันที่</td>
+                    <td style="width:15%; font-family: 'TH Sarabun New'" class="underline"></td>
+                    <td style="width:3%; font-family: 'TH Sarabun New'">เวลา</td>
+                    <td style="width:10%; font-family: 'TH Sarabun New'" class="underline"></td>
+                    <td style="width:5%; font-family: 'TH Sarabun New'">น.</td>
+                    <td style="width:30%; font-family: 'TH Sarabun New'"></td>
+
+                </tr>
+            </table>
+        </div>
+        <div>
+            <table>
+                <tr>
+                    <td style="width:20%; font-family: 'TH Sarabun New'"> </td>
+                    <td style="width:80%; font-family: 'TH Sarabun New'">ลงชื่อ_____________________________________ผู้ปฏิบัติ</td>
+                </tr>
+            </table>
+        </div>
+        <div>
+            <table>
+                <tr>
+                    <td style="width:20%; font-family: 'TH Sarabun New'"> </td>
+                    <td style="width:80%; font-family: 'TH Sarabun New'">ลงชื่อ_____________________________________หัวหน้าชุดความคุมงานซ่อมท่อ</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

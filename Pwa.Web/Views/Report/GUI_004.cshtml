@@ -1,0 +1,171 @@
+﻿@using System.Data;
+@using Pwa.FrameWork.Dto.Utils;
+@{
+    /**/
+
+    /**/
+
+    ViewBag.Title = "รายงานสรุปตามประเภทร้องเรียน";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    DataTable DataResult = (DataTable)ViewBag.Data;
+}
+
+
+<form id="frmReport" method="post">
+
+
+
+    <div class="panel panel-primary panel-line">
+
+        <!-- Contacts Content Header -->
+        <div class="panel-heading">
+            <h1 class="panel-title">รายงานสรุปตามประเภทร้องเรียน</h1>
+            <div class="page-header-actions">
+
+            </div>
+        </div>
+
+        <!-- Contacts Content -->
+        <div id="contactsContent" class="panel-body" data-plugin="selectable">
+
+            <!-- Actions -->
+            <div class="page-content-actions">
+                @Html.Partial("~/Views/Shared/ReportSearchPartial.cshtml")
+            </div>
+
+            @{ 
+            string tempCategory = "", CategoryDisplay = "", SubCategoryDisplay = "";
+            int No = 1, SubNo = 1;
+            decimal total = 0, complatepercentTotal = 0, avgperdaytoal = 0, cal30perTotal = 0;
+                }
+            <!-- Contacts -->
+            <div class="table-responsive divTable">
+                <table class="table is-indent tblDisplay"
+                       id="tblDisplay" name="tblDisplay"
+                       data-plugin="animateList">
+                    <thead>
+                        <tr>
+
+                            <th scope="col" class="cell-100">ด้าน</th>
+                            <th scope="col" class="cell-100">หัวข้อการร้องเรียน</th>
+                            <th scope="col" class="cell-100">จำนวนครั้ง</th>
+                            <th scope="col" class="cell-100">
+                                อัตราการร้องเรียน<br>
+                                (ครั้ง/ผู้ใช้น้ำ 1,00 ราย)
+                            </th>
+                            <th scope="col" class="cell-100">
+                                เฉลี่ย
+                                (วันละ)
+                            </th>
+                            <th scope="col" class="cell-100">
+                                จำนวนที่ยังไม่ปิด
+                                (ครั้ง)
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        @if (DataResult != null)
+                        {
+
+                            foreach (DataRow dr in DataResult.Rows)
+                            {
+                                <tr>
+                                    @if (tempCategory == "")
+                                    {
+                                        tempCategory = dr["CATEGORY"].ToString();
+                                        CategoryDisplay = string.Format("{0}.{1}", No, dr["CATEGORY"].ToString());
+                                        SubCategoryDisplay = string.Format("{0}.{1} {2}", No, SubNo, dr["COMPLAINT_TOPIC"].ToString());
+                                    }
+                                    else if (tempCategory == dr["CATEGORY"].ToString())
+                                    {
+                                        SubNo++;
+                                        CategoryDisplay = "";
+                                        SubCategoryDisplay = string.Format("{0}.{1} {2}", No, SubNo, dr["COMPLAINT_TOPIC"].ToString());
+                                    }
+                                    else
+                                    {
+
+                                        No++;
+                                        SubNo = 1;
+                                        tempCategory = dr["CATEGORY"].ToString();
+                                        CategoryDisplay = string.Format("{0}.{1}", No, dr["CATEGORY"].ToString());
+                                        SubCategoryDisplay = string.Format("{0}.{1} {2}", No, SubNo, dr["COMPLAINT_TOPIC"].ToString());
+                                    }
+
+                                    @{ 
+                                        total += Converting.ToDecimal(dr["Total"].ToString());
+                                        complatepercentTotal += Converting.ToDecimal(dr["COMPLAINT_PERCEN"].ToString());
+                                        avgperdaytoal += Converting.ToDecimal(dr["AVG_PER_DAY"].ToString());
+                                        cal30perTotal += Converting.ToDecimal(dr["CAL30PERCEN"].ToString());
+                                    }
+                                    <td>@CategoryDisplay</td>
+                                    <td align="left">@SubCategoryDisplay</td>
+                                    <td align="right">@dr["Total"]</td>
+                                    <td align="right">@dr["COMPLAINT_PERCEN"]</td>
+                                    <td align="right">@dr["AVG_PER_DAY"]</td>
+                                    <td align="right">@dr["CAL30PERCEN"]</td>
+                                </tr>
+                            }
+                        }
+
+
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th></th>
+                            <th><h4>รวม</h4></th>
+                            <th><h4>@total.ToString("##,##0.00")</h4></th>
+                            <th><h4>@complatepercentTotal.ToString("##,##0.00")</h4></th>
+                            <th><h4>@avgperdaytoal.ToString("##,##0.00")</h4></th>
+                            <th><h4>@cal30perTotal.ToString("##,##0.00")</h4></th>
+                        </tr>
+                        <tr>
+                            <th></th>
+                            <th><h4>% เทียบกับคำร้องทั้งหมด</h4></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+
+                    </tfoot>
+                </table>
+            </div>
+
+        </div>
+    </div>
+
+
+    <script>
+
+        $(document).ready(function () {
+           // $("#tblDisplay").DataTable({ "searching": false, "bLengthChange": false });
+        });
+        $(document).on("click", "#btnSearch", function () {
+
+            $("#ReportType").val('');
+            $("#Action").val('search');
+            $("#frmReport").submit();
+
+        });
+
+        $(document).on("click", "#btnExportPDF", function () {
+
+            $("#ReportType").val('pdf');
+            $("#Action").val('export');
+            $("#frmReport").submit();
+
+        });
+
+        $(document).on("click", "#btnExportExcel", function () {
+            $("#ReportType").val('excel');
+            $("#Action").val('export');
+            $("#frmReport").submit();
+
+        });
+
+    </script>
+</form>
+

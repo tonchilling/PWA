@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="GUI_002" targetNamespace="http://tempuri.org/GUI_002.xsd" xmlns:mstns="http://tempuri.org/GUI_002.xsd" xmlns="http://tempuri.org/GUI_002.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="GUI_002" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="GUI_002" msprop:Generator_UserDSName="GUI_002">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="GUI_002" msprop:Generator_TableClassName="GUI_002DataTable" msprop:Generator_TableVarName="tableGUI_002" msprop:Generator_RowChangedName="GUI_002RowChanged" msprop:Generator_TablePropName="_GUI_002" msprop:Generator_RowDeletingName="GUI_002RowDeleting" msprop:Generator_RowChangingName="GUI_002RowChanging" msprop:Generator_RowEvHandlerName="GUI_002RowChangeEventHandler" msprop:Generator_RowDeletedName="GUI_002RowDeleted" msprop:Generator_RowClassName="GUI_002Row" msprop:Generator_UserTableName="GUI_002" msprop:Generator_RowEvArgName="GUI_002RowChangeEvent">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="BracnchNo" msprop:Generator_ColumnVarNameInTable="columnBracnchNo" msprop:Generator_ColumnPropNameInRow="BracnchNo" msprop:Generator_ColumnPropNameInTable="BracnchNoColumn" msprop:Generator_UserColumnName="BracnchNo" type="xs:string" minOccurs="0" />
+              <xs:element name="ChannelCategoryld" msprop:Generator_ColumnVarNameInTable="columnChannelCategoryld" msprop:Generator_ColumnPropNameInRow="ChannelCategoryld" msprop:Generator_ColumnPropNameInTable="ChannelCategoryldColumn" msprop:Generator_UserColumnName="ChannelCategoryld" type="xs:string" minOccurs="0" />
+              <xs:element name="Name" msprop:Generator_ColumnVarNameInTable="columnName" msprop:Generator_ColumnPropNameInRow="Name" msprop:Generator_ColumnPropNameInTable="NameColumn" msprop:Generator_UserColumnName="Name" type="xs:string" minOccurs="0" />
+              <xs:element name="M_Month" msprop:Generator_ColumnVarNameInTable="columnM_Month" msprop:Generator_ColumnPropNameInRow="M_Month" msprop:Generator_ColumnPropNameInTable="M_MonthColumn" msprop:Generator_UserColumnName="M_Month" type="xs:string" minOccurs="0" />
+              <xs:element name="Y_Year" msprop:Generator_ColumnVarNameInTable="columnY_Year" msprop:Generator_ColumnPropNameInRow="Y_Year" msprop:Generator_ColumnPropNameInTable="Y_YearColumn" msprop:Generator_UserColumnName="Y_Year" type="xs:string" minOccurs="0" />
+              <xs:element name="All_Branch" msprop:Generator_ColumnVarNameInTable="columnAll_Branch" msprop:Generator_ColumnPropNameInRow="All_Branch" msprop:Generator_ColumnPropNameInTable="All_BranchColumn" msprop:Generator_UserColumnName="All_Branch" type="xs:string" minOccurs="0" />
+              <xs:element name="Waiting" msprop:Generator_ColumnVarNameInTable="columnWaiting" msprop:Generator_ColumnPropNameInRow="Waiting" msprop:Generator_ColumnPropNameInTable="WaitingColumn" msprop:Generator_UserColumnName="Waiting" type="xs:string" minOccurs="0" />
+              <xs:element name="NotLate" msprop:Generator_ColumnVarNameInTable="columnNotLate" msprop:Generator_ColumnPropNameInRow="NotLate" msprop:Generator_ColumnPropNameInTable="NotLateColumn" msprop:Generator_UserColumnName="NotLate" type="xs:string" minOccurs="0" />
+              <xs:element name="Late" msprop:Generator_ColumnVarNameInTable="columnLate" msprop:Generator_ColumnPropNameInRow="Late" msprop:Generator_ColumnPropNameInTable="LateColumn" msprop:Generator_UserColumnName="Late" type="xs:string" minOccurs="0" />
+              <xs:element name="Late1Day" msprop:Generator_ColumnVarNameInTable="columnLate1Day" msprop:Generator_ColumnPropNameInRow="Late1Day" msprop:Generator_ColumnPropNameInTable="Late1DayColumn" msprop:Generator_UserColumnName="Late1Day" type="xs:string" minOccurs="0" />
+              <xs:element name="Late2Day" msprop:Generator_ColumnVarNameInTable="columnLate2Day" msprop:Generator_ColumnPropNameInRow="Late2Day" msprop:Generator_ColumnPropNameInTable="Late2DayColumn" msprop:Generator_UserColumnName="Late2Day" type="xs:string" minOccurs="0" />
+              <xs:element name="Late3Day" msprop:Generator_ColumnVarNameInTable="columnLate3Day" msprop:Generator_ColumnPropNameInRow="Late3Day" msprop:Generator_ColumnPropNameInTable="Late3DayColumn" msprop:Generator_UserColumnName="Late3Day" type="xs:string" minOccurs="0" />
+              <xs:element name="LateMore3Day" msprop:Generator_ColumnVarNameInTable="columnLateMore3Day" msprop:Generator_ColumnPropNameInRow="LateMore3Day" msprop:Generator_ColumnPropNameInTable="LateMore3DayColumn" msprop:Generator_UserColumnName="LateMore3Day" type="xs:string" minOccurs="0" />
+              <xs:element name="Code" msprop:Generator_ColumnVarNameInTable="columnCode" msprop:Generator_ColumnPropNameInRow="Code" msprop:Generator_ColumnPropNameInTable="CodeColumn" msprop:Generator_UserColumnName="Code" type="xs:string" minOccurs="0" />
+              <xs:element name="DATE_ORDERING" msprop:Generator_ColumnVarNameInTable="columnDATE_ORDERING" msprop:Generator_ColumnPropNameInRow="DATE_ORDERING" msprop:Generator_ColumnPropNameInTable="DATE_ORDERINGColumn" msprop:Generator_UserColumnName="DATE_ORDERING" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

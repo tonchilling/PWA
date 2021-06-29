@@ -1,0 +1,203 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>พิมพ์ใบเบิกวัสดุอุปกรณ์</title>
+    <style type="text/css">
+        body {
+            font-family: AngsanaUPC;
+            font-size: 14pt;
+            width: 1024px;
+
+        }
+        .pagemain {
+            width: 100%;
+            height:100%; 
+            align-content:center; 
+            padding:40px;
+        }
+        .table_header {
+            width: 100%;
+            border-color: black;
+            border-bottom-style: solid;
+            border: 0 0 0 0;
+        }
+        table {
+            line-height:25px;
+            width:100%;
+            margin-bottom:0px;
+            /*margin:10px 0 8px 0;*/
+        }
+        table tr td {
+            background-color:white;
+        }
+        .table tr td{
+            padding-left:3px;
+            padding-right:3px
+        }
+
+
+        .underline {
+            border-bottom-style: solid;
+            border-color: #b0b0b0;
+            text-align: center;
+            border-bottom: 1px;
+        }
+        .nonunderline {
+            border: 0 0 1px 0;
+            border-bottom-style: solid;
+            border-color: blue;
+            text-align: center;
+        }
+        .footer {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="pagemain">
+        <table border="1" cellpadding="0" cellspacing="0">
+            <tr style="height:70px;">
+                <td align="left" width="35%" style="border:0px;padding-left:10px;"><img src="{Logo}" width="70" /></td>
+                <td align="center" width="30%" style="border:0px;"><h3>ใบเบิกวัสดุจากคลัง</h3></td>
+                <td align="right" width="35%" style="border:0px;"><br />เลขที่ใบเบิกจาก SAP ____________/___________</td>
+            </tr>
+        </table>
+        <table border="1" cellpadding="0" cellspacing="0" width="100%" height="30">
+            <tr style="height:25px;">
+                <td style="width:10%;border:0px;" align="right">รหัสศูนย์ต้นทุน</td>
+                <td style="width:15%;border:0px;" class="underline">{CostCenter}</td>
+                <td style="width:10%;border:0px;" align="right">วันที่</td>
+                <td style="width:20%;border:0px;" align="left" class="underline">{DocDate}</td>
+                <td style="width:36%;border:0px;" align="right">เลขที่ใบขอเบิก/ขอจ้าง____________/___________</td>
+            </tr>
+        </table>
+        <table border="1" cellpadding="0" cellspacing="0" width="100%">
+            <tr style="height:30px;">
+                <td align="center" colspan="2" style="background-color:#ded8d8;"><b>การเบิกวัสดุอุปกรณ์/เพื่อกิจกรรม</b></td>
+            </tr>
+        </table>
+        <table border="1" cellpadding="1" cellspacing="0" width="100%">
+            <tr style="height:25px;">
+                <td style="width:50%;">&nbsp;<img src="{C0}" width="18" /> &nbsp;901 เบิกวัสดุการผลิต</td>
+                <td style="width:50%;">&nbsp;<img src="{C0}" width="18" /> &nbsp;921 เบิกวัสดุ เพื่อซ่อมแซมสิ่งก่อสร้าง</td>
+            </tr>
+            <tr style="height:25px;">
+                <td style="width:50%;">&nbsp;<img src="{C0}" width="18" /> &nbsp;903 เบิกวัสดุดำเนินการ เพื่อการจำหน่ายน้ำ</td>
+                <td style="width:50%;">&nbsp;<img src="{C0}" width="18" /> &nbsp;923 เบิกวัสดุ เพื่อซ่อมแซมเครื่องจักร</td>
+            </tr>
+            <tr style="height:25px;">
+                <td style="width:50%;">&nbsp;<img src="{C0}" width="18" /> &nbsp;905 เบิกวัสดุดำเนินการ เพื่อการติดตั้งและวางท่อ</td>
+                <td style="width:50%;">&nbsp;<img src="{C0}" width="18" /> &nbsp;925 เบิกวัสดุ เพื่อซ่อมแซมระบบไฟฟ้า</td>
+            </tr>
+            <tr style="height:25px;">
+                <td style="width:50%;">&nbsp;<img src="{C0}" width="18" /> &nbsp;ประเภท PE_____________________ขนาดท่อ___________________110</td>
+                <td style="width:50%;">&nbsp;<img src="{C0}" width="18" /> &nbsp;951 เบิกวัสดุ เพื่อนำไปใช้ในโครงการ (ยังไม่ปิด)</td>
+            </tr>
+            <tr style="height:25px;">
+                <td style="width:50%;">&nbsp;<img src="{C0}" width="18" /> &nbsp;551 เบิกวัสดุ เพื่อตัดจำหน่ายพิเศษ______________________________0.5</td>
+                <td style="width:50%;">&nbsp;<img src="{C0}" width="18" /> &nbsp;______เบิกวัสดุ เพื่อ_________________</td>
+            </tr>
+        </table>
+        <table border="1" cellpadding="0" cellspacing="0" width="100%">
+            <tr style="height:30px;">
+                <td align="center" colspan="2" style="background-color:#ded8d8;"><b>การเบิกมาตรวัดน้ำ : เพื่อกิจกรรม</b></td>
+            </tr>
+        </table>
+        <table border="1" cellpadding="1" cellspacing="0" width="100%">
+            <tr style="height:25px;">
+                <td style="width:50%;">&nbsp;<img src="{C0}" width="18" /> &nbsp;905 เบิกมาตรวัดน้ำใหม่&nbsp;&nbsp;&nbsp;<img src="{C0}" width="18" />กรณีติดตั้งใหม่&nbsp;&nbsp;&nbsp;<img src="{C0}" width="18" />กรณีเปลี่ยนขนาดมาตร</td>
+                <td style="width:50%;">&nbsp;<img src="{C0}" width="18" /> &nbsp;971 เบิกมาตรวัดน้ำใหม่ เปลี่ยนแทน กรณีมาตรชำรุด</td>
+            </tr>
+            <tr style="height:25px;">
+                <td style="width:50%;">&nbsp;<img src="{C0}" width="18" /> &nbsp;971 เบิกมาตรวัดน้ำใหม่ กรณีมาตรวัดน้ำหาย(กปภ.รับภาระ)</td>
+                <td style="width:50%;">&nbsp;<img src="{C0}" width="18" /> &nbsp;903 เบิกมาตรวัดน้ำเก่า (N)เปลี่ยนแทน กรณีมาตรชำรุด</td>
+            </tr>
+            <tr style="height:25px;">
+                <td style="width:50%;">&nbsp;<img src="{C0}" width="18" /> &nbsp;973 เบิกมาตรวัดน้ำใหม่ กรณีมาตรวัดน้ำหาย(ผู้ใช้น้ำรับภาระ)</td>
+                <td style="width:50%;">&nbsp;<img src="{C0}" width="18" /> &nbsp;903 เบิกมาตรวัดน้ำของผู้ใช้น้ำ ไปบรรจบมาตร/ประสานมาตร</td>
+            </tr>
+        </table>
+        <table border="1" cellpadding="0" cellspacing="0" width="100%">
+            <tr style="height:30px;">
+                <td align="center" colspan="2" style="background-color:#ded8d8;"><b>การเบิกมาตรวัดน้ำ : เพื่อกิจกรรม บรรจบมาตร/ประมาตร กรณีพนักงานทำมาตรวัดน้ำของผู้ใช้น้ำหาย</b></td>
+            </tr>
+        </table>
+        <table border="1" cellpadding="1" cellspacing="0" width="100%">
+            <tr style="height:25px;">
+                <td>&nbsp;ให้เลือก &nbsp;<img src="{C0}" width="18" />979 เบิกมาตรวัดน้ำของผู้ใช้น้ำไปบรรจบมาตร/ประสานมาตร และ  &nbsp;&nbsp;&nbsp;<img src="{C0}" width="18" />975 เบิกมาตรวัดน้ำใหม่ กรณีพนักงานทำมาตรผู้ใช้น้ำหาย (พนักงานรับภาระ)</td>
+            </tr>
+            <tr style="height:25px;">
+                <td>&nbsp;<img src="{C0}" width="18" /> &nbsp;นำไปใช้ในโครง รหัสงบประมาณโครง 1Z_______________________________________________________________________________________</td>
+            </tr>
+            <tr style="height:25px;">
+                <td>&nbsp;<img src="{C0}" width="18" /> &nbsp;เข้าระบบสินทรัพย์ เลขที่ทรัพย์สิน______________________________________________________________________________________________</td>
+            </tr>
+            <tr style="height:25px;">
+                <td>&nbsp;<img src="{C0}" width="18" /> &nbsp;โอนวัสดุระหว่างคลัง คลังผู้โอน_________________________________เลขที่เอกสารใบสั่งให้โอนย้ายจาก SAP_______________________________</td>
+            </tr>
+        </table>
+        <table border="1" cellpadding="0" cellspacing="0" width="100%">
+            <tr style="height:30px;">
+                <td align="center" colspan="2" style="background-color:#ded8d8;"><b>รายการเบิกวัสดุ</b></td>
+            </tr>
+        </table>
+        <table border="1" cellpadding="1" cellspacing="0" width="100%" class="table">
+            <tr style="height:25px;">
+                <th rowspan="2" align="center" width="5%">ลำดับที่</th>
+                <th rowspan="2" align="center" width="8%">รหัสวัสดุ</th>
+                <th rowspan="2" align="center" width="30%">รายการ</th>
+                <th rowspan="2" align="center" width="7%">หน่วยนับ</th>
+                <th rowspan="2" align="center" width="10%">ราคาต่อหน่วย</th>
+                <th rowspan="2" align="center" width="5%">ปริมาณ</th>
+                <th rowspan="2" align="center" width="7%">ราคารวม (บาท)</th>
+                <th colspan="3" align="center" width="20%">สถานที่เก็บ(สภาพ)</th>
+            </tr>
+            <tr style="height:25px;">
+                <th align="center" width="33%">ดี</th>
+                <th align="center" width="33%">รอตรวจ</th>
+                <th align="center" width="33%">ชำรุด</th>
+            </tr>
+            {items}
+            <tr style="height:25px;">
+                <td colspan="6" align="right" style="margin-right:3px;">รวม&nbsp;&nbsp;&nbsp;</td>
+                <td align="center">{total}</td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+        </table>
+        <br />
+        <div class="footer">
+            <table border="0" cellpadding="0" cellspacing="0" width="100%" >
+                <tr style="height:25px;">
+                    <td align="center">ลงชื่อ______________________________ผู้ขอเบิก</td>
+                    <td align="center">ลงชื่อ______________________________เจ้าหน้าที่คลัง</td>
+                </tr>
+                <tr style="height:25px;">
+                    <td align="center">(______________________________)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                    <td align="center">(______________________________)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                </tr>
+                <tr style="height:25px;">
+                    <td align="center">ตำแหน่ง เจ้าหน้าที่โยธา</td>
+                    <td align="center">ตำแหน่ง พนักงานพัสดุ</td>
+                </tr>
+                <tr style="height:25px;">
+                    <td align="center">ลงชื่อ______________________________อนุมัติ&nbsp;&nbsp;</td>
+                    <td align="center">ลงชื่อ______________________________ผู้รับรอง&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                </tr>
+                <tr style="height:25px;">
+                    <td align="center">(______________________________)&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                    <td align="center">(______________________________)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                </tr>
+                <tr style="height:25px;">
+                    <td align="center">ตำแหน่ง ผู้จัดการการประปาส่วนภูมิภาค{BranchName}</td>
+                    <td align="center">ตำแหน่ง เจ้าหน้าที่โยธา</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,171 @@
+﻿@using Pwa.FrameWork.Dto;
+@using Pwa.FrameWork.Dto.Smart1662;
+
+@{
+    ViewBag.Title = "WaitForApproval";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    List<DropDownlistDto> SysBranchs = (List<DropDownlistDto>
+    )ViewBag.SysBranchs;
+
+    UserInfoDto sysCurrentUser = (UserInfoDto
+)ViewBag.CurrentUser;
+}
+
+
+<form>
+    <input type="hidden" name="status" class="status" value="0" />
+    <div class="row">
+        <div class="col-xxl-12">&nbsp;</div>
+        <div class="col-xxl-12">
+            <div class="col-12 text-right">
+                <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-outline btn-warning  btnStatus" onclick="$('.status').val('0'); _load_data();" statusdata="2">
+                        <i class="icon wb-folder" aria-hidden="true"></i>  <span class="text-uppercase hidden-sm-down">รอพิจารณา</span>
+                        <br>
+                        <span class="text-uppercase hidden-sm-down lbProcess">-</span>
+                    </button>
+                </div>
+
+                <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-outline btn-info  btnStatus" onclick="$('.status').val('1'); _load_data();" statusdata="2">
+                        <i class="icon wb-time" aria-hidden="true"></i>  <span class="text-uppercase hidden-sm-down">พิจารณาแล้ว</span>
+                        <br>
+                        <span class="text-uppercase hidden-sm-down lbSla">-</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="col-xxl-12">&nbsp;</div>
+        <div class="col-xxl-12">
+            <div class="panel panel-primary panel-line">
+
+                <div class="panel-heading">
+                    <h1 class="panel-title">รายการขออนุมัติแก้ไข</h1>
+                </div>
+                <div class="page-content-actions">
+                    <div class="col-md-3 col-lg-3">
+                        <div class="form-group ">
+                            <label class="pt-3">เลขที่รับแจ้ง</label>
+                            <input type="text" class="form-control" id="incident_no" placeholder="" />
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-lg-3">
+                        <div class="form-group ">
+                            <label class="pt-3">วันที่ขอแก้ไข</label>
+                            <input type="text" class="form-control datetime" id="start_date" autocomplete="off" placeholder="" />
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-lg-3">
+                        <div class="form-group ">
+                            <label class="pt-3">ถึง</label>
+                            <input type="text" class="form-control datetime" id="end_date" autocomplete="off" placeholder="" />
+                        </div>
+                    </div>
+                    @*<div class="col-md-3 col-lg-3">
+                        <div class="form-group ">
+                            <label class="pt-3">กปภ.</label>
+                            <select class="form-control" id="branch">
+                                @foreach (DropDownlistDto it in SysBranchs)
+                                {
+                                    <option value="@it.Value" @(it.Value == (Model != null ? Model.BranchId : sysCurrentUser.Ba) ? "selected" : "")>@it.Text </option>
+                                }
+                            </select>
+                        </div>
+                    </div>*@
+                    <div class="col-md-12 col-lg-12 text-right">
+                        <button type="button" class="btn  btn-primary btnSearch" onclick="_load_data();">ค้นหา</button>
+                        <button type="button" class="btn  btn-warning btnReset" onclick="window.location.href = '/Incident/WaitForApproval';">เริ่มใหม่</button>
+                    </div>
+                </div>
+
+
+                <div class="panel-body">
+                    <div id="div_result_search" class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>เลขที่รับแจ้ง</th>
+                                    <th>วันเวลาที่รับแจ้ง</th>
+                                    <th>ชื่อ-นามสกุลผู้รับแจ้ง</th>
+                                    <th>หัวข้อ</th>
+                                    <th>รายละเอียดที่รับแจ้ง</th>
+                                    <th>กปภ.</th>
+                                    <th>วันเวลาที่เสร็จ</th>
+                                    <th>สาเหตุที่ขอแก้ไข</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<script>
+    function getDateIfDate(d) {
+        var m = d.match(/\/Date\((\d+)\)\//);
+        return m ? (new Date(+m[1])).toLocaleDateString('th-TH', { month: '2-digit', day: '2-digit', year: 'numeric' }) + ' ' + (new Date(+m[1])).toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' }) : d;
+    }
+
+    function _load_data() {
+        $('#div_result_search').html('');
+        $.post('@Url.Content("~/Incident/LoadWFA")', {
+            status: $('.status').val(),
+            incident_no: $('#incident_no').val(),
+            start_date: $('#start_date').val(),
+            end_date: $('#end_date').val(),
+            //branch: $('#branch').val(),
+            tm: (new Date()).getTime()
+        }, function (response) {
+                var data = response;
+                $('#div_result_search').html('<table class="table table-hover">'
+                    + '<thead>'
+                    + '<tr>'
+                    + '<th>เลขที่รับแจ้ง</th>'
+                    + '<th>วันเวลาที่รับแจ้ง</th>'
+                    + '<th>ชื่อ-นามสกุลผู้รับแจ้ง</th>'
+                    + '<th>หัวข้อ</th>'
+                    + '<th>รายละเอียดที่รับแจ้ง</th>'
+                    + '<th>กปภ.</th>'
+                    + '<th>วันเวลาที่เสร็จ</th>'
+                    + '<th>สาเหตุที่ขอแก้ไข</th>'
+                    + '<th></th>'
+                    + '</tr>'
+                    + '</thead>'
+                    + '<tbody></tbody>'
+                    + '</table>');
+
+                for (var i = 0; i < data.length; i++) {
+                    $('#div_result_search table tbody').append('<tr data-id="' + data[i].incident_id + '">'
+                        + '<td>' + data[i].incident_no + '</td>'
+                        + '<td>' + getDateIfDate(data[i].request_date) + '</td>'
+                        + '<td>' + data[i].customer_name + '</td>'
+                        + '<td>' + data[i].topic + '</td>'
+                        + '<td>' + data[i].desc.replace(/\r\n/g, '<br />').replace(/\n/g, '<br />').replace(/\r/g, '<br />') + '</td>'
+                        + '<td>' + data[i].branch + '</td>'
+                        + '<td>' + (data[i].completed_date == null ? '' : data[i].completed_date) + '</td>'
+                        + '<td>' + data[i].reason + '</td>'
+                        + '<td>' + ($('.status').val() == '0' ? '<a href = "@Url.Action("Edit", "Incident")/' + data[i].incident_id + '?wfa=1" target = "_self" class="btn btn-sm btn-floating btn-success"><i class="icon wb-pencil" style="padding-top:10px;" aria-hidden="true"></i></a>' : '') + '</td>'
+                        + '</tr>');
+                }
+
+                $('#div_result_search table').dataTable({
+                    "searching": false
+                    , "bLengthChange": false
+                    , "order": [[1, "desc"], [0, "desc"]]
+                    , "columnDefs": [{ "targets": 1, "type": "date-eu" }],
+                });
+        });
+    }
+
+
+    $(".datetime").datepicker();
+    //$("#branch").select2();
+
+    _load_data();
+</script>
+

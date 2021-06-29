@@ -1,0 +1,116 @@
+﻿@using System.Data;
+@{
+    /**/
+
+    /**/
+
+    ViewBag.Title = "รายงานจำนวนผู้รับบริการ แยกตามช่องทางร้องเรียน";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    DataTable DataResult = (DataTable)ViewBag.Data;
+}
+
+
+<form id="frmReport" method="post">
+
+
+
+    <div class="panel panel-primary panel-line">
+
+        <!-- Contacts Content Header -->
+        <div class="panel-heading">
+            <h1 class="panel-title">รายงาน  > รายงานจำนวนผู้รับบริการ แยกตามช่องทางร้องเรียน </h1>
+            <div class="page-header-actions">
+
+            </div>
+        </div>
+
+        <!-- Contacts Content -->
+        <div id="contactsContent" class="panel-body" data-plugin="selectable">
+
+            <!-- Actions -->
+            <div class="page-content-actions">
+                @Html.Partial("~/Views/Shared/ReportSearchPartial.cshtml")
+            </div>
+
+
+            <!-- Contacts -->
+            <div class="table-responsive divTable">
+                <table class="table is-indent tblDisplay"
+                       id="tblDisplay" name="tblDisplay"
+                       data-plugin="animateList">
+                    <thead>
+                        <tr>
+                            <th scope="col" class="cell-100">ลำดับ</th>
+                            <th scope="col" class="cell-100">ช่องทางร้องเรียน</th>
+                            <th scope="col" class="cell-100">จำนวนข้อร้องเรียน (เรื่อง)</th>
+                            <th scope="col" class="cell-100">จำนวนข้อร้องเรียน (ร้อยละ)</th>
+                            <th scope="col" class="cell-100">จำนวนการติดตามเร่งรัดข้อขัดเรียนเดิม (เรื่อง)</th>
+                            <th scope="col" class="cell-100">จำนวนการติดตามเร่งรัดข้อขัดเรียนเดิม (ร้อยละ)</th>
+                            <th scope="col" class="cell-100">จำนวนการสอบถามทั่วไป (เรื่อง)</th>
+                            <th scope="col" class="cell-100">จำนวนการสอบถามทั่วไป (ร้อยละ)</th>
+                            <th scope="col" class="cell-100">รวมทั้งหมด (เรื่อง)</th>
+                            <th scope="col" class="cell-100">รวมทั้งหมด (ร้อยละ)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (DataResult != null)
+                        {
+                            foreach (DataRow dr in DataResult.Rows)
+                            {
+                        <tr>
+                            <td>@dr["CATEGORY_ORDER"]</td>
+                            <td>@dr["COMPLAINT_TOPIC"]</td>
+                            <td align="right">@Convert.ToInt32(dr["C_COMPLAINT"]).ToString("#,###,##0")</td>
+                            <td align="right">@Convert.ToDecimal(dr["COMPLAINT_PERCENTAGE"]).ToString("#,###,##0.00")</td>
+                            <td align="right">@Convert.ToInt32(dr["MORNITORING"]).ToString("#,###,##0")</td>
+                            <td align="right">@Convert.ToDecimal(dr["MORNITORING_PERCENTAGE"]).ToString("#,###,##0.00")</td>
+                            <td align="right">@Convert.ToInt32(dr["ASK_FOR_INFOR"]).ToString("#,###,##0")</td>
+                            <td align="right">@Convert.ToDecimal(dr["ASK_FOR_INFOR_PERCENTAGE"]).ToString("#,###,##0.00")</td>
+
+                            <td align="right">@Convert.ToInt32(dr["C_TOTAL"]).ToString("#,###,##0")</td>
+                            <td align="right">@Convert.ToDecimal(dr["C_TOTAL_PERCENTAGE"]).ToString("#,###,##0.00")</td>
+
+                        </tr>
+                            }
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+
+
+    <script>
+
+        $(document).ready(function () {
+           // $("#tblDisplay").DataTable({ "searching": false, "bLengthChange": false });
+        });
+        $(document).on("click", "#btnSearch", function () {
+
+            $("#ReportType").val('');
+            $("#Action").val('search');
+            $("#frmReport").submit();
+
+        });
+
+        $(document).on("click", "#btnExportPDF", function () {
+
+            $("#ReportType").val('pdf');
+            $("#Action").val('export');
+            $("#frmReport").submit();
+
+        });
+
+        $(document).on("click", "#btnExportExcel", function () {
+            $("#ReportType").val('excel');
+            $("#Action").val('export');
+            $("#frmReport").submit();
+
+        });
+
+    </script>
+</form>
+

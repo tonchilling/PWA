@@ -1,0 +1,337 @@
+﻿
+@using Pwa.FrameWork.Dto;
+@{
+    /**/
+
+    List<DropDownlistDto> SysArea = (List<DropDownlistDto>
+)ViewBag.SysArea;
+
+
+    List<DropDownlistDto> SysBranchs = (List<DropDownlistDto>
+)ViewBag.SysBranch;
+
+    List<DropDownlistDto> sysRequestTypes = (List<DropDownlistDto>
+)ViewBag.SysRequestType;
+
+    List<DropDownlistDto> SysRequestCategorys = (List<DropDownlistDto>
+    )ViewBag.SysRequestCategorys;
+
+    List<DropDownlistDto> SysRequestCategorySubjects = (List<DropDownlistDto>
+    )ViewBag.SysRequestCategorySubjects;
+
+    List<DropDownlistDto> SysChannelCates = (List<DropDownlistDto>
+  )ViewBag.SysChannelCates;
+}
+
+<script>
+    var sysBranchs = @Html.Raw(Json.Encode(SysBranchs));
+        var sysRequestTypes = @Html.Raw(Json.Encode(sysRequestTypes));
+    var SysRequestCategorys = @Html.Raw(Json.Encode(SysRequestCategorys));
+    var SysRequestCategorySubjects = @Html.Raw(Json.Encode(SysRequestCategorySubjects));
+</script>
+@model CriterialDto
+<div class="panel panel-primary divToolSearch">
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-sm-2">   <label>ช่วงเวลา</label></div>
+        </div>
+                <div class="row">
+                    <div class="col-sm-2">
+                      
+                        <div class="radio-custom radio-primary">
+                            <input type="radio" id="rdDay"  value="1"  class="rdPeriodType" name="rdPreiodType" @(Model.PeriodType == "1" ? "checked" : "")>
+                            <label for="rdDay">วัน</label>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <div class="input-daterange">
+                                <div class="input-group">
+
+                                    <input type="text" class="form-control selectPeriodValue txtFromDate" value="@Model.FromDateTH" id="txtFromDate" name="txtFromDate">
+                                    <span class="input-group-addon">
+                                        <i class="icon wb-calendar" aria-hidden="true"></i>
+                                    </span>
+                                </div>
+                                <div class="input-group">
+                                    <span class="input-group-addon">ถึง</span>
+                                    <input type="text" class="form-control selectPeriodValue txtToDate" id="txtToDate" value="@Model.ToDateTH" name="txtToDate">
+                                    <span class="input-group-addon">
+                                        <i class="icon wb-calendar" aria-hidden="true"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-sm-2">
+                        <div class="radio-custom radio-primary">
+                            <input type="radio" id="rdMonth" class="rdPeriodType" value="2" name="rdPreiodType"  @(Model.PeriodType == "2" ? "checked" : "")>
+                            <label for="rdMonth">เดือน</label>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <div class="input-daterange">
+                                <div class="input-group">
+
+                                    <input type="text" class="form-control selectPeriodValue txtFromMonth" value="@Model.FromMonthYearTH" id="txtFromMonth" name="txtFromMonth">
+                                    <span class="input-group-addon">
+                                        <i class="icon wb-calendar" aria-hidden="true"></i>
+                                    </span>
+                                </div>
+                                <div class="input-group">
+                                    <span class="input-group-addon">ถึง</span>
+                                    <input type="text" class="form-control selectPeriodValue txtToMonth" id="txtToMonth" value="@Model.ToMonthYearTH" name="txtToMonth">
+                                    <span class="input-group-addon">
+                                        <i class="icon wb-calendar" aria-hidden="true"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--   <div class="col-sm-4">
+                    <div class="form-group">
+                        <select class="ddlDisplayData select2" id="ddlDisplayData" name="ddlDisplayData">
+                            <option value="0" @(Model.DisplayData == "0" ? "selected" : "")>สรุป</option>
+                            <option value="1" @(Model.DisplayData == "1" ? "selected" : "")>รายละเอียด</option>
+
+                        </select>
+                    </div>
+                </div>-->
+                </div>
+                <div class="row">
+                    <div class="col-sm-2">
+                        <div class="radio-custom radio-primary">
+                            <input type="radio" id="rdQuarter"  value="3"  class="rdPeriodType" name="rdPreiodType" @(Model.PeriodType == "3" ? "checked" : "")>
+                            <label for="rdQuarter">ไตรมาส</label>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="input-group">
+
+                            <input type="text" class="form-control selectPeriodValue txtYear" id="txtYear" value="@Model.Year" name="txtYear">
+                            <span class="input-group-addon">
+                                <i class="icon wb-calendar" aria-hidden="true"></i>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <select class="ddlQuater select2" id="ddlQuater" name="ddlQuater">
+                            <option value="1" @(Model.Quarter == "1" ? "selected" : "")>ไตรมาสที่ 1</option>
+                            <option value="2" @(Model.Quarter == "2" ? "selected" : "")>ไตรมาสที่ 2</option>
+                            <option value="3" @(Model.Quarter == "3" ? "selected" : "")>ไตรมาสที่ 3</option>
+                            <option value="4" @(Model.Quarter == "4" ? "selected" : "")>ไตรมาสที่ 4</option>
+
+                        </select>
+                    </div>
+
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-2"></div>
+                    <div class="col-sm-5">
+                        <div class="form-group">
+                            <label for="ddlAreaSearch">กปภ.เขต</label>
+                            <select class="ddlAreaSearch select2" id="ddlAreaSearch" name="ddlAreaSearch">
+                                <option value="">เลือกเขต</option>
+                                @foreach (DropDownlistDto it in SysArea)
+                                {
+                                    <option value="@it.Value" @(Model.AreaId == it.Value ? "selected" : "")>
+                                        @it.Text
+                                    </option>
+                                }
+
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-5">
+                        <div class="form-group">
+                            <label for="ddlBranchSearch">กปภ.สาขา</label>
+                            <select class="ddlBranchSearch select2" id="ddlBranchSearch" name="ddlBranchSearch">
+                                <option value="">เลือกสาขา</option>
+                                @foreach (DropDownlistDto it in SysBranchs)
+                                {
+                                    <option value="@it.Value" @(Model.BranchId == it.Value ? "selected" : "")>
+                                        @it.Text
+                                    </option>
+                                }
+
+                            </select>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-2"></div>
+
+                    <div class="col-md-5 col-lg-5">
+                        <div class="form-group">
+                            <label for="ddlRequestType">ประเภทรับแจ้ง</label>
+                            <select class="ddlRequestType select2"
+                                    id="ddlRequestType" name="ddlRequestType"
+                                    tabindex="-98">
+                                <option value="">ประเภทรับแจ้ง</option>
+                                @foreach (DropDownlistDto it in sysRequestTypes)
+                                {
+                                    <option value="@it.Value" @(it.Value == (Model != null ? Model.RequestType : "") ? "selected" : "")>@it.Text </option>
+                                }
+
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-md-5 col-lg-5">
+                        <div class="form-group">
+                            <label for="ddlChannel">ช่องทาง</label>
+                            <select class="ddlChannel select2"
+                                    id="ddlChannel" name="ddlChannel">
+                                <option value="">กรุณาเลือก</option>
+                                @foreach (DropDownlistDto it in SysChannelCates)
+                                {
+                                    <option value="@it.Value" @(Model.ChannelType == it.Value ? "selected" : "")>
+                                        @it.Text
+                                    </option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-lg-3">
+                        <!--   <div class="form-group">
+                        <label for="ddlRequestCategory">ด้านการร้องเรียน</label>
+                        <select class="ddlRequestCategory select2"
+                                id="ddlRequestCategory" name="ddlRequestCategory">
+                            <option value="0">ด้านการร้องเรียน</option>
+                        </select>
+                    </div>-->
+                    </div>
+                    <div class="col-md-4 col-lg-4">
+                        <!--     <div class="form-group">
+                        <label for="ddlRequestCategorySubject">หัวข้อการร้องเรียน</label>
+                        <select class="ddlRequestCategorySubject select2"
+                                id="ddlRequestCategorySubject" name="ddlRequestCategorySubject">
+                            <option value="0">หัวข้อการร้องเรียน</option>
+                        </select>
+                    </div>-->
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12 text-center">
+                        <input type="button" id="btnSearch" class="btn  btn-success " value="ค้นหา" />
+                        <input type="button" id="btnCancel" class="btn  btn-default " value="ยกเลิก" />
+                        <img src="~/icon/PDF_48.png" id="btnExportPDF" class="imgBtn pull-right" />
+                        <img src="~/icon/XLS_48.png" id="btnExportExcel" class="imgBtn pull-right" />
+
+                        <input type="hidden" id="Action" name="Action" value="search" />
+                        <input type="hidden" id="ReportType" name="ReportType" />
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+
+        <script>
+            $(document).ready(function () {
+
+                $(".select2").select2({
+                    maximumSelectionLength: 2,
+                    width: '100%'
+                });
+
+                $('#txtFromDate').datepicker({
+                    format: "dd/mm/yyyy",
+                    viewMode: "days",
+                    minViewMode: "days"
+                })
+
+                $('#txtToDate').datepicker({
+                    format: "dd/mm/yyyy",
+                    viewMode: "days",
+                    minViewMode: "days"
+                })
+
+                $('#txtFromMonth').datepicker({
+                    format: "mm/yyyy",
+                    viewMode: "months",
+                    minViewMode: "months"
+                })
+
+                $('#txtToMonth').datepicker({
+                    format: "mm/yyyy",
+                    viewMode: "months",
+                    minViewMode: "months"
+                })
+
+                $('#txtYear').datepicker({
+                    format: "yyyy",
+                    viewMode: "years",
+                    minViewMode: "years"
+                })
+                LoadEvent();
+            });
+
+            function LoadEvent() {
+                $(document).on("change", ".ddlRequestType", function (e) {
+
+                    $("select.ddlRequestCategory").find('option').remove();
+                    $("select.ddlRequestCategorySubject").find('option').remove();
+
+                    var selCategory = SysRequestCategorys.filter(o => o.ParentId1 == $(this).val());
+
+                    $.each(selCategory, function (index, item) {
+                        $("select.ddlRequestCategory").append("<option value='" + item.Value + "'>" + item.Text + "</option>");
+                    });
+                    $("select.ddlRequestCategory").selectpicker('refresh');
+                    $("select.ddlRequestCategorySubject").selectpicker('refresh');
+                    $("select.ddlRequestCategory").trigger("change");
+                    e.stopPropagation();
+                });
+
+                $(document).on("change", ".ddlRequestCategory", function (e) {
+
+                    $("select.ddlRequestCategorySubject").find('option').remove();
+
+                    //  alert($(this).val())
+                    var selCategory = SysRequestCategorySubjects.filter(o => (o.ParentId1 == $(this).val() && o.ParentId2 == $(".ddlRequestType").selectpicker("val")));
+
+                    $.each(selCategory, function (index, item) {
+                        $("select.ddlRequestCategorySubject").append("<option value='" + item.Value + "'>" + item.Text + "</option>");
+                    });
+                    $("select.ddlRequestCategorySubject").selectpicker('refresh');
+                    e.stopPropagation();
+                });
+                $(document).on("click", ".rdPeriodType", function (e) {
+                    
+                    $(".selectPeriodValue").val('');
+                });
+
+                
+                $(document).on("change", ".ddlAreaSearch", function (e) {
+
+                    $(".ddlBranchSearch").empty();
+                    $(".ddlBranchSearch").append("<option value=''>Please Select</option>");
+                    $.each(sysBranchs.filter(o => o.ParentId1 == $(this).val()), function (index, item) {
+                        $(".ddlBranchSearch").append("<option value='" + item.Value + "'>" + item.Text + "</option>");
+
+                        // objControl.append("<option value='" + item.Value + "'>" + item.Text + "</option>");
+                    });
+
+                    $(".ddlBranchSearch").select2(
+                        {
+                            placeholder: 'กรุณาเลือก',
+                            width: '100%'
+                        }
+                    );
+
+                });
+            }
+
+        </script>

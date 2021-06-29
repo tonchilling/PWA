@@ -1,0 +1,490 @@
+﻿@using Pwa.FrameWork.Dao.EF.Smart1662;
+@using Pwa.FrameWork.Bal.Smart1662;
+@using Pwa.FrameWork.Dto.Smart1662;
+@using Pwa.FrameWork.Dto;
+@{
+    ViewBag.Title = "Item";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    List<ItemDto> AllItem = (List<ItemDto>)ViewBag.AllItem;
+
+}
+
+<div class="panel panel-primary panel-line">
+
+    <!-- Contacts Content Header -->
+    <div class="panel-heading">
+        <h1 class="panel-title">ข้อมูลพื้นฐาน  > วัสดุอุปกรณ์</h1>
+        <div class="page-header-actions">
+            <form></form>
+        </div>
+    </div>
+
+    <!-- Contacts Content -->
+    <div id="contactsContent" class="panel-body" data-plugin="selectable">
+
+        <!-- Actions -->
+        <div class="page-content-actions">
+            <div class="row">
+                <div class="col-md-2 col-lg-2">
+                    <div class="form-group ">
+                        <label class="pt-3">รหัสอุปกรณ์</label>
+                        <input type="text" class="form-control" name="search_ItemCode" id="search_ItemCode" placeholder="" />
+                    </div>
+                </div>
+                <div class="col-md-4 col-lg-4">
+                    <div class="form-group ">
+                        <label class="pt-3">ชื่ออุปกรณ์</label>
+                        <input type="text" class="form-control" name="search_ItemName" id="search_ItemName" placeholder="" />
+                    </div>
+                </div>
+                <div class="col-md-3 col-lg-3">
+                    <div class="form-group">
+                        <label class="pt-3">สถานะ</label>
+                        <select data-plugin="selectpicker" class="selectpicker" tabindex="-98" name="search_status" id="search_status">
+                            <option value="">ทุกสถานะ</option>
+                            <option value="1">ใช้งาน</option>
+                            <option value="0">ไม่ใช้งาน</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+                <div class="col-md-12 col-lg-12">
+                    <div class="pull-right">
+                        <button type="button" class="btn btn-outline btn-primary btnSearch">ค้นหา</button>
+                        @*<button type="button" class="btn btn-outline btn-default">ยกเลิก</button>*@
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+
+        <!-- Contacts -->
+        <div class="table-responsive divTable">
+            <table class="table is-indent tblDisplay" id="tblDisplay" name="tblDisplay" data-plugin="animateList" data-animate="fade" data-child="tr"
+                   data-selectable="selectable">
+                <thead>
+                    <tr>
+                        <th scope="col">รหัสอุปกรณ์</th>
+                        <th scope="col">ชื่ออุปกรณ์</th>
+                        <th scope="col">ราคา(บาท)</th>
+                        <th scope="col">หน่วย</th>
+                        <th scope="col">สถานะ</th>
+                        <th scope="col">UpdatedDate</th>
+                        <th scope="col">UpdatedBy</th>
+                        <th scope="col"></th>
+                        @*<th scope="col"></th>*@
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var ss in AllItem)
+                    {
+                        var year = Convert.ToInt32(ss.UpdatedDate.Split('/')[2]);
+                        if (year < 2500)
+                        {
+                            year = year + 543;
+                        }
+                        var UpdatedDate = ss.UpdatedDate.Split('/')[0] + '/' + ss.UpdatedDate.Split('/')[1] + '/' + year;// + ' ' + ss.UpdatedTime;
+                    <tr data-url="panel.tpl">
+                        <td>@ss.ItemCode</td>
+                        <td>@ss.ItemName</td>
+                        <td>@(ss.Price == null ? "" : ss.Price)</td>
+                        <td>@ss.UnitName</td>
+                        <td>@(ss.Status == "1" ? "ใช้งาน" : "ไม่ใช้งาน") </td>
+                        <td>@ss.UpdatedDate</td>
+                        <td>@ss.UpdatedByName</td>
+                        <td>
+                            <button type="button" data="@ss.ItemId" class="btn btn-floating btn-success btn-sm btnEdit"><i class="icon wb-pencil" aria-hidden="true"></i></button>
+                        </td>
+                        @*<td>
+                            <button type="button" data="@ss.ItemId"  class="btn btn-floating btn-danger btn-sm btnDelete hidden"><i class="icon wb-close" aria-hidden="true"></i></button>
+                        </td>*@
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+<div class="site-action" data-plugin="actionBtn">
+    <button type="button" class="btn-raised btn btn-success btn-floating btnAdd">
+        <i class="front-icon wb-plus animation-scale-up" aria-hidden="true"></i>
+        <i class="back-icon wb-close animation-scale-up" aria-hidden="true"></i>
+    </button>
+    <div class="site-action-buttons">
+        <button type="button" data-action="trash" class="btn-raised btn btn-success btn-floating animation-slide-bottom">
+            <i class="icon wb-trash" aria-hidden="true"></i>
+        </button>
+        <button type="button" data-action="folder" class="btn-raised btn btn-success btn-floating animation-slide-bottom">
+            <i class="icon wb-folder" aria-hidden="true"></i>
+        </button>
+    </div>
+</div>
+
+<div class="modal fade" id="InputForm" aria-hidden="true" aria-labelledby="InputForm"
+     role="dialog">
+    <div class="modal-dialog modal-primary  modal-simple modal-md">
+        <div class="modal-content">
+            <div class="modal-header ">
+                <button type="button" class="close" aria-hidden="true" data-dismiss="modal">×</button>
+                <h4 class="modal-title">บันทึก</h4>
+            </div>
+            <div class="modal-body" style="background-color:#f1f4f5;padding-top:10px">
+                <div class="panel panel-primary panel-line">
+                    <div class="panel-heading">
+                        <div class="panel-title">อุปกรณ์</div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-5 col-lg-5">
+                                <div class="form-group ">
+                                    <label class="pt-3">รหัสอุปกรณ์</label>
+                                    <input type="text" class="form-control" id="tb_ItemCode" name="tb_ItemCode" placeholder="" value="" />
+                                </div>
+                            </div>
+                            <div class="col-md-5 col-lg-5">
+                                <div class="form-group ">
+                                    <label class="pt-3">ชื่ออุปกรณ์</label>
+                                    <input type="text" class="form-control" id="tb_ItemName" name="tb_ItemName" placeholder="" value="" />
+                                </div>
+                            </div>
+
+                            <div class="col-md-2 col-lg-2">
+                                <div class="form-group" id="cbstatus">
+                                    <label class="pt-3">ใช้งาน</label>
+                                    <br />
+                                    <input type="checkbox" id="cb_status" name="cb_status"
+                                           data-color="#17b3a3" class="switchery js-switch" checked />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-5 col-lg-5">
+                                <div class="form-group ">
+                                    <label class="pt-3">ราคา(บาท)</label>
+                                    <input type="text" class="form-control" id="tb_Price" name="tb_Price" placeholder="" value="" />
+                                </div>
+                            </div>
+                            <div class="col-md-5 col-lg-5">
+                                <div class="form-group">
+                                    <label class="pt-3">หน่วย</label>
+                                    <select data-plugin="selectpicker" class="selectpicker ddl_Unit" tabindex="-98" name="ddl_Unit" id="ddl_Unit">
+                                        <option value="">เลือกหน่วย</option>
+                                        @foreach (DropDownlistDto obj in ViewBag.Unit)
+                                        {
+                                            <option value="@obj.Value">@obj.Text</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-5 col-lg-5">
+                                <div class="form-group ">
+                                    <label class="pt-6">วันที่สร้าง</label>
+                                    <input type="text" class="form-control" id="tb_CreatedDate" placeholder="" disabled value="" />
+                                </div>
+                            </div>
+                            <div class="col-md-5 col-lg-5">
+                                <div class="form-group ">
+                                    <label class="pt-6">ผู้สร้าง</label>
+                                    <input type="text" class="form-control" id="tb_CreatedName" placeholder="" disabled value="" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-5 col-lg-5">
+                                <div class="form-group ">
+                                    <label class="pt-6">วันที่แก้ไขล่าสุด</label>
+                                    <input type="text" class="form-control" id="tb_UpdatedDate" placeholder="" disabled value="" />
+                                </div>
+                            </div>
+                            <div class="col-md-5 col-lg-5">
+                                <div class="form-group ">
+                                    <label class="pt-6">ผู้ที่แก้ไขล่าสุด</label>
+                                    <input type="text" class="form-control" id="tb_UpdatedName" placeholder="" disabled value="" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline btn-primary btnSave" data-dismiss="modal" type="submit">บันทึก</button>
+                <a class="btn btn-outline  btn-default" data-dismiss="modal" href="javascript:void(0)">ยกเลิก</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var PageController = {
+
+        init: function (){
+
+            $(document).ready(function () {
+
+                var elem = document.querySelector('.js-switch');
+                var init = new Switchery(elem);
+                PageController.LoadEvent();
+                $("#tblDisplay").DataTable({ "searching": false, "bLengthChange": false });
+
+            });
+    },
+        LoadEvent: function ()
+        {
+
+             $(document).on("click", ".btnEdit", function () {
+                 PwaManager.PwaWaiting(true);
+                 PwaManager.PwaPost('@Url.Action("SearchItem", new { controller = "Master" })', { "ItemId": $(this).attr("data"), "ItemCode": "", "ItemName": "", "Status": "", "BaCode": "1001"},
+                function (data) {
+                    PageController.GetEditData(data.Data.lst);
+                    PwaManager.PwaWaiting(false);
+                }
+                , PageController.GetError);
+            $("#InputForm").modal({ backdrop: 'static', keyboard: false });
+            });
+            $(document).on("click", ".btnAdd", function () {
+                $("#InputForm").modal({ backdrop: 'static', keyboard: false });
+                PageController.AddNew();
+            });
+
+            //$(document).on("click", ".btnDelete", function () {
+            //    PwaConfirm("ลบ", "คุณต้องการลบข้อมูหรือไม่", function (isConfirm) {
+            //        if (isConfirm) {
+            //            swal(
+            //                {
+            //                    title: "สำเร็จ!",
+            //                    text: "ลบข้อมูลเรียบร้อย!",
+            //                    timer: 800
+            //                });
+
+            //        } else {
+            //            swal.close();
+
+            //        }
+            //    })
+            //});
+
+            $(document).on("click", ".btnSave", function () {
+
+                var dataList = [];
+
+                // ---------------------    validate fields ---------------------------------//
+                var validate1 = false;
+                if ($("#tb_ItemCode").val() == "") {
+                    validate1 = false;
+                    $("#tb_ItemCode").closest('.form-group').addClass('has-error');
+                    //return false;
+                } else {
+                    validate1 = true;
+                    $("#tb_ItemCode").closest('.form-group').removeClass('has-error');
+                }
+
+                var validate2 = false;
+                if ($("#tb_ItemName").val() == "") {
+                    validate2 = false;
+                    $("#tb_ItemName").closest('.form-group').addClass('has-error');
+                    //return false;
+                } else {
+                    validate2 = true;
+                    $("#tb_ItemName").closest('.form-group').removeClass('has-error');
+                }
+                
+
+                if (!validate1 || !validate2) return false;
+                    // ---------------------    validate fields ---------------------------------//
+
+                var row = $(this);
+
+                var dataDetail = {};
+                dataDetail.ItemId = $("#tb_ItemCode").attr("data");
+                dataDetail.Action = $("#tb_ItemCode").attr("act");
+                dataDetail.ItemCode = $("#tb_ItemCode").val();
+                dataDetail.ItemName = $("#tb_ItemName").val();
+                dataDetail.Price = $("#tb_Price").val();
+                dataDetail.UnitId = $("#ddl_Unit").val();
+                dataDetail.Status = ($("#cb_status").is(":checked") ? "1" : "0");
+                dataDetail.BaCode = "1001";
+                dataList.push(dataDetail);
+
+                PwaManager.PwaConfirm("บันทึก", "คุณต้องการบันทึกหรือไม่", function (isConfirm) {
+                    if (isConfirm) {
+                       PwaManager.PwaWaiting(true);
+
+                        PwaManager.PwaPost('@Url.Action("SaveItem", new { controller = "Master" })', { "Requests": dataDetail },
+
+                                function (data) {
+
+                                    PwaManager.PwaWaiting(false);
+                                    PageController.GetSuccess(data.Data.lst);
+                                    swal(
+                                        {
+                                            title: "สำเร็จ!",
+                                            text: "ลบข้อมูลเรียบร้อย!",
+                                            timer: 800
+                                        });
+                                }
+                            , PageController.GetError);
+
+                    } else {
+                        swal.close();
+
+                    }
+                })
+
+            });
+            $(document).on("click", ".btnDelete", function () {
+
+                var row = $(this);
+
+                var dataDetail = {};
+                dataDetail.ItemId = $(this).attr("data");
+                dataDetail.Action = "D";
+
+                PwaManager.PwaConfirm("บันทึก", "คุณต้องการลบข้อมูหรือไม่", function (isConfirm) {
+                    if (isConfirm) {
+                       PwaManager.PwaWaiting(true);
+
+                        PwaManager.PwaPost('@Url.Action("SaveItem", new { controller = "Master" })', { "Requests": dataDetail },
+
+                                function (data) {
+
+                                    PwaManager.PwaWaiting(false);
+                                    PageController.GetSuccess(data.Data.lst);
+                                    swal(
+                                        {
+                                            title: "สำเร็จ!",
+                                            text: "บันทึกข้อมูลเรียบร้อย!",
+                                            timer: 800
+                                        });
+                                }
+                            , PageController.GetError);
+
+                    } else {
+                        swal.close();
+
+                    }
+                })
+
+            });
+
+            $(document).on("click", ".btnSearch", function () {
+                Waiting(true);
+                var dataDetail = {};
+                var ItemCode = $("#search_ItemCode").val();
+                var ItemName = $("#search_ItemName").val();
+                var Status = $("#search_status").val();
+
+                PwaManager.PwaPost('@Url.Action("SearchItem", new { controller = "Master" })', { "ItemId": "", "ItemCode": ItemCode, "ItemName": ItemName, "Status": Status, "BaCode": "1001" }, PageController.GetSuccess, PageController.GetError);
+                setTimeout(function () {
+                    Waiting(false);
+                }, 1000);
+
+            });
+        },
+        GetError: function(error) {
+            alert('Failed : ' + error.responseJSON.Message);
+            swal.close();
+            PwaManager.PwaWaiting(false);
+        },
+
+
+        GetEditData: function(jsonData) {
+            var dvstatus = $("#cbstatus");
+            dvstatus.empty();
+            var cb = '<label class="pt-3">ใช้งาน</label><br/>';
+            
+            $.each(jsonData, function (index, i) {
+                $("#tb_ItemCode").val(i.ItemCode);
+                $("#tb_ItemCode").removeAttr("data", "");
+                $("#tb_ItemCode").attr("data", i.ItemId);
+                $("#tb_ItemCode").attr("act", "U");
+                $("#tb_ItemName").val(i.ItemName);
+                $("#tb_Price").val(i.Price);
+                //$("#ddl_Unit").val(jsonData.UnitName);
+                $('select[name=ddl_Unit]').val(i.UnitId);
+                $('.selectpicker').selectpicker('refresh');
+                cb += '<input type="checkbox" id="cb_status" name="cb_status" data-color="#17b3a3" class="js-switch"' + (i.Status == "1" ? "Checked" : "") + '/>';
+                $("#tb_CreatedDate").val(i.CreatedDate);
+                $("#tb_CreatedName").val(i.CreatedByName);
+                $("#tb_UpdatedDate").val(i.UpdatedDate);
+                $("#tb_UpdatedName").val(i.UpdatedByName);
+            });
+            dvstatus.append(cb);
+
+            
+            
+        },
+        AddNew: function() {
+            var dvstatus = $("#cbstatus");
+            dvstatus.empty();
+            var cb = '<label class="pt-3">ใช้งาน</label><br/>';
+            $("#tb_ItemCode").val("");
+            $("#tb_ItemCode").removeAttr("data", "");
+            $("#tb_ItemCode").attr("act", "I");
+            $("#tb_ItemName").val("");
+            $("#tb_Price").val("");
+            $('select[name=ddl_Unit]').val("");
+            $('.selectpicker').selectpicker('refresh');
+            cb += '<input type="checkbox" id="cb_status" name="cb_status" data-color="#17b3a3" class="js-switch" Checked />';
+            dvstatus.append(cb);
+
+            $("#tb_CreatedDate").val("");
+            $("#tb_CreatedName").val("");
+            $("#tb_UpdatedDate").val("");
+            $("#tb_UpdatedName").val("");
+        },
+
+     GetSuccess: function(jsonData) {
+         var html = "";
+         $('.divTable').empty();
+
+         html += '<table class="table is-indent tblDisplay" id="tblDisplay" name="tblDisplay" data-plugin="animateList" data-animate="fade" data-child="tr" data-selectable="selectable">';
+         html += '<thead>';
+         html += '<tr>';
+         html += '<th class="" scope="col">รหัสอุปกรณ์</th>';
+         html += '<th class="" scope="col">ชื่ออุปกรณ์</th>';
+         html += '<th scope="col" class="">ราคา(บาท)</th>';
+         html += '<th class="" scope="col">หน่วย</th>';
+         html += '<th scope="col" class="">สถานะ</th>';
+         html += '<th scope="col" class="">UpdatedDate</th>';
+         html += '<th scope="col" class="">UpdatedBy</th>';
+         html += '<th scope="col" class=""></th>';
+         //html += '<th scope="col" class=""></th>';
+         html += '</tr>';
+         html += '</thead>';
+         html += '<tbody>';
+        $.each(jsonData, function (index, item) {
+            html += '<tr data-url="panel.tpl">';
+            html += '<td>' + item.ItemCode + '</td>';
+            html += '<td>' + item.ItemName + '</td>';
+            html += '<td>' + (item.Price == null ? "" : item.Price) + '</td>';
+            html += '<td>' + item.UnitName + '</td>';
+            html += '<td>' + (item.Status == "1" ? "ใช้งาน" : "ไม่ใช้งาน") + '</td>';
+            html += '<td>' + item.UpdatedDate + '</td>';
+            html += '<td>' + item.UpdatedByName + '</td>';
+            html += '<td><button type="button" data="' + item.ItemId + '" class="btn btn-floating btn-success btn-sm btnEdit"><i class="icon wb-pencil" aria-hidden="true"></i></button></td>';
+            //html += '<td><button type="button" data="' + item.ItemId + '" class="btn btn-floating btn-danger btn-sm btnDelete"><i class="icon wb-pencil" aria-hidden="true"></i></button></td>';
+            html += '</tr>';
+        });
+         html += '</tbody>';
+         html += '</table>';
+         $('.divTable').append(html);
+         $('.divTable table').DataTable({ "searching": false, "bLengthChange": false });
+
+    }
+
+    }
+
+    PageController.init();
+
+
+
+
+
+
+</script>
+

@@ -1,0 +1,116 @@
+﻿@using System.Data;
+@using Pwa.FrameWork.Dto;
+@{
+    /**/
+
+    /**/
+
+    ViewBag.Title = "รายงานสาเหตุข้อร้องเรียนที่เกินกำหนด";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    DataTable DataResult = (DataTable)ViewBag.Data;
+}
+
+@model CriterialDto
+<form id="frmReport" method="post">
+
+
+
+    <div class="panel panel-primary panel-line">
+
+        <!-- Contacts Content Header -->
+        <div class="panel-heading">
+            <h1 class="panel-title">รายงาน  > รายงานสาเหตุข้อร้องเรียนที่เกินกำหนด</h1>
+            <div class="page-header-actions">
+
+            </div>
+        </div>
+
+        <!-- Contacts Content -->
+        <div id="contactsContent" class="panel-body" data-plugin="selectable">
+
+            <!-- Actions -->
+            <div class="page-content-actions">
+                @Html.Partial("~/Views/Shared/ReportSearchPartial.cshtml")
+            </div>
+
+
+            <!-- Contacts -->
+            <div class="table-responsive divTable">
+                <table class="table is-indent tblDisplay"
+                       id="tblDisplay" name="tblDisplay"
+                       data-plugin="animateList">
+                    <thead>
+                        <tr>
+                            <th scope="col" class="cell-100">ลำดับที่</th>
+                            <th scope="col" class="cell-200">สาเหตุที่เกินกำหนด SLA</th>
+                            <th scope="col" class="cell-100">จำนวน (เรื่อง)</th>
+                            <th scope="col" class="cell-100">ร้อยละ</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (DataResult != null)
+                        {
+                            decimal temp = 0;
+                            foreach (DataRow dr in DataResult.Rows)
+                            {
+                                <tr>
+                                    @if (temp == Math.Floor(Convert.ToDecimal(dr["ROW_RUNING"])))
+                                    {
+                                        <td></td>
+                                        <td> @dr["ROW_RUNING"]   @dr["SLA_OVER_DUE"]</td>
+                                    }
+                                    else
+                                    {
+                                        <td>
+                                            @Math.Floor(Convert.ToDecimal(dr["ROW_RUNING"])).ToString()
+                                        </td>
+                                        <td> @dr["SLA_OVER_DUE"]</td>
+                                    }
+
+                                    <td align="right">@dr["SLA_COUNT"]</td>
+                                    <td align="right">@dr["SLA_PERCENTAGE"]</td>
+                                </tr>
+                                temp = Math.Floor(Convert.ToDecimal(dr["ROW_RUNING"]));
+                            }
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+
+
+    <script>
+
+        $(document).ready(function () {
+            // $("#tblDisplay").DataTable({ "searching": false, "bLengthChange": false });
+        });
+        $(document).on("click", "#btnSearch", function () {
+
+            $("#ReportType").val('');
+            $("#Action").val('search');
+            $("#frmReport").submit();
+
+        });
+
+        $(document).on("click", "#btnExportPDF", function () {
+
+            $("#ReportType").val('pdf');
+            $("#Action").val('export');
+            $("#frmReport").submit();
+
+        });
+
+        $(document).on("click", "#btnExportExcel", function () {
+            $("#ReportType").val('excel');
+            $("#Action").val('export');
+            $("#frmReport").submit();
+
+        });
+
+    </script>
+</form>
+

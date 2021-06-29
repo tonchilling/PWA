@@ -1,0 +1,12 @@
+D:\Work\ประปา\Project\V1\Pwa.CisService\bin\Debug\Pwa.CisService.exe.config
+D:\Work\ประปา\Project\V1\Pwa.CisService\bin\Debug\Pwa.CisService.exe
+D:\Work\ประปา\Project\V1\Pwa.CisService\bin\Debug\Pwa.CisService.pdb
+D:\Work\ประปา\Project\V1\Pwa.CisService\bin\Debug\EntityFramework.dll
+D:\Work\ประปา\Project\V1\Pwa.CisService\bin\Debug\EntityFramework.SqlServer.dll
+D:\Work\ประปา\Project\V1\Pwa.CisService\bin\Debug\EntityFramework.xml
+D:\Work\ประปา\Project\V1\Pwa.CisService\bin\Debug\EntityFramework.SqlServer.xml
+D:\Work\ประปา\Project\V1\Pwa.CisService\obj\Debug\Pwa.CisService.csproj.CoreCompileInputs.cache
+D:\Work\ประปา\Project\V1\Pwa.CisService\obj\Debug\Pwa.CisService.csproj.CopyComplete
+D:\Work\ประปา\Project\V1\Pwa.CisService\obj\Debug\Pwa.CisService.exe
+D:\Work\ประปา\Project\V1\Pwa.CisService\obj\Debug\Pwa.CisService.pdb
+D:\Work\ประปา\Project\V1\Pwa.CisService\obj\Debug\Pwa.CisService.csprojAssemblyReference.cache

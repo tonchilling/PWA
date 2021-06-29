@@ -1,0 +1,481 @@
+﻿@using Pwa.FrameWork.Dto;
+@using Pwa.FrameWork.Dto.Smart1662;
+@using Pwa.FrameWork.Dto.Utils;
+@using Pwa.FrameWork.Dto.Smart1662.RepaireWork;
+@using Pwa.FrameWork.Dao.EF.Smart1662;
+@using Pwa.FrameWork.Dto.Smart1662.Incident;
+@using Pwa.FrameWork.Dto.Smart1662;
+@{
+    ViewBag.Title = "ItemSet";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    List<ItemDto> AllItem = (List<ItemDto>)ViewBag.AllItem;
+
+    List<DropDownlistDto> SysItems = (List<DropDownlistDto>
+)ViewBag.SysItems;
+
+    List<DropDownlistDto> SysUnit = (List<DropDownlistDto>
+    )ViewBag.SysUnit;
+}
+
+<div class="panel panel-primary panel-line">
+
+    <!-- Contacts Content Header -->
+    <div class="panel-heading">
+        <h1 class="panel-title">ข้อมูลพื้นฐาน  > Template วัสดุอุปกรณ์ที่ใช้ในงานซ่อม</h1>
+        <div class="page-header-actions">
+            <form></form>
+        </div>
+    </div>
+
+    <!-- Contacts Content -->
+    <div id="contactsContent" class="panel-body" data-plugin="selectable">
+
+        <!-- Actions -->
+        <div class="page-content-actions">
+            <div class="row">
+                <div class="col-md-3 col-lg-3">
+                    <div class="form-group ">
+                        <label class="pt-3">สาขา</label>
+                        <select tabindex="-98" class="search_Branch select2" name="search_Branch" id="search_Branch">
+                            <option value="">กปภ.</option>
+                            @foreach (DropDownlistDto obj in ViewBag.OwnerBranch)
+                            {
+                                <option value="@obj.Value" data="@obj.Id">@obj.Text</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-4 col-lg-4">
+                    <div class="form-group ">
+                        <label class="pt-3">Template วัสดุอุปกรณ์</label>
+                        <select tabindex="-98" class="search_Template select2" name="search_Template" id="search_Template">
+                            <option value="">เลือก Template</option>
+                            @foreach (SysItem_SetDto obj in ViewBag.ItemSet)
+                            {
+                                <option value="@obj.SetID">@obj.SetName</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-1 col-lg-1">
+                    <div class="form-group ">
+                        <label class="pt-3">&nbsp;</label>
+                        <button type="button" class="btn btn-outline btn-primary btnSearch">ค้นหา</button>
+                    </div>
+                </div>
+            </div>
+            <hr style="height:2px;border-width:0;color:#3e8ef7;background-color:#3e8ef7;">
+            <div class="row">
+                <div class="col-md-4 col-lg-4">
+                    <div class="form-group ">
+                        <label class="pt-3">ชื่อ Template วัสดุอุปกรณ์</label>
+                        <input type="text" class="form-control" name="tb_TemplateName" id="tb_TemplateName" placeholder="" />
+                    </div>
+                </div>
+                <div class="col-md-3 col-lg-3">
+                    <div class="form-group" id="cbstatus">
+                        <label class="pt-3">ใช้งาน</label>
+                        <br />
+                        <input type="checkbox" id="cb_status" name="cb_status"
+                               data-color="#17b3a3" class="js-switch" checked />
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4 col-lg-4">
+                    <div class="form-group ">
+                        <label>รายการวัสดุอุปกรณ์ที่ใช้</label> <button type="button" class="btn btn-floating btn-success btn-sm btnAddNewItem"><i class="icon wb-plus" aria-hidden="true"></i></button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Contacts -->
+        <div class="table-responsive divTable">
+            <table class="table is-indent tblDisplay tbItem" id="tblDisplay" name="tblDisplay" data-plugin="animateList" data-animate="fade" data-child="tr"
+                   data-selectable="selectable">
+                <thead>
+                    <tr>
+                        @*<th class="" scope="col"></th>*@
+                        <th scope="col" width="40%" style="text-align:center; ">รายการ</th>
+                        <th scope="col" width="20%" style="text-align:center;">หน่วยนับ</th>
+                        @*<th scope="col" style="text-align:center;">ราคาส่วนกลาง (บาท)</th>*@
+                        <th scope="col" width="20%" style="text-align:center;">ราคาต่อหน่วย (บาท)</th>
+                        <th scope="col" width="20%"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @*<tr data-url="panel.tpl">
+                    <td>dddd</td>
+                        <td>dddd</td>
+                        <td>dddd</td>
+                        <td>dddd</td>
+                        <td>
+                            <button type="button" class="btn btn-floating btn-danger btn-sm btnDeleteItem"><i class="icon wb-close" aria-hidden="true"></i></button>
+                        </td>
+                                </tr>*@
+                </tbody>
+            </table>
+        </div>
+
+        <div class="col-md-6 col-lg-6">
+            <div class="form-group ">
+                <label class="pt-6">วันที่สร้าง</label>
+                <input type="text" class="form-control" id="tb_CreatedDate" placeholder="" disabled value="" />
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-6">
+            <div class="form-group ">
+                <label class="pt-6">ผู้สร้าง</label>
+                <input type="text" class="form-control" id="tb_CreatedName" placeholder="" disabled value="" />
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-6">
+            <div class="form-group ">
+                <label class="pt-6">วันที่แก้ไขล่าสุด</label>
+                <input type="text" class="form-control" id="tb_UpdatedDate" placeholder="" disabled value="" />
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-6">
+            <div class="form-group ">
+                <label class="pt-6">ผู้ที่แก้ไขล่าสุด</label>
+                <input type="text" class="form-control" id="tb_UpdatedName" placeholder="" disabled value="" />
+            </div>
+        </div>
+
+        <div class="row" style="padding-top:10px;padding-bottom:10px">
+            <div class="col-md-12  text-center">
+                <input type="hidden" id="hddBrId" name="hddBrId" value="" />
+                <button class="btn btn-outline btn-primary btnAddTemplate" type="submit">เพิ่ม Template</button>
+                <button class="btn btn-outline btn-primary btnUpdateTemplate" type="submit">บันทึกแก้ไข Template</button>
+                <button class="btn btn-outline btn-primary btnDeleteTemplate" type="submit">ลบ Template</button>
+                <a class="btn  btn-outline btn-default" data-dismiss="modal" href="javascript:void(0)">ล้างหน้าจอ</a>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+<script>
+    var SysItems =@Html.Raw(Json.Encode(SysItems));
+    var SysUnit =@Html.Raw(Json.Encode(SysUnit));
+    var UrlGetTemplate = '@Url.Action("GetBranchItemSet", new { controller = "Master" })';
+    var itemUrl = getBaseUrl() + 'api/Item/';
+    var SaveTemplateURL = '@Url.Action("SaveTemplate", "Master")';
+    var TemplateURL = '@Url.Action("ItemSet", "Master")';
+    var PageController = {
+
+        init: function (){
+
+            $(document).ready(function () {
+
+                //var elem = document.querySelector('.js-switch');
+                //var init = new Switchery(elem);
+                PageController.LoadEvent();
+                $("#search_Branch").select2({ maximumSelectionLength: 2, width: '100%' });
+                $("#search_Template").select2({ maximumSelectionLength: 2, width: '100%' });
+                //$("#tblDisplay").DataTable({ "searching": false, "bLengthChange": false });
+                $(".selItem").select2({ maximumSelectionLength: 2, width: '100%' });
+                $(".selUnit").select2({ maximumSelectionLength: 2, width: '100%' });
+
+            });
+    },
+        LoadEvent: function () {
+            $(document).on("change", "#search_Branch", function () {
+                PwaManager.PwaPost('@Url.Action("GetDropDownListItem", new { controller = "Master" })', { "id": $(this).find('option:selected').attr("data") },
+                    function (data) {
+                        
+                        SysItems = data;
+                    }, PageController.GetError);
+                PageController.ClearItem();
+                $("#hddBrId").val($(this).find('option:selected').attr("data"));
+                PageController.Set_ddlTemplate($(this).find('option:selected').attr("data"));
+
+            });
+            $(document).on("change", "#search_Template", function () {
+                PageController.GetTemplateToTable($(this).val());
+
+            });
+            $(document).on("click", ".btnAddNewItem", function () {
+
+                var detailTable = $("table.tbItem > tbody");
+
+                var rowCount = $('table.tbItem tr').length
+                var newRow = "";
+                newRow += "<tr>";
+                //newRow += "<td  align=\"center\"><label class='lbNo'>" + rowCount + "</label></td>";
+                newRow += "<td><select class='form-control  selItem'></select></td>";
+                newRow += "<td><select class='form-control  selUnit'></select></td>";
+                //newRow += "<td><input type='text'  onkeypress='return isNumber(event)' class='form-control txtPriceCentral' readonly /></td>";
+                newRow += "<td><input type='text'  onkeypress='return isNumber(event)' class='form-control txtPrice' /></td>";
+                newRow += "<td>  <button type='button' class='btn btn-floating btn-danger btn-sm btnDeleteItem'><i class='icon wb-close' aria-hidden='true'></i></button></td>";
+                newRow += "</tr>";
+                detailTable.append(newRow);
+
+                $('table.tbItem  > tbody  > tr:last').each(function () {
+
+                    var row = $(this);
+
+                    PwaManager.PwaSelect2(row.find(".selItem"), SysItems);
+                    PwaManager.PwaSelect2(row.find(".selUnit"), SysUnit);
+                });
+            });
+            $(document).on("click", ".btnDeleteItem", function () {
+                var row = $(this).closest("tr");
+                row.remove();
+                //PageController.CalculateSummary();
+            });
+            $(document).on("change", ".selItem", function () {
+                var row = $(this).closest("tr");
+                PageController.CalculateItem(row.find(".selItem"),
+                    row.find(".selUnit"),
+                    $('#search_Branch').find('option:selected').attr("data"),
+                    //row.find("input.txtPriceCentral"),
+                    row.find("input.txtPrice"));
+
+            });
+
+            $(document).on("change", ".selUnit", function () {
+                var row = $(this).closest("tr");
+                PageController.CalculateItem(row.find(".selItem"),
+                    row.find(".selUnit"),
+                    $('#search_Branch').find('option:selected').attr("data"),
+                    //row.find("input.txtPriceCentral"),
+                    row.find("input.txtPrice"));
+
+            });
+            $(document).on("click", ".btnAddTemplate", function () {
+                var obj = PageController.GetData("I");
+                PwaManager.PwaConfirm("บันทึก", "คุณต้องการบันทึกหรือไม่", function (isConfirm) {
+                    if (isConfirm) {
+                        PwaManager.PwaWaiting(true);
+                        PwaManager.PwaPostFormData(SaveTemplateURL, obj, function (data) {
+                            PwaManager.PwaWaiting(false);
+                            swal(
+                                {
+                                    title: "สำเร็จ!",
+                                    text: "บันทึกข้อมูลเรียบร้อย!",
+                                    timer: 800
+                                });
+                            PageController.ClearItem();
+                            PageController.Set_ddlTemplate($("#hddBrId").val());
+                        }, PageController.GetError);
+                    } else {
+                        swal.close();
+                    }
+                })
+            });
+            $(document).on("click", ".btnUpdateTemplate", function () {
+                var obj = PageController.GetData("U");
+                PwaManager.PwaConfirm("บันทึก", "คุณต้องการบันทึกหรือไม่", function (isConfirm) {
+                    if (isConfirm) {
+                        PwaManager.PwaWaiting(true);
+                        PwaManager.PwaPostFormData(SaveTemplateURL, obj, function (data)
+                        {
+                            PwaManager.PwaWaiting(false);
+                            swal(
+                                {
+                                    title: "สำเร็จ!",
+                                    text: "บันทึกข้อมูลเรียบร้อย!",
+                                    timer: 800
+                                });
+                            PageController.ClearItem();
+                            PageController.Set_ddlTemplate($("#hddBrId").val());
+                         }, PageController.GetError);
+                    } else {
+                        swal.close();
+                    }
+                })
+            });
+            $(document).on("click", ".btnDeleteTemplate", function () {
+                var obj = PageController.GetData("D");
+                PwaManager.PwaConfirm("บันทึก", "คุณต้องการบันทึกหรือไม่", function (isConfirm) {
+                    if (isConfirm) {
+                        PwaManager.PwaWaiting(true);
+                        PwaManager.PwaPostFormData(SaveTemplateURL, obj, function (data) {
+                            PwaManager.PwaWaiting(false);
+
+                            swal({
+                                    title: "สำเร็จ!",
+                                    text: "บันทึกข้อมูลเรียบร้อย!",
+                                    timer: 800
+                            });
+                            PageController.ClearItem();
+                            PageController.Set_ddlTemplate($("#hddBrId").val());
+                        }, PageController.GetError);
+                    } else {
+                        swal.close();
+                    }
+                })
+            });
+        },
+        Set_ddlTemplate: function (BrId) {
+            PwaManager.PwaPost('@Url.Action("GetBranchItemSet", new { controller = "Master" })', { "id": BrId },
+            function (data) {
+                var search_Template = $("#search_Template");
+                search_Template.empty();
+                var op = '<option value="">เลือก Template</option>';
+                $.each(data, function (index, i) {
+                    op += '<option value="' + i.SetID + '">' + i.SetName + '</option>';
+                });
+                search_Template.append(op);
+                $('.select2').selectpicker('refresh');
+                }, PageController.GetError);
+        },
+        GetTemplateToTable: function (SetId) {
+            PwaManager.PwaPost('@Url.Action("GetTemplate", new { controller = "Master" })', { "id": SetId },
+                function (data) {
+                    var dvstatus = $("#cbstatus");
+                    dvstatus.empty();
+                    var cb = '<label class="pt-3">ใช้งาน</label><br/>';
+                    $("#tb_TemplateName").val(data.SetName);
+                    cb += '<input type="checkbox" id="cb_status" name="cb_status" data-color="#17b3a3" class="js-switch"' + (data.Status == "1" ? "Checked" : "") + '/>';
+                    dvstatus.append(cb);
+                    
+                    $("#tb_CreatedDate").val(data.CreatedDate + ' ' + data.CreatedTime);
+                    $("#tb_CreatedName").val(data.CreatedName);
+                    $("#tb_UpdatedDate").val(data.UpdatedDate + ' ' + data.UpdatedTime);
+                    $("#tb_UpdatedName").val(data.UpdatedName);
+
+                    var detailTable = $("table.tbItem > tbody");
+                    var newRow = "";
+                    PageController.LoadOpenCaseItems(data.Items);
+                    
+                }, PageController.GetError);
+        },
+        GetError: function (error) {
+            //alert('Failed : ' + error.responseJSON.Message);
+            alert('Failed : ' + error.Message);
+            swal.close();
+            PwaManager.PwaWaiting(false);
+        },
+        ClearItem : function () {
+            var dvstatus = $("#cbstatus");
+            dvstatus.empty();
+            var cb = '<label class="pt-3">ใช้งาน</label><br/>';
+            $("#tb_TemplateName").val("");
+            $("#tb_CreatedDate").val("");
+            $("#tb_CreatedName").val("");
+            $("#tb_UpdatedDate").val("");
+            $("#tb_UpdatedName").val("");
+            cb += '<input type="checkbox" id="cb_status" name="cb_status" data-color="#17b3a3" class="js-switch"   />';
+            dvstatus.append(cb);
+
+            var detailTable = $("table.tbItem > tbody");
+            detailTable.find("tr").remove();
+        },
+        //CalculateItem: function (ddlItem, ddlUnit, txtPriceCentral, txtPrice, priceNotChange) {
+        CalculateItem: function (ddlItem, ddlUnit, ddlSearchBranch, txtPrice, priceNotChange) {
+            var data = {};
+
+
+            data.ItemId = ddlItem.val();
+            data.UnitId = ddlUnit.val();
+            data.BranchId = ddlSearchBranch;
+            if (priceNotChange == null) {
+                PwaManager.PwaPost(itemUrl + "GetItemByIdAndUnit", data, function (resObj) {
+                    if (resObj != null) {
+                        //txtPriceCentral.val(PwaManager.ConvertToFloating(resObj.Price));
+                        txtPrice.val(PwaManager.ConvertToFloating(resObj.Price));
+
+                        //lbTotal.text(PwaManager.ConvertToFloating(PwaManager.ConvertToFloating(resObj.Price) * PwaManager.ConvertToFloating(txtQty.val())).toFixed(2));
+                    } else {
+                        //txtPriceCentral.val(0);
+                        txtPrice.val(0);
+                        //lbTotal.text(0);
+                    }
+
+                    PageController.CalculateSummary();
+
+                });
+            } else {
+                lbTotal.text(PwaManager.ConvertToFloating(PwaManager.ConvertToFloating(txtPrice.val()) * PwaManager.ConvertToFloating(txtQty.val())).toFixed(2));
+                PageController.CalculateSummary();
+
+            }
+        },
+        CalculateSummary: function () {
+            var summary = 0.00;
+            $('table.tbItem  > tbody  > tr').each(function () {
+                var row = $(this);
+                summary = summary + PwaManager.ConvertToFloating(row.find(".lbTotal").text());
+            });
+
+        },
+        LoadOpenCaseItems(data) {
+
+            var detailTable = $("table.tbItem > tbody");
+
+            detailTable.find("tr").remove();
+            var rowCount = $('table.tbItem tr').length;
+            var rowCount = 1;
+            var newRow = "";
+
+            $.each(data, function (index, item) {
+                newRow += "<tr data-url='panel.tpl'>";
+                //newRow += "<td><label class='lbNo'>" + rowCount + "</label></td>";
+                newRow += "<td> <select class='form-control  selItem'></select></td>";
+                newRow += "<td> <select class='form-control  selUnit'></select></td>";
+                //newRow += "<td><input type='text'  onkeypress='return isNumber(event)' class='form-control txtQty' /></td>";
+                newRow += "<td><input type='text'  value='" + item.Price + "'  onkeypress='return isNumber(event)' class='form-control txtPrice' /></td>";
+                //newRow += "<td><label class='lbTotal'>0.00</label></td>";
+                newRow += "<td>  <button type='button' class='btn btn-floating btn-danger btn-sm btnDeleteItem'><i class='icon wb-close' aria-hidden='true'></i></button></td>";
+                newRow += "</tr>";
+                detailTable.append(newRow);
+                var row = $('table.tbItem  > tbody > tr:last');
+                PwaManager.PwaSelect2(row.find(".selItem"), SysItems, item.ItemId);
+                PwaManager.PwaSelect2(row.find(".selUnit"), SysUnit, item.UnitId);
+                rowCount++;
+                newRow = "";
+            });
+
+
+
+        },
+        GetData: function (FlagType) {
+            var objData = {};
+            var formData = new FormData();
+            objData.SetID = $("#search_Template").val();
+            objData.SysBranchID = $("#search_Branch").find('option:selected').attr("data");
+            objData.SetName = $("#tb_TemplateName").val();
+            objData.Status = ($("#cb_status").is(":checked") ? "1" : "0");
+            objData.FlagType = FlagType;
+
+            objData.Items = [];
+            var objItem = {};
+            $('table.tbItem  > tbody  > tr').each(function () {
+                var row = $(this);
+
+                if (row.find(".selItem").select2('data')[0].id != ""
+                    && row.find(".selUnit").select2("data")[0].id != ""
+                    && row.find("input.txtPrice").val() != ""
+                )
+                {
+                    objItem = {};
+                    //objItem.RWId = objData.CloseJob.CloseJobId;
+                    //objItem.No = row.find("label.lbNo").text();
+                    objItem.SetID = $("#search_Template").val();
+                    objItem.ItemId = row.find(".selItem").select2('data')[0].id
+                    objItem.ItemName = row.find(".selItem").select2('data')[0].text
+                    objItem.UnitId = row.find(".selUnit").select2("data")[0].id;
+                    objItem.UnitName = row.find(".selUnit").select2("data")[0].text;
+                    //objItem.Qty = row.find("input.txtQty").val();
+                    objItem.Price = row.find("input.txtPrice").val();
+                    objData.Items.push(objItem);
+                }
+            });
+
+            formData.append("Obj", JSON.stringify(objData));
+            return formData;
+        },
+
+
+    }
+
+    PageController.init();
+
+
+</script>
+

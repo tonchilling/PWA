@@ -1,0 +1,14 @@
+D:\Work\ประปา\Project\V1\Pwa.FrameWork\bin\Debug\Pwa.FrameWork.dll.config
+D:\Work\ประปา\Project\V1\Pwa.FrameWork\bin\Debug\Pwa.FrameWork.dll
+D:\Work\ประปา\Project\V1\Pwa.FrameWork\bin\Debug\Pwa.FrameWork.pdb
+D:\Work\ประปา\Project\V1\Pwa.FrameWork\bin\Debug\EntityFramework.dll
+D:\Work\ประปา\Project\V1\Pwa.FrameWork\bin\Debug\EntityFramework.SqlServer.dll
+D:\Work\ประปา\Project\V1\Pwa.FrameWork\bin\Debug\Npgsql.dll
+D:\Work\ประปา\Project\V1\Pwa.FrameWork\bin\Debug\System.Threading.Tasks.Extensions.dll
+D:\Work\ประปา\Project\V1\Pwa.FrameWork\bin\Debug\EntityFramework.xml
+D:\Work\ประปา\Project\V1\Pwa.FrameWork\bin\Debug\EntityFramework.SqlServer.xml
+D:\Work\ประปา\Project\V1\Pwa.FrameWork\obj\Debug\Pwa.FrameWork.csproj.CoreCompileInputs.cache
+D:\Work\ประปา\Project\V1\Pwa.FrameWork\obj\Debug\Pwa.FrameWork.csproj.CopyComplete
+D:\Work\ประปา\Project\V1\Pwa.FrameWork\obj\Debug\Pwa.FrameWork.dll
+D:\Work\ประปา\Project\V1\Pwa.FrameWork\obj\Debug\Pwa.FrameWork.pdb
+D:\Work\ประปา\Project\V1\Pwa.FrameWork\obj\Debug\Pwa.FrameWork.csprojAssemblyReference.cache

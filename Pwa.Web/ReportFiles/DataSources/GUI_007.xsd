@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="GUI_007" targetNamespace="http://tempuri.org/GUI_007.xsd" xmlns:mstns="http://tempuri.org/GUI_007.xsd" xmlns="http://tempuri.org/GUI_007.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="GUI_007" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="GUI_007" msprop:Generator_UserDSName="GUI_007">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="GUI_007" msprop:Generator_TableClassName="GUI_007DataTable" msprop:Generator_TableVarName="tableGUI_007" msprop:Generator_RowChangedName="GUI_007RowChanged" msprop:Generator_TablePropName="_GUI_007" msprop:Generator_RowDeletingName="GUI_007RowDeleting" msprop:Generator_RowChangingName="GUI_007RowChanging" msprop:Generator_RowEvHandlerName="GUI_007RowChangeEventHandler" msprop:Generator_RowDeletedName="GUI_007RowDeleted" msprop:Generator_RowClassName="GUI_007Row" msprop:Generator_UserTableName="GUI_007" msprop:Generator_RowEvArgName="GUI_007RowChangeEvent">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="TOPIC_ORDER" msprop:Generator_ColumnVarNameInTable="columnTOPIC_ORDER" msprop:Generator_ColumnPropNameInRow="TOPIC_ORDER" msprop:Generator_ColumnPropNameInTable="TOPIC_ORDERColumn" msprop:Generator_UserColumnName="TOPIC_ORDER" type="xs:string" minOccurs="0" />
+              <xs:element name="TOPIC" msprop:Generator_ColumnVarNameInTable="columnTOPIC" msprop:Generator_ColumnPropNameInRow="TOPIC" msprop:Generator_ColumnPropNameInTable="TOPICColumn" msprop:Generator_UserColumnName="TOPIC" type="xs:string" minOccurs="0" />
+              <xs:element name="TOTAL" msprop:Generator_ColumnVarNameInTable="columnTOTAL" msprop:Generator_ColumnPropNameInRow="TOTAL" msprop:Generator_ColumnPropNameInTable="TOTALColumn" msprop:Generator_UserColumnName="TOTAL" type="xs:string" minOccurs="0" />
+              <xs:element name="Complan" msprop:Generator_ColumnVarNameInTable="columnComplan" msprop:Generator_ColumnPropNameInRow="Complan" msprop:Generator_ColumnPropNameInTable="ComplanColumn" msprop:Generator_UserColumnName="Complan" type="xs:string" minOccurs="0" />
+              <xs:element name="Monitoring" msprop:Generator_ColumnVarNameInTable="columnMonitoring" msprop:Generator_ColumnPropNameInRow="Monitoring" msprop:Generator_ColumnPropNameInTable="MonitoringColumn" msprop:Generator_UserColumnName="Monitoring" type="xs:string" minOccurs="0" />
+              <xs:element name="AskForInformation" msprop:Generator_ColumnVarNameInTable="columnAskForInformation" msprop:Generator_ColumnPropNameInRow="AskForInformation" msprop:Generator_ColumnPropNameInTable="AskForInformationColumn" msprop:Generator_UserColumnName="AskForInformation" type="xs:string" minOccurs="0" />
+              <xs:element name="C_Channel" msprop:Generator_ColumnVarNameInTable="columnC_Channel" msprop:Generator_ColumnPropNameInRow="C_Channel" msprop:Generator_ColumnPropNameInTable="C_ChannelColumn" msprop:Generator_UserColumnName="C_Channel" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

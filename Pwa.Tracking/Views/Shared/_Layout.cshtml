@@ -1,0 +1,215 @@
+﻿
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Pwa Incident Tracking</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="keywords">
+    <meta content="" name="description">
+    @Styles.Render("~/Content/css");
+    @Styles.Render("~/Content/Pages");
+    <!-- Favicons -->
+    <link href="~/Content/img/favicon.png" rel="icon">
+    <link href="~/Content/img/apple-touch-icon.png" rel="apple-touch-icon">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,700,700i|Montserrat:300,400,500,700" rel="stylesheet">
+    <!-- Bootstrap CSS File -->
+    <link href="~/Content/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Libraries CSS Files -->
+    <link href="~/Content/lib/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <link href="~/Content/lib/animate/animate.min.css" rel="stylesheet">
+    <link href="~/Content/lib/ionicons/css/ionicons.min.css" rel="stylesheet">
+    <link href="~/Content/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+    <link href="~/Content/lib/lightbox/css/lightbox.min.css" rel="stylesheet">
+    <link href="~/Content/css/sweetalert.min599c.css" rel="stylesheet" />
+    <!-- Main Stylesheet File -->
+    <link href="~/Content/css/style.css" rel="stylesheet">
+    <link href="~/Content/css/timeline.css" rel="stylesheet">
+    <link href="~/Content/lib/animate/animation.min599c.css" rel="stylesheet" />
+   
+    <script src="~/Content/lib/jquery/jquery.min.js"></script>
+    <script src="~/Content/lib/jquery/jquery-migrate.min.js"></script>
+    <script src="~/Content/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+</head>
+
+<body>
+    <!--==========================
+    Header
+    ============================-->
+
+    <header id="header" class="fixed-top">
+        <div class="container">
+            <div class="float-left">
+                <!-- Uncomment below if you prefer to use an image logo -->
+                <!-- <h1 class="text-light"><a href="#header"><span>NewBiz</span></a></h1> -->
+                <a href="#intro" class="scrollto"><img src="~/Content/img/pwasite-logo-header-294x70.png" alt="" class="img-fluid"></a>
+            </div>
+            <!-- .main-nav -->
+
+        </div>
+    </header><!-- #header -->
+    <!--==========================
+      Intro Section
+    ============================-->
+    <section id="intro" class="clearfix">
+        <div class="container">
+            <div class="intro-img">
+
+            </div>
+            <div class="intro-info">
+                <h2>ติดตามเรื่องร้องเรียน<br>การประปาส่วนภูมิภาค</h2>
+
+            </div>
+        </div>
+    </section><!-- #intro -->
+    <div id="contact">
+        <div class="form">
+
+            @RenderBody()
+
+        </div>
+    </div>
+    <!--==========================
+      Footer
+    ============================-->
+    <footer id="footer">
+        <div class="container">
+            <div class="copyright">
+                &copy; Copyright <strong> 2020 Ai Tech</strong>. All Rights Reserved
+            </div>
+        </div>
+    </footer><!-- #footer -->
+    <a href="#" class="back-to-top"><i class="fa fa-chevron-up"></i></a>
+    <!-- Uncomment below i you want to use a preloader -->
+    <!-- <div id="preloader"></div> -->
+    <!-- JavaScript Libraries -->
+  
+
+
+    <!-- Contact Form JavaScript File -->
+    <script src="~/Content/contactform/contactform.js"></script>
+    <script src="~/Content/lib/sweetalert.min599c.js"></script>
+    <!-- Template Main Javascript File -->
+    <script src="~/Content/js/main.js?ver=241"></script>
+    <script>
+        var PwaManager = {
+            TableBinding: function (element, jsonResult, cols) {
+                element.DataTable({
+                    data: jsonResult,
+                    columns: cols
+
+                });
+            },
+            PwaConfirm: function (title, text, callback) {
+                var isOk = false;
+                swal({
+                    title: title,
+                    text: text,
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonClass: "btn-warning",
+                    confirmButtonText: 'Yes',
+                    cancelButtonText: "No",
+                    closeOnConfirm: false,
+                    closeOnCancel: false
+                },
+                    function (isConfirm) {
+
+                        callback(isConfirm)
+                    });
+
+            },
+            PwaPost: function (url, dataJson, fnSuccess, fnFailed) {
+
+
+                $.post(url, dataJson, fnSuccess).fail(fnFailed);
+            },
+            PwaPostFormData: function (url, dataJson, fnSuccess, fnFailed) {
+
+
+                $.ajax({
+                    type: 'POST',
+                    url: url,
+                    data: dataJson,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function (data) {
+
+                        fnSuccess(data);
+                        console.log(data);
+
+                    },
+                    error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        fnSuccess({ Status: 'Failed', Message: errorThrown });
+                    }
+                });
+            },
+            PwaPostAsync: function (url, dataJson, fnSuccess, fnFailed) {
+                $.ajax({
+                    type: 'POST',
+                    url: url,
+                    data: dataJson,
+                    cache: false,
+                    async: true,
+                    //  dataType: 'json',
+                    traditional: true,
+                    success: function (data) {
+
+                        fnSuccess(data);
+                        console.log(data);
+
+                    },
+                    error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        fnSuccess({ Status: 'Failed', Message: errorThrown });
+                    }
+                });
+            },
+            PwaWaiting: function (visible) {
+                if (visible) {
+                 /*   $("body").animsition({
+                        inClass: "fade-in",
+                        outClass: "fade-out",
+                        inDuration: 800,
+                        outDuration: 500,
+                        loading: !0,
+                        loadingClass: "loader-overlay",
+                        loadingParentElement: "html",
+                        loadingInner: '\n      <div class="loader-content">\n        <div class="loader-index">\n          <div></div>\n          <div></div>\n          <div></div>\n          <div></div>\n          <div></div>\n          <div></div>\n        </div>\n      </div>',
+                        onLoadEvent: !0
+                    })*/
+                } else {
+
+                    $(".loader-overlay").fadeOut().remove()
+                }
+            },
+            PwaSelect2: function LoadDropDownListTemp(objControl, itemList, SelectValue) {
+                $(objControl).empty();
+                $(objControl).append("<option value=''>Please Select</option>");
+                $.each(itemList, function (index, item) {
+                    $(objControl).append("<option value='" + item.Value + "'" + ((SelectValue == item.Value ? "selected" : "")) + ">" + item.Text + "</option>");
+
+                    // objControl.append("<option value='" + item.Value + "'>" + item.Text + "</option>");
+                });
+
+                $(objControl).select2(
+                    {
+                        placeholder: 'กรุณาเลือก'
+                    }
+                );
+            },
+            PwaAutoComplete: function (jsonElement, jsonObjs, callback) {
+                autocomplete2(jsonElement, jsonObjs, 8, callback);
+            }
+
+        }
+
+    </script>
+</body>
+</html>
+
+
+
+

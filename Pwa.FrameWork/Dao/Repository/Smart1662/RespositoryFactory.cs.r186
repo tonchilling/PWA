@@ -1,0 +1,56 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Pwa.FrameWork.Dao.Repository.Smart1662.SqlServer;
+namespace Pwa.FrameWork.Dao.Repository.Smart1662
+{
+    public class RespositoryFactory
+    {
+        public static IIncidentRepository GetIncidentRepository()
+        {
+            return new Incident.IncidentRepository();
+        }
+
+        public static ISysChannelRespository GetSysChannelRespository()
+        {
+            return new SqlServer.SysChannelResponsitory();
+        }
+        public static ISysRequestTypeRespository GetSysRequestTypeRespository()
+        {
+            return new SqlServer.SysRequestTypeResponsitory();
+        }
+        public static ISysRequestCategoryResponsitory GetSysRequestCategoryResponsitory()
+        {
+            return new SqlServer.SysRequestCategoryResponsitory();
+        }
+        public static ISysRequestCategorySubjectResponsitory GetSysRequestCategorySubjectResponsitory()
+        {
+            return new SqlServer.SysRequestCategorySubjectResponsitory();
+        }
+        public static ISysAreaRespository GetSysAreaRespository()
+        {
+            return new SqlServer.SysAreaResponsitory();
+        }
+        public static SysMenuResponsitory GetSysMenuRepository(bool sqlserver)
+        {
+            return new SqlServer.SysMenuResponsitory();
+        }
+
+        public static SysRolPermissionReponsitory GetSysRolPermissionRepository(bool sqlserver)
+        {
+            return new SqlServer.SysRolPermissionReponsitory();
+        }
+
+
+        public static SysAccountReponsitory GetSysAccountReponsitory(bool sqlserver)
+        {
+            return new SqlServer.SysAccountReponsitory();
+        }
+        public static ISysBranchRespository GetSysBranchRespository()
+        {
+            return new SqlServer.SysBranchResponsitory();
+        }
+    }
+}

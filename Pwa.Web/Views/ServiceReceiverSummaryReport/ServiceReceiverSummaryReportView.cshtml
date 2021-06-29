@@ -1,0 +1,88 @@
+﻿@using ReportViewerForMvc
+@{
+    ViewBag.Title = "รายงานจำนวนผู้รับบริการ แยกตามช่องทางร้องเรียน";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    bool _reportViewStatus = (bool)ViewData["_reportViewStatus"];
+}
+<form id="frmcomplaintreport">
+    <div class="row" data-plugin="matchHeight" data-by-row="true">
+        <div class="col-xxl-12">
+
+            <div class="panel panel-primary panel-line">
+
+                <div class="panel-heading">
+                    <h1 class="panel-title">รายงาน > รายงานจำนวนผู้รับบริการ แยกตามช่องทางร้องเรียน</h1>
+                    <div class="page-header-actions">
+                    </div>
+                </div>
+
+                <div id="contactsContent" class="panel-body" data-plugin="selectable">
+
+                    <div class="page-content-actions">
+
+                        <div class="row">
+                            <div class="col-md-3 col-lg-3">
+                                <div class="form-group ">
+                                    <label class="pt-3">เลขที่รับแจ้ง</label>
+                                    <input type="text" class="form-control" id="txtRepairCode" placeholder="" />
+                                </div>
+                            </div>
+
+                            <div class="col-md-3 col-lg-3">
+                                <div class="form-group ">
+                                    <label class="pt-3">หัวข้อ</label>
+                                    <input type="text" class="form-control" id="txtRequestTypeName" placeholder="" />
+                                </div>
+                            </div>
+
+                            <div class="col-md-3 col-lg-3">
+                                <div class="form-group ">
+                                    <label class="pt-3">ผู้แจ้ง</label>
+                                    <input type="text" class="form-control" id="txtCustomerName" placeholder="" />
+                                </div>
+                            </div>
+
+                            <div class="col-md-3 col-lg-3">
+                                <div class="form-group">
+                                    <label class="pt-3">ผู้รับแจ้ง</label>
+                                    <input type="text" class="form-control" name="txtRecieverName" placeholder="" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12 col-lg-12">
+                                <div class="pull-right">
+                                    <button type="button" id="btnSearch"
+                                            class="btn btn-outline btn-primary btnSearch"
+                                            onclick="location.href='@Url.Action("GenReport","ServiceReceiverSummaryReport")'">
+                                        ค้นหา
+                                    </button>
+                                    <button type="button" class="btn btn-outline btn-default btnReset" data-plugin="btnReset">เริ่มใหม่</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel panel-primary panel-line">
+                        &nbsp;
+                    </div>
+
+                    <div style="text-align: center;">
+                        @if (_reportViewStatus)
+                        {
+                            @Html.ReportViewer(ViewBag.ReportViewer as Microsoft.Reporting.WebForms.ReportViewer, new { scrolling = "yes" })
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<script>
+    var GenReport = '@Url.Action("ServiceReceiverSummaryReport", "GenReport")'
+</script>
+
+<script>
+</script>

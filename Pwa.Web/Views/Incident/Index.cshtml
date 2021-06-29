@@ -1,0 +1,1446 @@
+﻿@using Pwa.FrameWork.Dao.EF.Smart1662;
+@using Pwa.FrameWork.Dto;
+@using Pwa.FrameWork.Dto.Smart1662;
+@using Pwa.FrameWork.Dto.Smart1662.Incident;
+@using Pwa.FrameWork.Bal.Smart1662;
+
+
+@{
+    //List<IncidentDto> dataList = (List<IncidentDto>)ViewBag.IncidentList;
+    List<IncidentDto> dataList = new List<IncidentDto>();
+
+    ViewBag.Title = "PWA Incident | PWA Smart 1662";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    List<DropDownlistDto> SysBranchs = (List<DropDownlistDto>
+    )ViewBag.SysBranchs;
+
+    List<DropDownlistDto> SysChannels = (List<DropDownlistDto>
+    )ViewBag.SysChannels;
+
+    UserInfoDto sysCurrentUser = (UserInfoDto
+)ViewBag.CurrentUser;
+
+    var sysRequestTypes = @Html.Raw(Json.Encode(ViewBag.sysRequestTypes));
+    var SysRequestCategorys = @Html.Raw(Json.Encode(ViewBag.SysRequestCategorys));
+    var SysRequestCategorySubjects = @Html.Raw(Json.Encode(ViewBag.SysRequestCategorySubjects));
+    var CurrentUser = @Html.Raw(Json.Encode(ViewBag.CurrentUser));
+    var model = @Html.Raw(Json.Encode(Model));
+}
+
+@section Scripts
+{
+    <!--   <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+        <script src="@Url.Content("~/Scripts/Build/IncidentCaseReceive/bundle.js")"></script>
+        -->
+}
+
+
+<style>
+
+
+    .pnlMap {
+        width: 900px;
+        height: 100vh;
+        position: relative;
+    }
+
+    #mapid {
+        width: 100%;
+        height: 100vh;
+        min-height: 600px;
+    }
+
+    a.btn-sm .icon {
+        margin: 3px 3px 0;
+    }
+
+    .divBranchMap {
+        z-index: 1710;
+        position: absolute;
+        width: 20%;
+        top: 10px;
+        left: 50px;
+    }
+
+ #addMap .modal-body {
+        position: relative;
+        -webkit-box-flex: 1;
+        -webkit-flex: 1 1 auto;
+        -ms-flex: 1 1 auto;
+        flex: 1 1 auto;
+        padding: 5px;
+    }
+
+    .modal-open > .select2-container {
+        z-index: 1700;
+    }
+    .divToolSearch {
+        position: absolute;
+        z-index: 1700;
+        top: 10px;
+        left: 50px;
+        min-width:500px;
+    }
+
+    .panel-primary {
+    
+    }
+</style>
+
+<script>
+    var GetDataUrl = '@Url.Action("GetData", "Incident")'
+    var ReceiveUrl = '@Url.Action("Edit", "Incident")'
+    var FollowUpUrl = '@Url.Action("FollowUp", "Incident")'
+</script>
+
+<!-- Page -->
+<script src="~/Scripts/datepicker/date-eu.js"></script>
+<form id="frmIncident" action="@Url.Action("Receive", "Incident")">
+
+    <div class="row" data-plugin="matchHeight" data-by-row="true">
+        <div class="col-xxl-12">
+            <div class="example example-buttons pull-right">
+                <div class="btn-group btn-group ">
+                    <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-outline btn-primary  btnStatus" statusdata="2">
+                            <i class="icon wb-inbox" aria-hidden="true"></i>  <span class="text-uppercase hidden-sm-down">รับเรื่อง</span>
+                            <br>
+                            <span class="text-uppercase hidden-sm-down lbWaiting">-</span>
+                        </button>
+                    </div>
+
+                    <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-outline btn-info  btnStatus" statusdata="2">
+                            <i class="icon wb-folder" aria-hidden="true"></i>  <span class="text-uppercase hidden-sm-down">กำลังดำเนินการ</span>
+                            <br>
+                            <span class="text-uppercase hidden-sm-down lbProcess">-</span>
+                        </button>
+                    </div>
+
+                    <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-outline btn-warning  btnStatus" statusdata="2">
+                            <i class="icon wb-time" aria-hidden="true"></i>  <span class="text-uppercase hidden-sm-down">เกินระยะเวลา</span>
+                            <br>
+                            <span class="text-uppercase hidden-sm-down lbSla">-</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xxl-12">
+
+            <!-- Contacts Content -->
+            <div class="panel panel-primary panel-line">
+
+                <!-- Contacts Content Header -->
+                <div class="panel-heading">
+                    <h1 class="panel-title">รายการร้องเรียน</h1>
+                    <div class="page-header-actions">
+                        <form></form>
+                    </div>
+                </div>
+
+                <!-- Contacts Content -->
+                <div id="contactsContent" class="panel-body" data-plugin="selectable">
+
+                    <!-- Actions -->
+                    <div class="page-content-actions">
+                        <div class="row">
+
+                            <div class="col-md-3 col-lg-3">
+                                <div class="form-group ">
+                                    <label class="pt-3">เลขที่รับแจ้ง</label>
+                                    <input type="text" class="form-control" id="txtIncidentNo" placeholder="" />
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-lg-3">
+                                <div class="form-group">
+                                    <label class="pt-3">ชื่อ-นามสกุล</label>
+                                    <input type="text" class="form-control" id="txtCustomerName" placeholder="" />
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-6">
+                                <div class="form-group">
+                                    <label class="pt-3">ติดต่อ</label>
+                                    <div class="input-group">
+                                        <span class="input-group-btn" style="padding:0; width:35%">
+                                            <select class="selectpicker" id="selContact" tabindex="-98">
+                                                <option>เบอร์โทร</option>
+                                                <option>อีเมล</option>
+                                            </select>
+                                        </span>
+                                        <input type="text" placeholder="รายละเอียดการติดต่อ" class="form-control" id="txtContactDetail" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-lg-4">
+                                <div class="form-group">
+                                    <label class="pt-3">รายละเอียด</label>
+                                    <input type="text" class="form-control" id="txtDetail" placeholder="" />
+                                </div>
+                            </div>
+                            <div class="col-md-2 col-lg-2">
+                                <div class="form-group">
+                                    <label class="pt-3">สถานะ</label>
+                                    <select class="selectpicker" id="selStatus" tabindex="-98">
+                                        <option value="">สถานะ</option>
+                                        <option value="1">เสร็จ</option>
+                                        <option value="2">ไม่เสร็จ</option>
+                                        @*<option value="4">ไม่เสร็จ</option>*@
+                                    </select>
+
+                                </div>
+
+                            </div>
+                            <div class="col-md-3 col-lg-3">
+                                <div class="form-group">
+                                    <label class="pt-3">ช่องทาง</label>
+                                    <select class="ddlChannel" id="ddlChannel" name="channels">
+                                        <option value="">ช่องทาง</option>
+                                        @foreach (DropDownlistDto it in SysChannels)
+                                        {
+                                            <option value="@it.Value" @(it.Value == (Model != null ? Model.BranchId : "") ? "selected" : "")>@it.Text </option>
+                                        }
+                                    </select>
+
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-lg-3">
+                                <div class="form-group">
+                                    <label class="pt-3">กปภ.</label>
+                                    <select class="ddlBranch" id="ddlBranch" name="branch">
+                                        <option value="0">เลือกสาขา</option>
+                                        @foreach (DropDownlistDto it in SysBranchs)
+                                        {
+                                            <option value="@it.Value" @(it.Value == (Model != null ? Model.BranchId : sysCurrentUser.Ba) ? "selected" : "")>@it.Text </option>
+                                        }
+
+                                    </select>
+
+                                </div>
+                            </div>
+                            <div class="col-md-5 col-lg-5">
+                                <label class="pt-3">บริเวณที่เกิดเหตุ</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control disabled" id="txtIncidentAddress" placeholder="" />
+
+                                    <img src="~/Content/assets/images/map.png"  class="imgSearchMap" style="height:2.573rem; margin-left:8px;" />
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="row" style="margin-top:15px;">
+                            <div class="col-md-6 col-lg-6">
+                                <div class="pull-left" id="dvCommand">
+
+                                    <button type="submit" class="btn btn-outline btn-primary">รับแจ้ง</button>
+                                    <button type="button" class="btn btn-outline btn-default" onclick="searchReject()">สาขาส่งเรื่องกลับ</button>
+                                    <button type="button" class="btn btn-outline btn-default" onclick="handleOpenSocialGISCPopup()">Social GISC</button>
+                                    <input type="hidden" id="hddProcessStage" value="" />
+
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-6">
+                                <div class="pull-right">
+                                    <button type="button" class="btn  btn-primary btnSearch " >ค้นหา</button>
+                                    <button type="button" class="btn  btn-warning btnReset" data-plugin="btnReset">เริ่มใหม่</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!-- Contacts -->
+                    <div class="table-responsive divResult">
+
+                        <table class="table table-hover" id="tblDisplay" data-animate="fade" data-child="tr">
+                            <thead>
+                                <tr>
+                                    <th class="" scope="col">เลขที่รับแจ้ง</th>
+                                    <th class="" scope="col">วันเวลาที่รับแจ้ง</th>
+                                    <th class="" scope="col">ชื่อ-นามสกุลผู้แจ้ง</th>
+                                    <th class="" scope="col">หัวข้อ</th>
+                                    <th scope="col" class="">รายละเอียดเรื่องรับแจ้ง</th>
+                                    <th class="" scope="col">กปภ.</th>
+                                    <th class="" scope="col">สถานที่</th>
+                                    <th scope="col" class="">สถานะ</th>
+                                    <th scope="col" class="">ติดตาม</th>
+                                    <th scope="col" class=""></th>
+                                    <th scope="col" class=""></th>
+                                    <th scope="col" class=""></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var data in dataList)
+                                {
+                                    <tr data-url="panel.tpl" data="@data.PwaIncidentID">
+                                        <td class="">@data.PwaIncidentNo</td>
+                                        <td class="">@string.Format("{0}/{1}/{2}", data.CreatedDate.Day.ToString("##00"), data.CreatedDate.Month.ToString("##00"), (data.CreatedDate.Year + 543).ToString("####0000"))</td>
+                                        <td class="">@data.CustomerName</td>
+                                        <td class="">@data.RequestCategorySubject</td>
+                                        <td class="">@data.CaseDetail</td>
+                                        <td class="">@data.BranchName</td>
+                                        <td class="">@data.PwsIncidentAddress</td>
+                                        <td class="">@data.StatusText</td>
+                                        <td class="">@data.NumOfFollow</td>
+                                        <td>
+                                            <button type="button" data="@data.PwaIncidentNo" class="btn btn-floating btn-warning btn-sm btnFollowUp"><font size="1">ติดตาม</font></button>
+                                        </td>
+                                        <td>
+                                            <button type="button" class="btn btn-floating btn-success btn-sm btnEdit"><i class="icon wb-pencil" aria-hidden="true"></i></button>
+                                        </td>
+                                        <td>
+                                            <button type="button" class="btn btn-floating btn-danger btn-sm"><i class="icon wb-close" aria-hidden="true"></i></button>
+                                        </td>
+                                    </tr>
+
+                                }
+
+
+                            </tbody>
+                        </table>
+
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+
+    </div>
+    <div class="row">
+        <div class="col-xxl-4 col-lg-6">
+            <div class="panel panel-primary panel-line">
+                <div class="panel-heading">
+                    <h3 class="panel-title">ข่าวสารน้ำประปา</h3>
+                </div>
+                <div class="panel-body">
+
+                    <table class="tablesaw table-striped tablesaw-swipe" data-tablesaw-mode="swipe" data-tablesaw-mode-switch="" data-tablesaw-minimap="" id="tablesaw-5203">
+                        <thead>
+                            <tr>
+                                <th data-tablesaw-priority="3">วันที่</th>
+                                <th data-tablesaw-priority="persist" class="tablesaw-swipe-cellpersist">รายละเอียด</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th>01/02/2020</th>
+                                <td class="tablesaw-swipe-cellpersist"><a href="javascript:void(0)" data-rel="external">Hot Shots!</a></td>
+
+                            </tr>
+                            <tr>
+                                <th>02/02/2020</th>
+                                <td class="tablesaw-swipe-cellpersist"><a href="javascript:void(0)" data-rel="external">the Graduate</a></td>
+
+                            </tr>
+                            <tr>
+                                <th>03/02/2020</th>
+                                <td class="tablesaw-swipe-cellpersist"><a href="javascript:void(0)" data-rel="external">Gone In 60 Seconds</a></td>
+
+                            </tr>
+                            <tr>
+                                <th>04/02/2020</th>
+                                <td class="tablesaw-swipe-cellpersist"><a href="javascript:void(0)" data-rel="external">Fight Club</a></td>
+
+                            </tr>
+                            <tr>
+                                <th>05/02/2020</th>
+                                <td class="tablesaw-swipe-cellpersist"><a href="javascript:void(0)" data-rel="external">Evolution</a></td>
+
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-xxl-4 col-lg-6">
+            <div class="panel panel-primary panel-line">
+                <div class="panel-heading">
+                    <h3 class="panel-title">ข้อร้องเรียน</h3>
+                </div>
+                <div class="panel-body">
+
+                    <canvas id="myChart" width="auto" height="200"></canvas>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Site Action -->
+    <div class="site-action actionBtn" data-plugin="actionBtn">
+        <button type="button" class="site-action-toggle btn-raised btn btn-success btn-floating">
+            <i class="front-icon wb-plus animation-scale-up" aria-hidden="true"></i>
+            <i class="back-icon wb-close animation-scale-up" aria-hidden="true"></i>
+        </button>
+        <div class="site-action-buttons">
+
+        </div>
+    </div>
+    <!-- End Site Action -->
+    <!-- Add User Form -->
+    <div class="modal fade" id="addUserForm" aria-hidden="true" aria-labelledby="addUserForm"
+         role="dialog" tabindex="-1">
+        <div class="modal-dialog modal-primary  modal-simple modal-sidebar modal-lg">
+            <div class="modal-content">
+                <div class="modal-header  ">
+                    <button type="button" class="close" aria-hidden="true" data-dismiss="modal">×</button>
+                    <h4 class="modal-title">บันทึกแจ้งร้องเรียน</h4>
+                </div>
+                <div class="modal-body" style="background-color:#f1f4f5;padding-top:10px">
+                    <form>
+                        <div class="panel panel-bordered">
+                            <div class="panel-heading">
+                                <div class="panel-title"> ผู้แจ้งร้องเรียน</div>
+                            </div>
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-md-3 col-lg-3">
+                                        <div class="form-group">
+                                            <select data-plugin="selectpicker" class="selectpicker" ย tabindex="-98">
+                                                <option>นาย</option>
+                                                <option>นาง</option>
+                                                <option>นางสาว</option>
+                                            </select>
+
+                                        </div>
+
+                                    </div>
+                                    <div class="col-md-3 col-lg-3">
+                                        <div class="form-group ">
+                                            <input type="text" class="form-control" name="name" placeholder="ชื่อ" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-lg-3">
+                                        <div class="form-group">
+                                            <input type="text" class="form-control" name="phone" placeholder="นามสกุล" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-lg-3">
+                                        <div class="form-group">
+                                            <input type="text" class="form-control" name="Line" placeholder="เบอร์โทร" />
+                                        </div>
+                                    </div>
+
+
+
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 col-lg-6">
+                                        <textarea type="text" class="form-control" name="desc" placeholder="ที่อยู่"></textarea>
+                                    </div>
+                                    <div class="col-md-3 col-lg-3">
+                                        <div class="form-group">
+                                            <input type="text" class="form-control" name="address" placeholder="รหัสผู้ใช้น้ำ" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-lg-3">
+                                        <div class="form-group">
+                                            <input type="text" class="form-control" name="address" placeholder="รหัสมิเตอร์" />
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="panel panel-primary panel-line">
+                            <div class="panel-heading">
+                                <div class="panel-title">การรับแจ้งร้องเรียน</div>
+                            </div>
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-md-2 col-lg-2">
+                                        <div class="form-group">
+                                            @Html.DropDownList("IncidentTypes", (IEnumerable<SelectListItem>)ViewBag.IncidentTypes, new { @class = "selectpicker", @tabindex = "-98", @data_plugin = "selectpicker", @v_model = "PwaIncidentTypeID" })
+                                        </div>
+                                        <span>Selected: {{PwaIncidentTypeID}}</span>
+                                    </div>
+                                    <div class="col-md-3 col-lg-3">
+                                        <div class="form-group ">
+                                            <input type="text" class="form-control" name="name" placeholder="เลขที่รับแจ้ง" v-model="PwaIncidentNo" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-lg-3">
+                                        <div class="form-group">
+                                            @*<input type="text" class="form-control" name="phone" placeholder="ผู้รับแจ้ง" />*@
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 col-lg-2">
+                                        <div class="form-group">
+                                            <div class="input-group">
+
+                                                <input type="text" class="form-control datetime" placeholder="วันที่รับแจ้ง" data-plugin="datepicker" v-model="ReceivedCaseDate">
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 col-lg-2">
+                                        <div class="form-group">
+                                            <div class="input-group clockpicker" data-placement="left" data-align="top" data-autoclose="true">
+                                                <input type="text" class="form-control" value="09:30" v-model="CompletedCaseDate">
+                                                <span class="input-group-addon">
+                                                    <span class="glyphicon glyphicon-time"></span>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-2 col-lg-2">
+                                        <div class="form-group">
+                                            @Html.DropDownList("IncidentGroups", (IEnumerable<SelectListItem>)ViewBag.IncidentGroups, new { @class = "selectpicker", @tabindex = "-98", @v_model = "PwaIncidentGroupID" })
+                                        </div>
+
+                                    </div>
+                                    <div class="col-md-3 col-lg-3">
+                                        <div class="form-group">
+                                            @Html.DropDownList("InformChannels", (IEnumerable<SelectListItem>)ViewBag.InformChannels, new { @class = "selectpicker", @tabindex = "-98", @v_model = "PwaInformChannel" })
+                                        </div>
+
+                                    </div>
+                                    <div class="col-md-3 col-lg-3">
+                                        <div class="form-group">
+                                            <input type="text" class="form-control" name="phone" placeholder="อีเมล" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 col-lg-2">
+                                        <div class="form-group">
+                                            <div class="input-group">
+
+                                                <input type="text" class="form-control datetime" placeholder="วันเวลาที่เสร็จ" data-plugin="datepicker">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 col-lg-2">
+                                        <div class="form-group">
+                                            <div class="input-group clockpicker" data-placement="left" data-align="top" data-autoclose="true">
+                                                <input type="text" class="form-control" value="09:30">
+                                                <span class="input-group-addon">
+                                                    <span class="glyphicon glyphicon-time"></span>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-5 col-lg-5">
+                                        <div class="form-group">
+                                            <select data-plugin="selectpicker" class="selectpicker" tabindex="-98">
+                                                <option>หัวข้อการร้องเรียน</option>
+
+
+                                            </select>
+
+                                        </div>
+
+                                    </div>
+                                    <div class="col-md-2 col-lg-2">
+                                        <div class="form-group">
+                                            <input type="checkbox" class="icheckbox-primary" id="inputUnchecked" name="inputiCheckCheckboxes"
+                                                   data-plugin="iCheck" data-checkbox-class="icheckbox_flat-blue" />
+                                            <label for="inputUnchecked">ยกเว้น SLA</label>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3 col-lg-3">
+                                        <div class="form-group">
+                                            <input type="text" class="form-control" name="address" placeholder="เหตุผล" />
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-2 col-lg-2">
+                                        <div class="form-group">
+                                            <input type="text" class="form-control" name="address" placeholder="วัน/ชั่วโมง/นาที" />
+                                        </div>
+                                    </div>
+
+
+
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 col-lg-6">
+                                        <div class="form-group">
+                                            <input type="text" class="form-control" name="address" placeholder="หัวข้อ" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-lg-3">
+
+                                        <div class="form-group">
+                                            <input type="text" class="form-control" name="address" placeholder="กปภ.สาขา" />
+                                        </div>
+
+                                    </div>
+
+                                    <div class="col-md-3 col-lg-3">
+                                        <div class="form-group">
+                                            <select data-plugin="selectpicker" class="selectpicker" tabindex="-98">
+                                                <option>สถานะ</option>
+
+
+                                            </select>
+
+                                        </div>
+                                    </div>
+
+
+
+
+
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 col-lg-6">
+                                        <div class="row">
+                                            <div class="col-md-12 col-lg-12">
+
+                                                <div class="panel panel-danger panel-line" style="border:0.5px solid #ff4c52">
+                                                    <div class="panel-heading">
+                                                        <h3 class="panel-title">รายละเอียดเรื่องรับแจ้ง</h3>
+                                                    </div>
+                                                    <div class="panel-body">
+                                                        <div class="form-group">
+                                                            <div class="example example-responsive">
+                                                                <textarea type="text" class="form-control marker"
+                                                                          data-iconlibrary="fa" data-width="400"
+                                                                          name="address" placeholder="รายละเอียด"></textarea>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12 col-lg-12">
+
+                                                <div class="panel panel-success panel-line" style="border:0.5px solid #11c26d">
+                                                    <div class="panel-heading">
+                                                        <h3 class="panel-title">การแก้ไขปัญหา</h3>
+                                                    </div>
+                                                    <div class="panel-body">
+                                                        <div class="form-group">
+                                                            <div class="example example-responsive">
+                                                                <textarea type="text" class="form-control marker"
+                                                                          data-iconlibrary="fa" data-width="400"
+                                                                          name="address" placeholder="รายละเอียด"></textarea>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-6">
+                                        <div class="form-group">
+                                            <div id="mapid2"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-3 col-lg-3">
+                                        <div class="form-group">
+                                            <input type="text" class="form-control" name="address" placeholder="ผู้บันทึก" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-lg-3">
+                                        <div class="form-group">
+                                            <div class="input-group">
+                                                <span class="input-group-addon">
+                                                    <i class="icon wb-calendar" aria-hidden="true"></i>
+                                                </span>
+                                                <input type="text" class="form-control datetime" placeholder="วันที่บันทึก" data-plugin="datepicker">
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+
+
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-outline btn-primary" data-dismiss="modal" type="submit">Save</button>
+                    <a class="btn  btn-outline btn-default" data-dismiss="modal" href="javascript:void(0)">Cancel</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Add User Form -->
+    <!-- Show Map -->
+    <div class="modal fade modal-info " id="addMap" aria-hidden="true" aria-labelledby="addMap"
+         role="dialog" >
+        <div class="modal-dialog  modal-simple modal-sidebar modal-lg">
+        
+            <div class="modal-content">
+               
+                <div class="modal-body">
+                    <div class="pnlMap">
+                        <div class="panel panel-primary divToolSearch">
+                            <div class="panel-body" >
+                                <div class="row">
+                                    <div class="col-sm-8">
+                                        <div class="input-search autocomplete">
+                                            <input type="text" class="form-control txtSearch" name="" placeholder="ค้นหาพื้นที่...">
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <select class="ddlBranchSearch" id="ddlBranchSearch">
+                                            <option value="0">เลือกสาขา</option>
+                                            @foreach (DropDownlistDto it in SysBranchs)
+                                            {
+                                                <option value="@it.Value" @(it.Value == (Model != null ? Model.BranchId : sysCurrentUser.Ba) ? "selected" : "")>@it.Text </option>
+                                            }
+
+                                        </select>
+                                    </div>
+
+
+                                </div>
+                            </div>
+                            </div>
+
+                            <div id="mapid"></div>
+                        </div>
+                </div>
+            </div>
+                
+                </div>
+        </div>
+   
+    <!--<script src="~/Content/assets/js/charts/chartjs.min599c.js?v4.0.2442"></script>-->
+    <!-- Modal Social GISC -->
+    <div class="modal fade bd-example-modal-lg" id="Modal_Social_GISC" tabindex="-1" role="dialog"
+         aria-labelledby="exampleModalLabel" aria-hidden="true" style="padding-right: 0px;">
+        <div class="modal-dialog" role="document" style="max-width: none;margin-left: 50px;margin-right: 50px;">
+            <div class="modal-content">
+                <div class=""
+                     style="background-color: #2196f3;color: white;padding-top: 10px;padding-bottom: 10px;text-align: left;padding-left: 10px;padding-right: 10px;">
+                    <div class="col-md-6 col-lg-6">
+                        <span>
+                            <b style="font-size: 1.4375rem;">
+                                <svg class="bi bi-file-earmark-check" width="1em" height="1em" viewBox="0 0 16 16"
+                                     fill="currentColor">
+                                    <path d="M9 1H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h5v-1H4a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1h5v2.5A1.5 1.5 0 0 0 10.5 6H13v2h1V6L9 1z" />
+                                    <path fill-rule="evenodd"
+                                          d="M15.854 10.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 0 1 .708-.708l1.146 1.147 2.646-2.647a.5.5 0 0 1 .708 0z" />
+                                </svg>
+                                <span class="modal-title" style="font-size: 18.0pt;">Social GISC</span>
+                            </b>
+                        </span>
+                    </div>
+                    <div class="col-md-6 col-lg-6" style="text-align: right;">
+                        <span>
+                            <a type="button" class="btn btn-close" data-dismiss="modal"
+                               style="padding-bottom: 3px;padding-top: 3px;padding-right: 0px;">
+                                <svg style="width: 24px;height: 30px;vertical-align: middle;" fill="currentColor">
+                                    <path fill-rule="evenodd"
+                                          d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z" />
+                                </svg>
+
+                            </a>
+                        </span>
+                    </div>
+                </div>
+                <div id="div_html_preview" class="modal-body" style="height: 504px;overflow: scroll;">
+                    <div class="page-content-actions">
+
+                        <div class="row">
+                            <div class="col-md-3 col-lg-3">
+                                <div class="form-group ">
+                                    <label class="pt-3">วันเวลาโพสต์จาก</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control datetime"
+                                               id="StartDate"
+                                               value=""
+                                               placeholder="" data-plugin="datepicker">
+                                        <span class="input-group-addon " style="width: 40px;">
+                                            <span class="glyphicon glyphicon-calendar"></span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-lg-3">
+                                <div class="form-group">
+                                    <label class="pt-3">ถึง</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control datetime"
+                                               id="EndDate"
+                                               value=""
+                                               placeholder="" data-plugin="datepicker">
+                                        <span class="input-group-addon " style="width: 40px;">
+                                            <span class="glyphicon glyphicon-calendar"></span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-lg-3">
+                                <div class="form-group" style="display:none;">
+                                    <label class="pt-3">แหล่งข้อมูล</label>
+                                    <select class="selectpicker" id="from">
+                                        <option value="">--ทั้งหมด--</option>
+                                        @foreach (DropDownlistDto it in SysChannels)
+                                        {
+                                            @*<option value="@it.Value" @(it.Value == (Model != null ? Model.BranchId : "") ? "selected" : "")>@it.Text </option>*@
+                                            <option value="@it.Value">@it.Text </option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-lg-3" style="margin-top: 32px;">
+                                <button type="button" class="btn btn-outline btn-primary btnSearchSocialGISC" >ค้นหา</button>
+                            </div>
+                            <div class="col-xxl-12">
+                                <!-- Contacts -->
+                                <div class="table-responsive divResult_SocialGISC">
+                                    <table class="table table-hover" id="tblSocialGISC" data-animate="fade" data-child="tr">
+                                        <thead>
+                                            <tr>
+                                                <th class="" scope="col">ลำดับ</th>
+                                                <th class="" scope="col">วันที่โพสต์</th>
+                                                <th class="" scope="col">ข้อความ</th>
+                                                <th class="" scope="col" style="width: 132px;">ประเภทความคิดเห็น</th>
+                                                <th class="" scope="col" style="width: 100px;">ผู้โพสต์</th>
+                                                <th class="" scope="col">แหล่งข้อมูล</th>
+                                                <th class="" scope="col" style="width: 110px;">กปภ. สาขา</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @{
+                                                int index = 1;
+                                                foreach (var data in dataList)
+                                                {
+                                                    <tr data-url="panel.tpl" data="@data.PwaIncidentID">
+                                                        <td class="">@index</td>
+                                                        <td class="">@string.Format("{0}/{1}/{2}", data.CreatedDate.Day.ToString("##00"), data.CreatedDate.Month.ToString("##00"), (data.CreatedDate.Year + 543).ToString("####0000"))</td>
+                                                        <td class="">@data.CaseDetail</td>
+
+                                                        <td class="">Facebook</td>
+                                                        <td class="">@data.CustomerName</td>
+                                                        <td class="">@data.RequestCategorySubject</td>
+
+                                                        <td class="">@data.BranchName</td>
+                                                    </tr>
+                                                    index++;
+                                                }
+                                            }
+
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</form>
+
+<form id="socialGISC_incident" action="@Url.Content("~/Incident/Receive?c=SocialGISC")" method="post" style="display:none;">
+    <input type="hidden" class="post_date" name="post_date" />
+    <input type="hidden" class="post_by" name="post_by" />
+    <input type="hidden" class="post_msg" name="post_msg" />
+    <input type="hidden" class="msg_type" name="msg_type" />
+    <input type="hidden" class="post_channel" name="post_channel" />
+    <input type="hidden" class="ww_code" name="ww_code" />
+    <input type="hidden" class="comment_id" name="comment_id" />
+</form>
+
+
+
+<script src="~/Content/assets/restaurant.geojson.js?ver=4.00"></script>
+
+
+<script>
+
+
+    var map = L.map('mapid').setView([13, 100], 6);
+    var SearchMarker;
+    var SearchLatLng;
+    var SearchLayerGroup, AreaLayerGroup;
+    var PageController = {
+        init: function () {
+            $(document).ready(function () {
+                console.log("document ready")
+
+                $(IncidentMenu).addClass("active");
+
+                $.extend(jQuery.fn.dataTableExt.oSort, {
+                    "extract-date-pre": function (value) {
+                        var date = $(value, 'span')[0].innerHTML;
+                        date = date.split('/');
+                        return Date.parse(date[1] + '/' + date[0] + '/' + date[2])
+                    },
+                    "extract-date-asc": function (a, b) {
+                        return ((a < b) ? -1 : ((a > b) ? 1 : 0));
+                    },
+                    "extract-date-desc": function (a, b) {
+                        return ((a < b) ? 1 : ((a > b) ? -1 : 0));
+                    }
+
+                });
+                $("#ddlBranch").select2({ width: '100%' });
+                $("#ddlBranchSearch").select2({ width: '100%' });
+                
+                $("#ddlChannel").select2({ width: '100%' });
+
+
+                $(".datetime").datepicker()
+                $('.clockpicker').clockpicker();
+
+                $(".marker").markdown({
+                    autofocus: false,
+                    height: 120,
+                    iconlibrary: 'fa',
+                    onShow: function (e) {
+                        //e.hideButtons('cmdPreview');
+                        e.change(e);
+                    }
+                });
+                /**/
+              
+
+                PageController.LoadEvent();
+                PageController.LoadData();
+                PageController.LoadMap();
+           
+                LoadChart();
+            
+
+           
+
+            });
+        },
+        LoadEvent: function () {
+
+            $(".btnShowMap").on("click", function () {
+                //  $("#addUserForm").modal("show");
+
+
+            });
+
+            $(document).on("click", ".btnStatus", function () {
+
+                $("#selStatus").val($(this).attr("statusdata")).trigger("change");
+
+                PageController.LoadData();
+
+            });
+
+
+            $(".actionBtn").on("click", function () {
+                // $("#addUserForm").modal("show");
+                $("#frmIncident").submit();
+
+            });
+
+
+            $('#addUserForm').on('show.bs.modal', function () {
+                setTimeout(function () {
+                    document.getElementById('addUserForm').style.display = 'block';
+                    map.invalidateSize();
+                }, 10);
+            })
+            $(document).on("show.bs.modal", "#addMap", function () {
+                setTimeout(function () {
+                    document.getElementById('addMap').style.display = 'block';
+                    map.invalidateSize();
+                }, 10);
+
+
+            });
+            $(document).on("click", ".imgSearchMap", function () {
+                $("#addMap").modal("show");
+            });
+            $(document).on("click", ".btnSearch", function () {
+                console.log("btnSearch click");
+                $('#hddProcessStage').val('');
+                PageController.LoadData();
+            });
+
+            $(document).on("click", ".btnSearchSocialGISC", function () {
+                console.log("btnSearchSocialGISC click");
+               searchSocialGISC();
+            });
+
+            
+
+            $(document).on("click", ".btnReset", function () {
+                console.log("btnReset click");
+                location.reload();
+            });
+
+            $(document).on("click", ".btnFollowUp", function () {
+                $("#frmIncident").attr('action', FollowUpUrl + '/' + $(this).closest("tr").attr("data"));
+                $("#frmIncident").submit();
+            });
+            $(document).on("click", ".btnEdit", function () {
+
+                $("#frmIncident").attr('action', ReceiveUrl + '/' + $(this).closest("tr").attr("data"));
+                $("#frmIncident").submit();
+
+
+            });
+        
+            $(document).on('dblclick', '#tblSocialGISC tbody tr', function () {
+                $('#socialGISC_incident .post_date').val($(this).find('td').eq(1).text());
+                $('#socialGISC_incident .post_by').val($(this).find('td').eq(4).text());
+                $('#socialGISC_incident .post_msg').val($(this).find('td').eq(2).text());
+                $('#socialGISC_incident .msg_type').val($(this).find('td').eq(3).text());
+                $('#socialGISC_incident .post_channel').val($(this).find('td').eq(5).text());
+                $('#socialGISC_incident .ww_code').val($(this).find('td').eq(6).attr('data-ww_code'));
+                $('#socialGISC_incident .comment_id').val($(this).attr('data-comment_id'));
+
+                $('#socialGISC_incident').submit();
+            });
+
+            $(document).on("change", ".ddlBranchSearch", function (e) {
+             
+                $("#txtIncidentAddress").val('');
+                $(".ddlBranch").val($(this).val()).trigger("change");
+            });
+
+
+            $(document).on("change", ".ddlBranch", function (e) {
+             
+                PwaManager.pwaMapPWABranchAndPipe(map, $(this).val(), AreaLayerGroup, null, true);
+
+            });
+          
+
+            $('.txtSearch').on('input', function () {
+                GeoSearch.search(this.value, (data) => {
+                    var list = [];
+
+                    if (data == null || data == '') {
+                        return;
+                    }
+
+                    $.each(data.data, function (i, item) {
+                        list.push({
+                            'Text': item.FormattedAddress,
+                            'Value': item.LocationID
+                        })
+                    });
+                    console.log(list);
+                    PwaManager.PwaAutoComplete($(".txtSearch"), list, (val) => {
+
+
+                        GeoSearch.getDetail(val, (result) => {
+                            if (result.success) {
+                                let lat_long = '';
+                                let lat = '';
+                                let long = '';
+
+                                SearchLayerGroup.clearLayers();
+                                for (let key in result.data) {
+                                    if (key == 'LAT_LON' && result.data.hasOwnProperty(key)) {
+                                        lat_long = result.data[key];
+                                    }
+                                }
+
+                                if (lat_long != null && lat_long != '') {
+                                    var splitResult = lat_long.split(',');
+                                    lat = splitResult[0];
+                                    long = splitResult[1];
+                                    
+                                    SearchLayerGroup.addLayer(L.marker([lat * 1, long * 1]).addTo(map)).bindPopup(this.value);
+                                    $('#txtIncidentAddress').val(this.value);
+                                //    $('#hdCaseLatitude').val(lat);
+                                //    $('#hdCaseLongtitude').val(long);
+
+                                  //  PwaManager.pwaMapStreetView("streetPanorama", lat * 1, long * 1);
+                                    map.setView([lat * 1, long * 1], 17);
+
+                                }
+
+                            }
+                        });
+
+                    });
+
+                });
+
+            });
+
+        },
+        LoadMap: function () {
+
+            var popup = L.popup();
+
+            var googleStreets = L.tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
+                maxZoom: 20,
+                subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+            }).addTo(map);
+
+            SearchLayerGroup = new L.FeatureGroup();
+            AreaLayerGroup = new L.FeatureGroup();
+            map.addLayer(SearchLayerGroup);
+            map.addLayer(AreaLayerGroup);
+                var poiLayers = L.geoJSON(restaurant, {
+                    onEachFeature: function (feature, layer) {
+                        layer.bindPopup(feature.properties.city + '<br><b>' + feature.properties.name + '</b>').openPopup();
+                    }
+                });
+
+
+             
+
+            PwaManager.pwaMapPWABranchAndPipe(map, $("#ddlBranch").select2("data")[0].id, AreaLayerGroup, null, true);
+
+
+                var options = {
+                    position: 'topright',
+                    draw: {
+                        polyline: false,
+                        polygon: false,
+
+                        circle: false, // Turns off this drawing tool
+                        rectangle: false,
+                        marker: false
+                    },
+
+                    edit: false
+                };
+            map.on('click', onMapClick);
+            function onMapClick(e) {
+            /*    popup
+                    .setLatLng(e.latlng)
+                    .setContent("Select Map " + e.latlng.toString())
+                    .openOn(map);*/
+                $("#txtIncidentAddress").val('');
+                SearchLayerGroup.clearLayers();
+                SearchMarker = new L.marker(e.latlng, { draggable: 'true' });
+                SearchLatLng = [e.latlng.lat, e.latlng.lng];
+                SearchLayerGroup.addLayer(SearchMarker);
+                SearchMarker.on('dragend', function (event) {
+                    var marker = event.target;
+                 /*   popup
+                        .setLatLng(marker.getLatLng())
+                        .setContent("Select Map " + marker.getLatLng())
+                        .openOn(map);*/
+                //    map.panTo(new L.LatLng(surveyLatLng[0], surveyLatLng[1]))
+                });
+            
+
+            }
+         
+
+        },
+        LoadData: function () {
+            console.log('LoadData');
+            var html = '';
+            $('.divResult').empty();
+            PwaManager.PwaWaiting(true);
+            html += '<table class="table table-hover" id="tblDisplay" data-animate="fade" data-child="tr">';
+            html += '<thead>';
+            html += '<tr>';
+            html += '<th class="" scope="col">เลขที่รับแจ้ง</th>';
+            html += '<th class="" scope="col">วันเวลาที่รับแจ้ง</th>';
+            html += '<th class="" scope="col">ชื่อ-นามสกุลผู้แจ้ง</th>';
+            html += '<th class="" scope="col">หัวข้อ</th>';
+            html += '<th scope="col" class="">รายละเอียดเรื่องรับแจ้ง</th>';
+            html += '<th class="">กปภ.</th>';
+            html += '<th scope="col">สถานที่</th>';
+            html += '<th scope="col" class="">สถานะ</th>';
+            html += '<th scope="col" class="">ติดตาม</th>';
+            html += '<th scope="col" class=""></th>';
+            html += '<th scope="col" class=""></th>';
+            // html += '<th scope="col" class=""></th>';
+            html += '</tr>';
+            html += '</thead>';
+            html += '<tbody>';
+
+            console.log('Create searchData');
+
+            var searchData = {};
+            searchData.PwaIncidentNo = $("#txtIncidentNo").val();
+            searchData.CustomerName = $("#txtCustomerName").val();
+            searchData.ChannelId = $("#ddlChannel").select2("data")[0].id;
+            //console.log("ChannelId = " + searchData.ChannelId);
+            searchData.Status = $("#selStatus").val();
+            searchData.CaseDetail = $("#txtDetail").val();
+            var selContactIndex = $("#selContact").val();
+            //console.log("selContactIndex " + selContactIndex);
+            if (selContactIndex == "เบอร์โทร") {
+                searchData.Telephone = $("#txtContactDetail").val();
+            } else {
+                searchData.Email = $("#txtContactDetail").val();
+            }
+            searchData.BranchNo = $("#ddlBranch").select2("data")[0].id;
+            searchData.PwsIncidentAddress = $("#txtIncidentAddress").val();
+            searchData.ProcessStage = $("#hddProcessStage").val();
+            if (SearchLayerGroup != null && SearchLayerGroup.getLayers() != null && SearchLayerGroup.getLayers().length>0) {
+                var latlngs = SearchLayerGroup.getLayers()[0].getLatLng();
+                searchData.CaseLatitude = latlngs.lat;
+                searchData.CaseLongtitude = latlngs.lng;
+            }
+
+    //$(document).on("click", ".btnSearch", function () {
+    //    console.log("btnSearch click");
+    //    searchSocialGISC();
+    //    //$('#hddProcessStage').val('');
+    //    //LoadData();
+    //});
+
+
+
+            console.log('Done create searchData ' + JSON.stringify(searchData));
+            $(".lbWaiting").text("-");
+            $(".lbProcess").text("-");
+            $(".lbSla").text("-");
+            PwaManager.PwaPost(GetDataUrl, searchData, function (data) {
+
+                if (data != null) {
+
+                    setTimeout(function () {
+                        $(".lbWaiting").text(data.filter(o => o.IncidentStatus == "1").length);
+                        $(".lbProcess").text(data.filter(o => o.IncidentStatus == "2").length);
+                        $(".lbSla").text(data.filter(o => o.IncidentStatus == "4").length);
+
+                    }, 500
+                    );
+                    $.each(data, function (index, item) {
+                        html += '<tr data=' + item.PwaIncidentID + '>';
+                        html += '<td>' + item.PwaIncidentNo + '</td>';
+                        html += '<td>' + item.CreatedDateText + '</td>';
+                        html += '<td>' + item.CustomerName + '</td>';
+                        html += '<td>' + item.RequestCategorySubject + '</td>';
+                        html += '<td>' + item.CaseDetail + '</td>';
+                        html += '<td>' + item.BranchName + '</td>';
+                        html += '<td>' + item.PwsIncidentAddress + '</td>';
+                        html += '<td>' + item.StatusText + '</td>';
+                        html += '<td>' + (item.NumOfFollow == null ? "" : item.NumOfFollow) + '</td>';
+                        html += '<td><a href = "' + FollowUpUrl + '/' + item.PwaIncidentID + '" target = "_self" class="btn btn-sm btn-floating btn-warning" style="padding:5px !important;" ><font size="1">ติดตาม</font></a></td>';
+                        html += '<td><a href = "' + ReceiveUrl + '/' + item.PwaIncidentID + '" target = "_self" class="btn btn-sm btn-floating btn-success"><i class="icon wb-pencil" aria-hidden="true"></i></a></td>';
+                        //html += '<td><a class="btn btn-sm btn-floating btn-danger text-white btnDelete"><i class="icon wb-close" aria-hidden="true"></i></a></td>';
+                        html += '</tr>';
+                    });
+                    html += '</tbody>';
+                    html += '</table>';
+                    html += ' </div>';
+                    $('.divResult').append(html);
+                    $('.divResult table').DataTable({
+                        "searching": false
+                        , "bLengthChange": false
+                        , "order": [[1, "desc"], [0, "desc"]]
+                        , "columnDefs": [{ "targets": 1, "type": "date-eu" }],
+                    });
+                } else {
+                    html += '</tbody>';
+                    html += '</table>';
+                    html += ' </div>';
+                    $('.divResult').append(html);
+                    $('.divResult table').DataTable({
+                        "searching": false
+                        , "bLengthChange": false
+                        , "order": [[1, "desc"], [0, "desc"]]
+                        , "columnDefs": [{ "targets": 1, "type": "date-eu" }],
+                    });
+                }
+
+                setTimeout(function () {
+                    PwaManager.PwaWaiting(false);
+
+                }, 1000
+                );
+            });
+        }
+    }
+
+
+    PageController.init();
+
+    
+
+    function GetFollower(jsonData, incidentNo) {
+        $("#tb_IncidentNo").val(incidentNo);
+        var no = 0;
+        $.each(jsonData, function (index, item) {
+            no = no + 1;
+        });
+        $("#tb_No").val(no + 1);
+        var today = new Date();
+        var dd = today.getDate();
+        var mm = today.getMonth() + 1;
+
+        var yyyy = today.getFullYear();
+        if (dd < 10) {
+            dd = '0' + dd;
+        }
+        if (mm < 10) {
+            mm = '0' + mm;
+        }
+        if (yyyy < 2500) {
+            yyyy = yyyy + 543;
+        }
+        var now = dd + '/' + mm + '/' + yyyy;
+        $("#tb_FollowerDate").val(now);
+
+    }
+    function resetFollower() {
+        $("#tb_IncidentNo").val('');
+        $("#tb_No").val('1');
+        var today = new Date();
+        var dd = today.getDate();
+        var mm = today.getMonth() + 1;
+        var yyyy = today.getFullYear();
+        if (dd < 10) {
+            dd = '0' + dd;
+        }
+        if (mm < 10) {
+            mm = '0' + mm;
+        }
+        if (yyyy < 2500) {
+            yyyy = yyyy + 543;
+        }
+        var today = dd + '/' + mm + '/' + yyyy;
+        $("#tb_FollowerDate").val(today);
+        $("#tb_Information").val('');
+        $('select[name=ddl_ChannelFollower]').val('');
+        //$('.ChannelFollower').selectpicker('refresh');
+        $("#ddl_ChannelFollower").select2().trigger('change');
+    }
+    function GetError(error) {
+        swal.close();
+        alert('Failed : ' + error.responseJSON.Message);
+        PwaManager.PwaWaiting(false);
+    }
+
+
+
+    function LoadChart() {
+        var ctx = document.getElementById('myChart').getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['ด้านปริมาณน้ำ', 'ด้านท่อแตกรั่ว', 'ด้านคุณภาพน้ำ', 'ด้านบริการ', 'ด้านบุคลากร'],
+                datasets: [{
+                    label: 'เดือน พฤษภาคม',
+                    data: [50, 70, 30, 24, 65],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        });
+    }
+
+
+
+
+    function searchSocialGISC() {
+        //_tbl_socialgisc.fnClearTable();
+
+        //$('#tblSocialGISC').html('');
+        $('.divResult_SocialGISC').html('');
+
+        $.post('@Url.Content("~/Incident/GetSocialGISC")', {
+            start: $('#StartDate').val(),
+            end: $('#EndDate').val(),
+            from: $('#from').val(),
+            tm: (new Date()).getTime()
+        }, function (response) {
+            var data = response;
+
+                html = '<table class="table table-hover" id="tblSocialGISC" data-animate="fade" data-child="tr">'
+                    + '<thead>'
+                    + '<tr>'
+                    + '<th class="" scope="col">ลำดับ</th>'
+                    + '<th class="" scope="col">วันที่โพสต์</th>'
+                    + '<th class="" scope="col">ข้อความ</th>'
+                    + '<th class="" scope="col" style="width: 132px;">ประเภทความคิดเห็น</th>'
+                    + '<th class="" scope="col" style="width: 100px;">ผู้โพสต์</th>'
+                    + '<th class="" scope="col">แหล่งข้อมูล</th>'
+                    + '<th class="" scope="col" style="width: 110px;">กปภ. สาขา</th>'
+                    + '</tr>'
+                    + '</thead>'
+                    + '<tbody>';
+
+                for (var i = 0; i < data.length; i++) {
+                    var tr = '<tr data-comment_id="' + data[i].comment_id + '">'
+                        + '<td>' + (i + 1) + '</td>'
+                        + '<td>' + data[i].publish_datetime + '</td>'
+                        + '<td>' + data[i].message + '</td>'
+                        + '<td>' + data[i].category + '</td>'
+                        + '<td>' + data[i].display_name + '</td>'
+                        + '<td>' + data[i].name + '</td>'
+                        + '<td data-ww_code="' + data[i].ww_code + '">' + data[i].brn_name + '</td>'
+                        + '</tr>';
+
+                    html += tr;
+                }
+                html += '</tbody>'
+                    + '</table>';
+
+                $('.divResult_SocialGISC').append(html);
+            console.log()
+                $('.divResult_SocialGISC table').DataTable({
+                    "searching": false
+                    , "bLengthChange": false
+                    , "order": [[0, "asc"]]
+                    , "columnDefs": [{ "targets": 1, "type": "date-eu" }],
+                });
+        });
+    }
+
+    function handleOpenSocialGISCPopup() {
+        searchSocialGISC();
+
+        @* $("#html_preview").empty(); *@
+        $("#Modal_Social_GISC").modal();
+        @* $("#html_preview").append(html); *@
+    };
+
+
+
+    function searchReject() {
+        $('#hddProcessStage').val('4');
+        PageController.LoadData();
+    }
+</script>
+<!-- End Add Label Form -->
+<!-- End Page -->
+<!-- Footer -->

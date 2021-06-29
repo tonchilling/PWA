@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="GUI_001" targetNamespace="http://tempuri.org/GUI_001.xsd" xmlns:mstns="http://tempuri.org/GUI_001.xsd" xmlns="http://tempuri.org/GUI_001.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="GUI_001" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="GUI_001" msprop:Generator_UserDSName="GUI_001">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="GUI_001" msprop:Generator_TableClassName="GUI_001DataTable" msprop:Generator_TableVarName="tableGUI_001" msprop:Generator_TablePropName="_GUI_001" msprop:Generator_RowDeletingName="GUI_001RowDeleting" msprop:Generator_RowChangingName="GUI_001RowChanging" msprop:Generator_RowEvHandlerName="GUI_001RowChangeEventHandler" msprop:Generator_RowDeletedName="GUI_001RowDeleted" msprop:Generator_UserTableName="GUI_001" msprop:Generator_RowChangedName="GUI_001RowChanged" msprop:Generator_RowEvArgName="GUI_001RowChangeEvent" msprop:Generator_RowClassName="GUI_001Row">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="AREA_CODE" msprop:Generator_ColumnVarNameInTable="columnAREA_CODE" msprop:Generator_ColumnPropNameInRow="AREA_CODE" msprop:Generator_ColumnPropNameInTable="AREA_CODEColumn" msprop:Generator_UserColumnName="AREA_CODE" type="xs:string" minOccurs="0" />
+              <xs:element name="AREA_NAME" msprop:Generator_ColumnVarNameInTable="columnAREA_NAME" msprop:Generator_ColumnPropNameInRow="AREA_NAME" msprop:Generator_ColumnPropNameInTable="AREA_NAMEColumn" msprop:Generator_UserColumnName="AREA_NAME" type="xs:string" minOccurs="0" />
+              <xs:element name="BRANCH_CODE" msprop:Generator_ColumnVarNameInTable="columnBRANCH_CODE" msprop:Generator_ColumnPropNameInRow="BRANCH_CODE" msprop:Generator_ColumnPropNameInTable="BRANCH_CODEColumn" msprop:Generator_UserColumnName="BRANCH_CODE" type="xs:string" minOccurs="0" />
+              <xs:element name="BRANCH_NAME" msprop:Generator_ColumnVarNameInTable="columnBRANCH_NAME" msprop:Generator_ColumnPropNameInRow="BRANCH_NAME" msprop:Generator_ColumnPropNameInTable="BRANCH_NAMEColumn" msprop:Generator_UserColumnName="BRANCH_NAME" type="xs:string" minOccurs="0" />
+              <xs:element name="CATEGORY" msprop:Generator_ColumnVarNameInTable="columnCATEGORY" msprop:Generator_ColumnPropNameInRow="CATEGORY" msprop:Generator_ColumnPropNameInTable="CATEGORYColumn" msprop:Generator_UserColumnName="CATEGORY" type="xs:string" minOccurs="0" />
+              <xs:element name="AMOUNT" msprop:Generator_ColumnVarNameInTable="columnAMOUNT" msprop:Generator_ColumnPropNameInRow="AMOUNT" msprop:Generator_ColumnPropNameInTable="AMOUNTColumn" msprop:Generator_UserColumnName="AMOUNT" type="xs:decimal" minOccurs="0" />
+              <xs:element name="CATEGORY_ORDER" msprop:Generator_ColumnVarNameInTable="columnCATEGORY_ORDER" msprop:Generator_ColumnPropNameInRow="CATEGORY_ORDER" msprop:Generator_ColumnPropNameInTable="CATEGORY_ORDERColumn" msprop:Generator_UserColumnName="CATEGORY_ORDER" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="GUI_001_D" msprop:Generator_TableClassName="GUI_001_DDataTable" msprop:Generator_TableVarName="tableGUI_001_D" msprop:Generator_TablePropName="GUI_001_D" msprop:Generator_RowDeletingName="GUI_001_DRowDeleting" msprop:Generator_RowChangingName="GUI_001_DRowChanging" msprop:Generator_RowEvHandlerName="GUI_001_DRowChangeEventHandler" msprop:Generator_RowDeletedName="GUI_001_DRowDeleted" msprop:Generator_UserTableName="GUI_001_D" msprop:Generator_RowChangedName="GUI_001_DRowChanged" msprop:Generator_RowEvArgName="GUI_001_DRowChangeEvent" msprop:Generator_RowClassName="GUI_001_DRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="AREA_CODE" msprop:Generator_ColumnVarNameInTable="columnAREA_CODE" msprop:Generator_ColumnPropNameInRow="AREA_CODE" msprop:Generator_ColumnPropNameInTable="AREA_CODEColumn" msprop:Generator_UserColumnName="AREA_CODE" type="xs:string" minOccurs="0" />
+              <xs:element name="AREA_NAME" msprop:Generator_ColumnVarNameInTable="columnAREA_NAME" msprop:Generator_ColumnPropNameInRow="AREA_NAME" msprop:Generator_ColumnPropNameInTable="AREA_NAMEColumn" msprop:Generator_UserColumnName="AREA_NAME" type="xs:string" minOccurs="0" />
+              <xs:element name="BRANCH_CODE" msprop:Generator_ColumnVarNameInTable="columnBRANCH_CODE" msprop:Generator_ColumnPropNameInRow="BRANCH_CODE" msprop:Generator_ColumnPropNameInTable="BRANCH_CODEColumn" msprop:Generator_UserColumnName="BRANCH_CODE" type="xs:string" minOccurs="0" />
+              <xs:element name="BRANCH_NAME" msprop:Generator_ColumnVarNameInTable="columnBRANCH_NAME" msprop:Generator_ColumnPropNameInRow="BRANCH_NAME" msprop:Generator_ColumnPropNameInTable="BRANCH_NAMEColumn" msprop:Generator_UserColumnName="BRANCH_NAME" type="xs:string" minOccurs="0" />
+              <xs:element name="CAT1" msprop:Generator_ColumnVarNameInTable="columnCAT1" msprop:Generator_ColumnPropNameInRow="CAT1" msprop:Generator_ColumnPropNameInTable="CAT1Column" msprop:Generator_UserColumnName="CAT1" type="xs:decimal" minOccurs="0" />
+              <xs:element name="CAT2" msprop:Generator_ColumnVarNameInTable="columnCAT2" msprop:Generator_ColumnPropNameInRow="CAT2" msprop:Generator_ColumnPropNameInTable="CAT2Column" msprop:Generator_UserColumnName="CAT2" type="xs:decimal" minOccurs="0" />
+              <xs:element name="CAT3" msprop:Generator_ColumnVarNameInTable="columnCAT3" msprop:Generator_ColumnPropNameInRow="CAT3" msprop:Generator_ColumnPropNameInTable="CAT3Column" msprop:Generator_UserColumnName="CAT3" type="xs:decimal" minOccurs="0" />
+              <xs:element name="CAT4" msprop:Generator_ColumnVarNameInTable="columnCAT4" msprop:Generator_ColumnPropNameInRow="CAT4" msprop:Generator_ColumnPropNameInTable="CAT4Column" msprop:Generator_UserColumnName="CAT4" type="xs:decimal" minOccurs="0" />
+              <xs:element name="CAT5" msprop:Generator_ColumnVarNameInTable="columnCAT5" msprop:Generator_ColumnPropNameInRow="CAT5" msprop:Generator_ColumnPropNameInTable="CAT5Column" msprop:Generator_UserColumnName="CAT5" type="xs:decimal" minOccurs="0" />
+              <xs:element name="TOTAL_CAT" msprop:Generator_ColumnVarNameInTable="columnTOTAL_CAT" msprop:Generator_ColumnPropNameInRow="TOTAL_CAT" msprop:Generator_ColumnPropNameInTable="TOTAL_CATColumn" msprop:Generator_UserColumnName="TOTAL_CAT" type="xs:decimal" minOccurs="0" />
+              <xs:element name="TOTAL_PERCEN" msprop:Generator_ColumnVarNameInTable="columnTOTAL_PERCEN" msprop:Generator_ColumnPropNameInRow="TOTAL_PERCEN" msprop:Generator_ColumnPropNameInTable="TOTAL_PERCENColumn" msprop:Generator_UserColumnName="TOTAL_PERCEN" type="xs:decimal" minOccurs="0" />
+              <xs:element name="TOTAL_AVG_DAILY" msprop:Generator_ColumnVarNameInTable="columnTOTAL_AVG_DAILY" msprop:Generator_ColumnPropNameInRow="TOTAL_AVG_DAILY" msprop:Generator_ColumnPropNameInTable="TOTAL_AVG_DAILYColumn" msprop:Generator_UserColumnName="TOTAL_AVG_DAILY" type="xs:decimal" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

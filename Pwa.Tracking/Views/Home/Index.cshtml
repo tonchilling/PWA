@@ -1,0 +1,191 @@
+﻿
+@{
+    ViewBag.Title = "Tracking";
+}
+<form action="/Index" method="post" role="form" class="contactForm" >
+    <div class="container">
+        <h2></h2>
+        <div class="row">
+            <div class="col-md-12 col-lg-12">
+                <div id="tracking-pre"></div>
+                <div id="tracking">
+                    <div class="text-center tracking-status-intransit">
+
+                        <div class="form-row">
+                            <div class="form-group" style="width:40%; margin-left:10%">
+                                <input type="text" name="TrackingNo" id="TrackingNo" class="form-control TrackingNo"  value="@(ViewBag.tracking_no !=null  ? ViewBag.tracking_no :"") " placeholder="Tracking No." data-rule="minlen:4" data-msg="Please enter Incident No." />
+                            </div>
+                            <div class="form-group">
+                                @*<button type="submit" title="ค้นหาการร้องเรียน">ค้นหา</button>*@
+                                <button type="button" class="smbt btnSearch" id="btnSearch" name="btnSearch" title="ค้นหาการร้องเรียน">ค้นหา</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-center tracking-status-intransit"   style="min-height:150px;">
+                        <div id="dvHeader" hidden>
+                            <div class="form-row">
+                                <div class="form-group" style="width:30%;margin-left:10%;">
+                                    <div><p class="text-left" id="lb_TrackingNo">เลขที่รับแจ้ง</p></div>
+                                </div>
+                                <div class="form-group" style="width:50%;">
+                                    <div><p class="text-left" id="txt_TrackingNo"></p></div>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group" style="width:30%;margin-left:10%;">
+                                    <div><p class="text-left" id="lb_Name">ชื่อผู้แจ้ง</p></div>
+                                </div>
+                                <div class="form-group" style="width:50%;">
+                                    <div><p class="text-left" id="txt_Name"></p></div>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group" style="width:30%;margin-left:10%;">
+                                    <div><p class="text-left" id="lb_Tel">เบอร์โทรศัพท์</p></div>
+                                </div>
+                                <div class="form-group" style="width:50%;">
+                                    <div><p class="text-left" id="txt_Tel"></p></div>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group" style="width:30%;margin-left:10%;">
+                                    <div><p class="text-left" id="lb_Topic">แจ้งเรื่องร้องเรียน</p></div>
+                                </div>
+                                <div class="form-group" style="width:50%;">
+                                    <div><p class="text-left" id="txt_Topic"></p></div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                   
+                </div>
+               
+            </div>
+        </div>
+            <div class="tracking-list" id="dvTimeline" hidden>
+                <div class="tracking-item">
+                </div>
+                <div class="tracking-item">
+                </div>
+
+
+
+
+
+                @*<div class="tracking-item">
+                <div class="tracking-icon">
+                    <svg class="svg-inline--fa fa-circle fa-w-16" aria-hidden="true" data-prefix="fas" data-icon="circle" role="img" viewBox="0 0 512 512" data-fa-i2svg="">
+                        <path fill="currentColor" d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8z"></path>
+                    </svg>
+                    <!-- <i class="fas fa-circle"></i> -->
+                </div>
+                <div class="tracking-date">Aug 10, 2018<span>05:01 PM</span></div>
+                <div class="tracking-content">DESTROYEDPER SHIPPER INSTRUCTION<span>KUALA LUMPUR (LOGISTICS HUB), MALAYSIA, MALAYSIA</span></div>
+            </div>
+            <div class="tracking-item">
+                <div class="tracking-icon status-outfordelivery">
+                    <svg class="svg-inline--fa fa-shipping-fast fa-w-20" aria-hidden="true" data-prefix="fas" data-icon="shipping-fast" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" data-fa-i2svg="">
+                        <path fill="currentColor" d="M624 352h-16V243.9c0-12.7-5.1-24.9-14.1-33.9L494 110.1c-9-9-21.2-14.1-33.9-14.1H416V48c0-26.5-21.5-48-48-48H112C85.5 0 64 21.5 64 48v48H8c-4.4 0-8 3.6-8 8v16c0 4.4 3.6 8 8 8h272c4.4 0 8 3.6 8 8v16c0 4.4-3.6 8-8 8H40c-4.4 0-8 3.6-8 8v16c0 4.4 3.6 8 8 8h208c4.4 0 8 3.6 8 8v16c0 4.4-3.6 8-8 8H8c-4.4 0-8 3.6-8 8v16c0 4.4 3.6 8 8 8h208c4.4 0 8 3.6 8 8v16c0 4.4-3.6 8-8 8H64v128c0 53 43 96 96 96s96-43 96-96h128c0 53 43 96 96 96s96-43 96-96h48c8.8 0 16-7.2 16-16v-32c0-8.8-7.2-16-16-16zM160 464c-26.5 0-48-21.5-48-48s21.5-48 48-48 48 21.5 48 48-21.5 48-48 48zm320 0c-26.5 0-48-21.5-48-48s21.5-48 48-48 48 21.5 48 48-21.5 48-48 48zm80-208H416V144h44.1l99.9 99.9V256z"></path>
+                    </svg>
+                    <!-- <i class="fas fa-shipping-fast"></i> -->
+                </div>
+                <div class="tracking-date">Jul 19, 2018<span>07:36 AM</span></div>
+                <div class="tracking-content">Shipment is out for despatch by KLHB023.<span>KUALA LUMPUR (LOGISTICS HUB), MALAYSIA, MALAYSIA</span></div>
+            </div>*@
+
+            </div>
+     </div>
+
+
+</form>
+
+<script>
+    var PageController = {
+
+        init: function (){
+
+            $(document).ready(function () {
+                PageController.LoadEvent();
+
+            });
+    },
+        LoadEvent: function ()
+        {
+            $(document).on("click", ".btnSearch", function () {
+                PwaManager.PwaWaiting(true);
+                var dataDetail = {};
+                var TrackingNo = $("#TrackingNo").val();
+
+                PwaManager.PwaPost('@Url.Action("GetTrackingHeader", new { controller = "Home" })', { "TrackingNo": TrackingNo }, PageController.GetSuccess, PageController.GetError);
+                setTimeout(function () {
+                    PwaManager.PwaWaiting(false);
+                }, 1000);
+
+            });
+        },
+        GetError: function(error) {
+            $("#dvHeader").attr("hidden");
+            $("#txt_TrackingNo").text("");
+            $("#txt_Name").text("");
+            $("#txt_Tel").text("");
+            $("#txt_Topic").text(""); 
+        },
+
+        GetSuccess: function (jsonData) {
+            $("#dvHeader").removeAttr("hidden");
+            $("#txt_TrackingNo").text(jsonData.PwaIncidentNo); 
+            $("#txt_Name").text(jsonData.CustomerName); 
+            $("#txt_Tel").text(jsonData.Telephone); 
+            $("#txt_Topic").text(jsonData.CaseTitleName); 
+
+         var html = "";
+            $("#dvTimeline").empty();
+            $("#dvTimeline").removeAttr("hidden");
+            var i = 1;
+            $.each(jsonData.TrackingDetail, function (index, item) {
+                html += '<div class="tracking-item">';
+                if (i == 1) {
+                    html += '<div class="tracking-icon">';
+                }
+                else {
+                    html += '<div class="tracking-icon status-intransit">';
+                }
+                i++;
+                html += '<svg class="svg-inline--fa fa-circle fa-w-16" aria-hidden="true" data-prefix="fas" data-icon="circle" role="img" viewBox="0 0 512 512" data-fa-i2svg="">'
+                html += '<path fill="currentColor" d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8z"></path>';
+                html += '</svg></div>';
+                html += '<div class="tracking-date">' + item.CreatedDate + '<span>' + item.CreatedTime + '</span></div>';
+                html += '<div class="tracking-content">' + item.StatusName + '<span>' + '' + '</span></div>';
+                html += '</div>';
+            });
+            //$.each(jsonData.TrackingDetail, function (index, item) {
+            //    html += '<div class="tracking-item">';
+            //    if (i == 1) {
+            //        html += '<div class="tracking-icon">';
+            //    }
+            //    else {
+            //        html += '<div class="tracking-icon status-intransit">';
+            //    }
+            //    i++;
+            //    html += '<svg class="svg-inline--fa fa-circle fa-w-16" aria-hidden="true" data-prefix="fas" data-icon="circle" role="img" viewBox="0 0 512 512" data-fa-i2svg="">'
+            //    html += '<path fill="currentColor" d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8z"></path>';
+            //    html += '</svg></div>';
+            //    html += '<div class="tracking-date">' + item.CreatedDate + '<span>' + item.CreatedTime + '</span></div>';
+            //    html += '<div class="tracking-content">' + item.StatusName + '<span>' + '' + '</span></div>';
+            //    html += '</div>';
+            //});
+            $("#dvTimeline").append(html);
+        
+
+    }
+
+    }
+
+    PageController.init();
+
+
+</script>
+
+
+

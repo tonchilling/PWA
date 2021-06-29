@@ -1,0 +1,109 @@
+﻿@using System.Data;
+@{
+    /**/
+
+    /**/
+
+    ViewBag.Title = "รายงานจำนวน กปภ.สาขา ที่มีอัตราการร้องเรียนต่อผู้ใช้น้ำ 1,000 ราย (ครส.)";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    DataTable DataResult = (DataTable)ViewBag.Data;
+}
+<a href="~/Views/Report/GUI_012.cshtml">~/Views/Report/GUI_012.cshtml</a>
+
+
+<form id="frmReport" method="post">
+
+
+
+    <div class="panel panel-primary panel-line">
+
+        <!-- Contacts Content Header -->
+        <div class="panel-heading">
+            <h1 class="panel-title">รายงาน  > รายงานจำนวน กปภ.สาขา ที่มีอัตราการร้องเรียนต่อผู้ใช้น้ำ 1,000 ราย (ครส.)</h1>
+            <div class="page-header-actions">
+
+            </div>
+        </div>
+
+        <!-- Contacts Content -->
+        <div id="contactsContent" class="panel-body" data-plugin="selectable">
+
+            <!-- Actions -->
+            <div class="page-content-actions">
+                @Html.Partial("~/Views/Shared/ReportSearchPartial.cshtml")
+            </div>
+
+
+            <!-- Contacts -->
+            <div class="table-responsive divTable">
+                <table class="table is-indent tblDisplay"
+                       id="tblDisplay" name="tblDisplay"
+                       data-plugin="animateList">
+                    <thead>
+                        <tr>
+                            <th scope="col" class="cell-200">กปภ.เขต</th>
+                            <th scope="col" class="cell-100">จำนวน กปภ.สาขา</th>
+                            <th scope="col" class="cell-100">อัตราการร้องเรียนไม่เกิน 9 เรื่อง</th>
+                            <th scope="col" class="cell-100">อัตราการร้องเรียน 10-29 เรื่อง</th>
+                            <th scope="col" class="cell-100">อัตราการร้องเรียน 30-49 เรื่อง</th>
+                            <th scope="col" class="cell-50">อัตราการร้องเรียนมากกว่า 50 เรื่อง</th>
+                            <th scope="col" class="cell-50">รวม</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (DataResult != null)
+                            {
+                                foreach (DataRow dr in DataResult.Rows)
+                                {
+                        <tr>
+                            <td align="right">@Convert.ToInt32(dr["col1"]).ToString("#,###,##0")</td>
+                            <td align="right">@Convert.ToInt32(dr["col2"]).ToString("#,###,##0")</td>
+                            <td align="right">@Convert.ToInt32(dr["col3"]).ToString("#,###,##0")</td>
+                            <td align="right">@Convert.ToInt32(dr["col4"]).ToString("#,###,##0")</td>
+                            <td align="right">@Convert.ToInt32(dr["col5"]).ToString("#,###,##0")</td>
+                            <td align="right">@Convert.ToInt32(dr["col6"]).ToString("#,###,##0")</td>
+                            <td align="right">@Convert.ToInt32(dr["col7"]).ToString("#,###,##0")</td>
+                        </tr>
+                                }
+                            }
+
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+
+
+    <script>
+
+        $(document).ready(function () {
+            $("#tblDisplay").DataTable({ "searching": false, "bLengthChange": false });
+        });
+        $(document).on("click", "#btnSearch", function () {
+
+            $("#ReportType").val('');
+            $("#Action").val('search');
+            $("#frmReport").submit();
+
+        });
+
+        $(document).on("click", "#btnExportPDF", function () {
+
+            $("#ReportType").val('pdf');
+            $("#Action").val('export');
+            $("#frmReport").submit();
+
+        });
+
+        $(document).on("click", "#btnExportExcel", function () {
+            $("#ReportType").val('excel');
+            $("#Action").val('export');
+            $("#frmReport").submit();
+
+        });
+
+    </script>
+</form>
+

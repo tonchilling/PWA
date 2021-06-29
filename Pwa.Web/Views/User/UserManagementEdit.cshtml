@@ -1,0 +1,291 @@
+﻿@using Pwa.FrameWork.Dao.EF.Smart1662;
+@using Pwa.FrameWork.Bal.Smart1662;
+@using Pwa.FrameWork.Dto.Smart1662;
+@using Pwa.FrameWork.Dto;
+@{
+    ViewBag.Title = "User Management Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+
+<div class="panel panel-primary panel-line">
+
+    <!-- Contacts Content Header -->
+    <div class="panel-heading">
+        <h1 class="panel-title">ข้อมูลระบบ  > การจัดการผู้ใช้งานระบบ</h1>
+        <div class="page-header-actions">
+        </div>
+    </div>
+
+    <!-- Contacts Content -->
+    <div id="contactsContent" class="panel-body" >
+
+        <!-- Actions -->
+        <form id="frm" autocomplete="off" action="#" method="post">
+        <div class="page-content-actions">
+            <div class="row">
+                <div class="col-md-6 col-lg-6">
+                    <div class="form-group ">
+                        <label class="pt-3">รหัสพนักงาน/User Login</label>
+                        <input type="text" autocomplete="off"  class="form-control" name="tb_userLogin" id="tb_userLogin"  value="@(ViewBag.Account.UserLogin==null? "":ViewBag.Account.UserLogin)" />
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-6">
+                    <div class="form-group ">
+                        <label class="pt-3">รหัสผ่าน</label>
+                        <input type="password" autocomplete="off" class="form-control" name="tb_password" id="tb_password" />
+                    </div>
+                </div>
+
+                @*<div class="col-md-5 col-lg-5">
+                    <div class="form-group">
+                        <label class="pt-3">สถานะ</label>
+                        <select data-plugin="selectpicker" class="selectpicker" tabindex="-98" name="ddl_status" id="ddl_status">
+                            <option value="1">ใช้งาน</option>
+                            <option value="0">ไม่ใช้งาน</option>
+                        </select>
+                    </div>
+                </div>*@
+
+
+            </div>
+            <div class="row">
+                <div class="col-md-6 col-lg-6">
+                    <div class="form-group ">
+                        <label class="pt-3">ชื่อ</label>
+                        <input type="text" class="form-control" name="tb_firstname" id="tb_firstname" placeholder="" value="@ViewBag.Account.AccountFirstName" />
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-6">
+                    <div class="form-group ">
+                        <label class="pt-3">สกุล</label>
+                        <input type="text" autocomplete="off" class="form-control" name="tb_lastname" id="tb_lastname" placeholder="" value="@ViewBag.Account.AccountLastName" />
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 col-lg-6">
+                    <div class="form-group ">
+                        <label class="pt-3">Email</label>
+                        <input type="text" autocomplete="off" class="form-control" name="tb_email" id="tb_email" placeholder="" value="@ViewBag.Account.AccountEmail" />
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-6">
+                    <div class="form-group" id="cbstatus">
+                        <label class="pt-3">ใช้งาน</label>
+                        <br />
+                        <input type="checkbox" id="cb_status" name="cb_status"
+                               data-color="#17b3a3" class="switchery js-switch" @(ViewBag.Account.FlagStatus == "1" ? "checked" : "") />
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 col-lg-6">
+                    <div class="form-group ">
+                        <label class="pt-3">เขต/สาขา/ส่วนกลาง</label>
+                        <div class="form-group">
+                            <select tabindex="-98" class="ddl_branch select2" name="ddl_branch" id="ddl_branch">
+                                <option value="">เลือก สิทธิ์การใช้งานระบบ</option>
+                                @foreach (DropDownlistDto obj in ViewBag.Branch)
+                                {
+                                    <option value="@obj.Value" data="@obj.Id" @(obj.Value == (ViewBag.Account.Ba != null ? ViewBag.Account.Ba : "") ? "selected" : "")>@obj.Text</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-6">
+                    <div class="form-group ">
+                        <label class="pt-3">สิทธิ์การใช้งานระบบ</label>
+                        <div class="form-group">
+                            <select tabindex="-98" class="ddl_role select2" name="ddl_role" id="ddl_role">
+                                <option value="">เลือก กปภ.</option>
+                                @foreach (DropDownlistDto obj in ViewBag.Role)
+                                {
+                                    <option value="@obj.Value" @(obj.Value == (ViewBag.Account.RoleId != null ? ViewBag.Account.RoleId : "") ? "selected" : "")>@obj.Text</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <hr style="height:2px;border-width:0;color:#3e8ef7;background-color:#3e8ef7;">
+            <div class="row">
+                <div class="col-md-6 col-lg-6">
+                    <div class="form-group ">
+                        <label class="pt-6">วันที่สร้าง</label>
+                        <input type="text" class="form-control" id="tb_CreatedDate" placeholder="" disabled value="@ViewBag.Account.CreatedDate" />
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-6">
+                    <div class="form-group ">
+                        <label class="pt-6">ผู้สร้าง</label>
+                        <input type="text" class="form-control" id="tb_CreatedName" placeholder="" disabled value="@ViewBag.Account.CreatedByName" />
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 col-lg-6">
+                    <div class="form-group ">
+                        <label class="pt-6">วันที่แก้ไขล่าสุด</label>
+                        <input type="text" class="form-control" id="tb_UpdatedDate" placeholder="" disabled value="@ViewBag.Account.UpdatedDate" />
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-6">
+                    <div class="form-group ">
+                        <label class="pt-6">ผู้ที่แก้ไขล่าสุด</label>
+                        <input type="text" class="form-control" id="tb_UpdatedName" placeholder="" disabled value="@ViewBag.Account.UpdatedByName" />
+                    </div>
+                </div>
+
+            </div>
+            <hr style="height:2px;border-width:0;color:#3e8ef7;background-color:#3e8ef7;">
+            <br />
+            <div class="col-xxl-12 text-center">
+                <div class="row">
+                    <div class="col-md-12 col-lg-12">
+                        <button type="button" class="btn btn-primary btnSave" accid="@ViewBag.Account.AccountId" id="btnSave" name="btnSave">บันทึก</button>
+                        <button type="button" class="btn btn-outline btn-default btnCancel" id="btnCancel" name="btnCancel">ยกเลิก</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        </form>
+    </div>
+</div>
+
+
+
+<script>
+    var UserManagementUrl = '@Url.Action("UserManagement", "User")';
+    var PageController = {
+
+        init: function (){
+
+            $(document).ready(function () {
+
+                var elem = document.querySelector('.js-switch');
+                var init = new Switchery(elem);
+                PageController.LoadEvent();
+                
+                $("#ddl_branch").select2({ maximumSelectionLength: 2, width: '100%' });
+                $("#ddl_role").select2({ maximumSelectionLength: 2, width: '100%' });
+            });
+    },
+        LoadEvent: function ()
+        {
+            $(document).on("click", ".btnSave", function () {
+
+                var dataList = [];
+
+                // ---------------------    validate fields ---------------------------------//
+
+                var validate1 = false;
+                if ($("#tb_userLogin").val() == "") {
+                    validate1 = false;
+                    $("#tb_userLogin").closest('.form-group').addClass('has-error');
+                    //return false;
+                } else {
+                    validate1 = true;
+                    $("#tb_userLogin").closest('.form-group').removeClass('has-error');
+                }
+
+                var validate2 = false;
+                if ($("#tb_firstname").val() == "") {
+                    validate2 = false;
+                    $("#tb_firstname").closest('.form-group').addClass('has-error');
+                    //return false;
+                } else {
+                    validate2 = true;
+                    $("#tb_firstname").closest('.form-group').removeClass('has-error');
+                }
+
+                var validate3 = false;
+                if ($("#tb_lastname").val() == "") {
+                    validate3 = false;
+                    $("#tb_lastname").closest('.form-group').addClass('has-error');
+                    //return false;
+                } else {
+                    validate3 = true;
+                    $("#tb_lastname").closest('.form-group').removeClass('has-error');
+                }
+
+                var validate4 = false;
+                if ($("#tb_email").val() == "") {
+                    validate4 = false;
+                    $("#tb_email").closest('.form-group').addClass('has-error');
+                    //return false;
+                } else {
+                    validate4 = true;
+                    $("#tb_email").closest('.form-group').removeClass('has-error');
+                }
+                
+                if (!validate1 || !validate2 || !validate3 || !validate4) return false;
+                    // ---------------------    validate fields ---------------------------------//
+
+                var row = $(this);
+
+                var dataDetail = {};
+                dataDetail.AccountId = $(this).attr("accid");
+                //dataDetail.Action = $("#tb_UnitId").attr("act");
+                dataDetail.UserLogin = $("#tb_userLogin").val();
+                dataDetail.Password = $("#tb_password").val();
+                dataDetail.AccountFirstName = $("#tb_firstname").val();
+                dataDetail.AccountLastName = $("#tb_lastname").val();
+                dataDetail.AccountEmail = $("#tb_email").val();
+                dataDetail.Ba = $("#ddl_branch").val();
+                dataDetail.RoleId = $("#ddl_role").val();
+                dataDetail.FlagStatus = ($("#cb_status").is(":checked") ? "1" : "0");
+                dataList.push(dataDetail);
+
+                PwaManager.PwaConfirm("บันทึก", "คุณต้องการบันทึกหรือไม่", function (isConfirm) {
+                    if (isConfirm) {
+                       PwaManager.PwaWaiting(true);
+
+                        PwaManager.PwaPost('@Url.Action("SaveAccount", new { controller = "User" })', { "Requests": dataDetail },
+
+                                function (data) {
+
+                                    PwaManager.PwaWaiting(false);
+                                    PageController.GetSuccess(data);
+                                    swal(
+                                        {
+                                            title: "สำเร็จ!",
+                                            text: "บันทึกข้อมูลเรียบร้อย!",
+                                            timer: 800
+                                        });
+                                }
+                            , PageController.GetError);
+
+                    } else {
+                        swal.close();
+
+                    }
+                })
+
+            }); 
+            
+        },
+        GetError: function(error) {
+            alert('Failed : ' + error.responseJSON.Message);
+            swal.close();
+            PwaManager.PwaWaiting(false);
+        },
+        GetSuccess: function(jsonData) {
+            window.location.href = UserManagementUrl;
+        }
+
+    }
+
+    PageController.init();
+
+
+
+
+
+
+</script>
+

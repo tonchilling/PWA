@@ -1,0 +1,261 @@
+﻿@using Pwa.FrameWork.Dto;
+@using Pwa.FrameWork.Dto.Smart1662;
+@using Pwa.FrameWork.Dto.Utils;
+@{
+    Layout = null;
+
+    List<DropDownlistDto> SysBranch = (List<DropDownlistDto>)ViewBag.SysBranch;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+    <meta name="description" content="bootstrap admin template">
+    <meta name="author" content="">
+
+
+    <link href="~/Content/bootstrap.css" rel="stylesheet"/>
+    <!-- Map -->
+    <link href="~/Content/assets/map/css/leaflet.css" rel="stylesheet" />
+    <link href="~/Content/assets/map/css/leaflet.draw.css" rel="stylesheet" />
+    <link href="~/Content/assets/map/css/leaflet-search.src.css?ver=1.0" rel="stylesheet" />
+    <link href="~/Content/assets/vendor/bootstrap-markdown/bootstrap-markdown.min599c.css" rel="stylesheet" />
+    <link href="~/Content/assets/vendor/select2/select2.min599c.css?ver=1.0" rel="stylesheet" />
+    <link href="~/Content/assets/map/css/leftlet.label.css" rel="stylesheet" />
+    <link href="~/Content/assets/vendor/select2/select2.min599c.css" rel="stylesheet" />
+    <link href="~/Content/assets/map/css/leaflet.measure.css" rel="stylesheet" />
+
+    <script src="~/Content/assets/vendor/jquery/jquery.min599c.js"></script>
+
+    <!-- Map -->
+    <script src="~/Content/assets/map/js/leaflet.js"></script>
+    <script src="~/Content/assets/map/js/leaflet.draw.js"></script>
+    <script src="~/Content/assets/map/js/leaflet-search.src.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAq8n0n-Jt5P7ZbMqPJHJp9D5CjyuSmoVU"></script>
+
+    <script src="~/Content/assets/map/js/cdn/esri-leaflet.js" crossorigin=""></script>
+    <script src="~/Content/assets/map/js/cdn/leaflet-google.js"></script>
+    <script src="~/Content/assets/map/js/turf3.01.js"></script>
+    <script src="~/Content/assets/map/js/leaflet.label.js"></script>
+    <script src="~/Content/assets/map/js/leaflet.measure.js"></script>
+    <script src="~/Content/assets/vendor/select2/select2.min599c.js"></script>
+    <style>
+        #mapid {
+            width: 100%;
+            height: 100vh;
+        }
+
+        .divBranchMap {
+            z-index: 1710;
+            position: absolute;
+            width: 60%;
+            top: 10px;
+            left: 50px;
+            height:50px;
+        }
+
+        .divBtnGroup {
+            z-index: 1710;
+            position: absolute;
+            width: 40%;
+            bottom: 10px;
+            right: 10px;
+        }
+    </style>
+
+</head>
+<body>
+    <div id="mapid">
+    </div>
+    <div class="divBranchMap">
+        <select class="ddlBranchSearch">
+            <option value="0">เลือกสาขา</option>
+            @foreach (DropDownlistDto it in SysBranch)
+            {
+                <option value="@it.Value">@it.Text </option>
+            }
+
+        </select>
+    </div>
+    <div class="divBtnGroup">
+        <button class="btn btn-primary btn-sm btn-block">สร้างข้อมูล</button>
+        <button class="btn btn-primary btn-sm btn-block">สรุปผู้ใช้น้ำได้รับผลกระทบ</button>
+        <button class="btn btn-primary btn-sm btn-block">พื้นที่ได้รับผลกระทบ</button>
+    </div>
+</body>
+
+<script type="text/javascript">
+
+    function getBaseUrl() {
+        var location = document.location + '';
+
+        if (location.toLowerCase().indexOf('119.59.115.68/smart1662') > 0) {
+            return 'http://119.59.115.68/smart1662/';
+        } else if (location.toLowerCase().indexOf('www.smart1662.arm999.com') > 0) {
+            return 'http://www.smart1662.arm999.com/';
+        } else if (location.toLowerCase().indexOf('smart1662.arm999.com') > 0) {
+            return 'http://smart1662.arm999.com/';
+        } else if (location.toLowerCase().indexOf('smart1662.pwa.co.th') > 0) {
+            return 'https://smart1662.pwa.co.th/';
+        } else {
+            return 'http://localhost:26189/';
+        }
+
+
+
+    }
+    var GISUrl = getBaseUrl() + '/api/GIS/';
+
+    var map = L.map('mapid').setView([13, 100], 6);
+    var AreaGroupLayer;
+    var EditGroupLayers;
+    var SurveyGroupLayer;
+    var surveMarker;
+    var surveyLatLng = [];
+    var makerStyle = L.Icon.extend({
+        options: {
+            iconSize: [32, 44],
+
+        }
+    });
+    var pwaMaker = new makerStyle({ iconUrl: getBaseUrl() + '/icon/pwa2.png' });
+    EditGroupLayers = new L.FeatureGroup();
+    SurveyGroupLayer = new L.FeatureGroup();
+    AreaGroupLayer = new L.FeatureGroup();
+    map.addLayer(EditGroupLayers);
+    map.addLayer(SurveyGroupLayer);
+    map.addLayer(AreaGroupLayer);
+
+    var PageController = {
+        Init: function () {
+            $(document).ready(function () {
+                console.log("document ready")
+
+                $(".ddlBranchSearch").select2({
+                    maximumSelectionLength: 2,
+                    width: '100%'
+                });
+                PageController.LoadMap();
+                PageController.LoadEvent();
+            });
+
+        },
+        LoadMap: function () {
+
+            var mapOption;
+            var drawControl;
+
+            L.tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
+                maxZoom: 20,
+                subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+            }).addTo(map);
+
+            mapOption = {
+                position: 'topright',
+                draw: {
+                    polyline: true,
+                    polygon: {
+                        allowIntersection: false, // Restricts shapes to simple polygons
+                        drawError: {
+                            color: '#e1e100', // Color the shape will turn when intersects
+                            message: '<strong>Oh snap!<strong> you can\'t draw that!' // Message that will show when intersect
+                        }
+                    },
+
+                    circle: false, // Turns off this drawing tool
+                    rectangle: true,
+                    marker: false
+                },
+
+                edit: {
+                    featureGroup: EditGroupLayers, //REQUIRED!!
+                    remove: true
+                }
+            };
+
+            drawControl = new L.Control.Draw(mapOption);
+            //     map.addControl(drawControl);
+            map.on('click', onMapClick);
+            function onMapClick(e) {
+                console.log("onMapClick");
+                if (SurveyGroupLayer != null) {
+                    SurveyGroupLayer.clearLayers();
+                }
+                surveMarker = new L.marker(e.latlng, { draggable: 'true' });
+                surveMarker.bindPopup('จุดที่พบจริง')
+                surveyLatLng = [e.latlng.lat, e.latlng.lng];
+                SurveyGroupLayer.addLayer(surveMarker)
+                surveMarker.openPopup();
+                map.fitBounds(SurveyGroupLayer.getBounds());
+                surveMarker.on('dragend', function (event) {
+                    var marker = event.target;
+
+
+                    surveMarker.setLatLng(marker.getLatLng(), { draggable: 'true' });
+                    map.panTo(marker.getLatLng())
+                    surveMarker.bindPopup('จุดที่พบจริง').openPopup();
+                    SurveyGroupLayer.addLayer(surveMarker).openPopup();
+                    map.fitBounds(SurveyGroupLayer.getBounds());
+                });
+
+            }
+
+        },
+        LoadEvent: function () {
+            $(document).on("change", ".ddlBranchSearch", function (e) {
+             PageController.LoadBranch(map, $(this).val(), AreaGroupLayer,true);
+
+            });
+        },
+        LoadBranch: function (map, bacode, AreaGroupLayer, setZoom) {
+            var data = {};
+            data.BACode = bacode;
+
+            PageController.PwaPost(GISUrl + "GetBranchArea", data, function (resObj) {
+                console.log('GetBranchArea > '+resObj)
+                if (resObj != null) {
+
+                    AreaGroupLayer.clearLayers();
+
+                    var html = "";
+                    html += "สาขา :" + resObj.pwaname;
+                    html += "<br>ที่อยู่ :" + resObj.pwaaddress;
+                    html += "<br>เบอร์โทร :" + resObj.pwatel;
+
+                    var areaShap = L.geoJson($.parseJSON(resObj.shapegeojson), {
+                        pointToLayer: function (feature, latlng) {
+
+                            return L.marker(latlng, { icon: pwaMaker });
+                        }
+                    });
+
+
+                    AreaGroupLayer.addLayer(areaShap);
+                    areaShap.bindPopup(html).openPopup();
+                    //    areaShap.getBounds().getCenter();
+                    if (setZoom == null) {
+                        map.setView([areaShap.getBounds().getCenter().lat, areaShap.getBounds().getCenter().lng], 14);
+                    } else if (setZoom != null && setZoom) {
+                        map.setView([areaShap.getBounds().getCenter().lat, areaShap.getBounds().getCenter().lng], 14);
+                    }
+
+
+                }
+            });
+        },
+        PwaPost: function (url, dataJson, fnSuccess, fnFailed) {
+
+
+            $.post(url, dataJson, fnSuccess).fail(fnFailed);
+        },
+    }
+
+
+    PageController.Init();
+</script>
+
+</html>

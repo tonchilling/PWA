@@ -1,0 +1,110 @@
+﻿@using System.Data;
+@{
+    /**/
+
+    /**/
+
+    ViewBag.Title = "รายงานการร้องเรียนจากลูกค้าจำแนกตามด้านการร้องเรียน";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    DataTable DataResult = (DataTable)ViewBag.Data;
+}
+
+
+<form id="frmReport" method="post">
+
+
+
+    <div class="panel panel-primary panel-line">
+
+        <!-- Contacts Content Header -->
+        <div class="panel-heading">
+            <h1 class="panel-title">รายงาน  > รายงานการร้องเรียนจากลูกค้าจำแนกตามด้านการร้องเรียน</h1>
+            <div class="page-header-actions">
+
+            </div>
+        </div>
+
+        <!-- Contacts Content -->
+        <div id="contactsContent" class="panel-body" data-plugin="selectable">
+
+            <!-- Actions -->
+            <div class="page-content-actions">
+                @Html.Partial("~/Views/Shared/ReportSearchPartial.cshtml")
+            </div>
+
+
+            <!-- Contacts -->
+            <div class="table-responsive divTable">
+                <table class="table is-indent tblDisplay"
+                       id="tblDisplay" name="tblDisplay"
+                       data-plugin="animateList">
+                    <thead>
+                        <tr>
+                            <th scope="col" class="cell-100">ลำดับที่</th>
+                            <th scope="col" class="cell-200">วันที่รับเรื่อง</th>
+                            <th scope="col" class="cell-100">วันที่ปิดงาน</th>
+                            <th scope="col" class="cell-100">ดำเนินการ(วัน)</th>
+                            <th scope="col" class="cell-100">ผ่าน SLA</th>
+                            <th scope="col" class="cell-100">สาเหตุที่เกิด SLA</th>
+                            <th scope="col" class="cell-50">ช่องทาง</th>
+                            <th scope="col" class="cell-50">เรื่อง</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @*@if (DataResult != null)
+                            {
+                                foreach (DataRow dr in DataResult.Rows)
+                                {
+                                    <tr>
+                                        <td>@dr["No"]</td>
+                                        <td>@dr["ReceivedCaseDate"]</td>
+                                        <td>@dr["CompletedCaseDate"]</td>
+                                        <td>@dr["No"]</td>
+                                        <td>@dr["Sla"]</td>
+                                        <td>@dr["SlaDetail"]</td>
+                                        <td>@dr["InformChannel"]</td>
+                                        <td>@dr["RequestCategorySubject"]</td>
+                                    </tr>
+                                }
+                            }*@
+
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+
+
+    <script>
+
+        $(document).ready(function () {
+            $("#tblDisplay").DataTable({ "searching": false, "bLengthChange": false });
+        });
+        $(document).on("click", "#btnSearch", function () {
+
+            $("#ReportType").val('');
+            $("#Action").val('search');
+            $("#frmReport").submit();
+
+        });
+
+        $(document).on("click", "#btnExportPDF", function () {
+
+            $("#ReportType").val('pdf');
+            $("#Action").val('export');
+            $("#frmReport").submit();
+
+        });
+
+        $(document).on("click", "#btnExportExcel", function () {
+            $("#ReportType").val('excel');
+            $("#Action").val('export');
+            $("#frmReport").submit();
+
+        });
+
+    </script>
+</form>
+

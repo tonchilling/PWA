@@ -1,0 +1,107 @@
+﻿@using System.Data;
+@using Pwa.FrameWork.Dto;
+@{
+    /**/
+
+    /**/
+
+    ViewBag.Title = "รายงานผลการรับฟังและบริหารจัดการข้อร้องเรียน (ครส.)";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    DataTable DataResult = (DataTable)ViewBag.Data;
+}
+
+@model CriterialDto
+<form id="frmReport" method="post">
+
+
+
+    <div class="panel panel-primary panel-line">
+
+        <!-- Contacts Content Header -->
+        <div class="panel-heading">
+            <h1 class="panel-title">รายงาน  > รายงานผลการรับฟังและบริหารจัดการข้อร้องเรียน (ครส.) </h1>
+            <div class="page-header-actions">
+
+            </div>
+        </div>
+
+        <!-- Contacts Content -->
+        <div id="contactsContent" class="panel-body" data-plugin="selectable">
+
+            <!-- Actions -->
+            <div class="page-content-actions">
+                @Html.Partial("~/Views/Shared/ReportSearchPartial.cshtml")
+            </div>
+
+
+            <!-- Contacts -->
+            <div class="table-responsive divTable">
+                <table class="table is-indent tblDisplay"
+                       id="tblDisplay" name="tblDisplay"
+                       data-plugin="animateList">
+                    <thead>
+                        <tr>
+                            <th scope="col" rowspan="2" class="cell-100 border text-center">ประเด็น</th>
+                            <th scope="col" colspan="3" class="cell-100  text-center">การรับฟังและบริหารจัดการข้อร้องเรียน  ช่องทาง</th>
+                        </tr>
+                        <tr>
+                            <th scope="col" class="cell-150  text-center border">การร้องเรียนใหม่</th>
+                            <th scope="col" class="cell-300   text-center border">การติดตามเร่งรัดข้อขัดเรียนเดิม</th>
+                            <th scope="col" class="cell-200  text-center border">การสอบถามทั่วไป</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (DataResult != null)
+                        {
+                            foreach (DataRow dr in DataResult.Rows)
+                            {
+                                <tr>
+                                    <td>@dr["TOPIC_ORDER"] . @dr["TOPIC"]</td>
+                                    <td align="right">@dr["Complan"]</td>
+                                    <td align="right">@dr["Monitoring"]</td>
+                                    <td align="right">@dr["AskForInformation"]</td>
+                                </tr>
+                            }
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+
+
+    <script>
+
+        $(document).ready(function () {
+            // $("#tblDisplay").DataTable({ "searching": false, "bLengthChange": false });
+        });
+        $(document).on("click", "#btnSearch", function () {
+
+            $("#ReportType").val('');
+            $("#Action").val('search');
+            $("#frmReport").submit();
+
+        });
+
+        $(document).on("click", "#btnExportPDF", function () {
+
+            $("#ReportType").val('pdf');
+            $("#Action").val('export');
+            $("#frmReport").submit();
+
+        });
+
+        $(document).on("click", "#btnExportExcel", function () {
+            $("#ReportType").val('excel');
+            $("#Action").val('export');
+            $("#frmReport").submit();
+
+        });
+
+    </script>
+</form>
+

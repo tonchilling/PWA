@@ -1,0 +1,254 @@
+﻿@using Pwa.FrameWork.Dto;
+@{
+
+    ViewBag.Title = "RoleAutorize";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    List<DropDownlistDto> objSysRoles = (List<DropDownlistDto>
+)ViewData["objSysRole"];
+}
+
+
+
+<div class="panel panel-primary panel-line">
+
+    <!-- Contacts Content Header -->
+    <div class="panel-heading">
+        <h1 class="panel-title">ข้อมูลระบบ  > สิทธิ์การใช้งาน</h1>
+        <div class="page-header-actions">
+            <form></form>
+        </div>
+    </div>
+
+    <!-- Contacts Content -->
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-md-6 col-lg-3">
+                <div class="form-group">
+                    <select class="selectpicker ddlSysRole" id="ddlSysRole">
+                        <option value="">กรุณาเลือกผู้ใช้งาน</option>
+                        @foreach (DropDownlistDto obj in objSysRoles)
+                        {
+                            <option value="@obj.Value">@obj.Text</option>
+                        }
+                    </select>
+
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <button class="btn btn-outline btn-primary btnSave" type="submit">บันทึก</button>
+            </div>
+            </div>
+        <!-- Actions -->
+        <div class="page-content-actions">
+
+            <table class="table table-hover   tblDisplay" id="tblDisplay" data-plugin="animateList" data-animate="fade" data-child="tr"
+                   data-selectable="selectable">
+                <thead>
+                    <tr>
+                        <th>Menu</th>
+                        <th>Sub Menu</th>
+                        <th>View</th>
+                        <th>Edit</th>
+                        <th>Delete</th>
+
+                    </tr>
+                </thead>
+                <tbody></tbody>
+
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="InputForm" aria-hidden="true" aria-labelledby="InputForm"
+     role="dialog">
+    <div class="modal-dialog modal-primary  modal-simple modal-lg">
+        <div class="modal-content">
+            <div class="modal-header ">
+                <button type="button" class="close" aria-hidden="true" data-dismiss="modal">×</button>
+                <h4 class="modal-title">บันทึก</h4>
+            </div>
+            <div class="modal-body" style="background-color:#f1f4f5;padding-top:10px">
+                <div class="panel panel-primary panel-line">
+                    <div class="panel-heading">
+                        <div class="panel-title">ประเภทเรื่องร้องเรียน</div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-4 col-lg-4">
+                                <div class="form-group ">
+                                    <input type="text" class="form-control" id="txtName" name="txtName" placeholder="ชื่อ" />
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-lg-4">
+                                <div class="form-group">
+                                    <input type="text" class="form-control" id="txtDesc" name="txtDesc" placeholder="คำอธิบาย" />
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-lg-4">
+                                <div class="form-group">
+
+                                    <div class="float-left mr-20">
+                                        <input type="checkbox" id="chkActive" name="inputiCheckBasicCheckboxes"
+                                               data-color="#17b3a3" class="switchery js-switch" checked />
+                                    </div>
+                                    <label class="pt-3" for="inputBasicOn">ใช้งาน</label>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline btn-primary btnSave" data-dismiss="modal" type="submit">บันทึก</button>
+                <a class="btn btn-outline  btn-default" data-dismiss="modal" href="javascript:void(0)">ยกเลิก</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+
+
+    var pageManager = {
+        init: function () {
+
+    $(document).ready(function () {
+
+        pageManager.LoadData();
+
+            });
+
+            $(document).on("click", ".btnEdit", function () {
+                $("#InputForm").modal({ backdrop: 'static', keyboard: false });
+            });
+            $(document).on("click", ".btnAdd", function () {
+                $("#InputForm").modal({ backdrop: 'static', keyboard: false });
+            });
+
+            $(document).on("click", ".btnSave", function () {
+
+                var dataList = [];
+
+                // ---------------------    validate fields ---------------------------------//
+                if ($("#ddlSysRole").val() == "") {
+                    $("#ddlSysRole").closest('.form-group').addClass('has-error');
+                    return false;
+                } else {
+                    $("#ddlSysRole").closest('.form-group').removeClass('has-error');
+                }
+               // ---------------------    validate fields ---------------------------------//
+
+
+                $('.tblDisplay > tbody  > tr').each(function () {
+
+                    var row = $(this);
+
+                    var dataDetail = {};
+                    dataDetail.RoleId = $("#ddlSysRole").val();
+                    dataDetail.MenuId = row.attr("menuid");
+                    dataDetail.ParentId = row.attr("parentid");
+                    dataDetail.View = ($(this).find(".chkView").is(":checked") ? "1" : "0");
+                    dataDetail.Edit = ($(this).find(".chkEdit").is(":checked") ? "1" : "0");
+                    dataDetail.Delete = ($(this).find(".chkDelete").is(":checked") ? "1" : "0");
+                    dataList.push(dataDetail);
+                });
+
+                PwaManager.PwaConfirm("บันทึก", "คุณต้องการบันทึกหรือไม่", function (isConfirm) {
+                    if (isConfirm) {
+
+                        PwaManager.PwaWaiting(true);
+
+                        PwaManager.PwaPost('@Url.Action("SaveRoles", new { controller = "User" })', { "Requests": dataList, "roleId": $("#ddlSysRole").val() }, 
+                            // function return
+                            function (data) {
+
+                                PwaManager.PwaWaiting(false);
+                                GetSucces(data)
+                                swal(
+                                    {
+                                        title: "สำเร็จ!",
+                                        text: "บันทึกข้อมูลเรียบร้อย!",
+                                        timer: 800
+                                    });
+                            }
+                            , GetError);
+
+                    
+
+                    } else {
+                        swal.close();
+                    
+                    }
+                })
+            });
+
+            $(document).on("change", "#ddlSysRole", function (e) {
+            
+
+                PwaManager.PwaPost('@Url.Action("GetRoles", new { controller = "User" })', { Id: $(this).val()}, GetSucces,GetError);
+                e.preventDefault();
+            });
+            
+        },
+        LoadData: function () {
+
+               PwaManager.PwaPost('@Url.Action("GetRoles", new { controller = "User" })', null, GetSucces,GetError);
+
+        }
+
+    }
+
+
+    pageManager.init();
+
+
+
+    function GetError(error) {
+        alert('fail:');
+    }
+
+    function GetSucces(jsonData) {
+        var tbBodyDisplay = $("#tblDisplay tbody");
+        var tr = "";
+        tbBodyDisplay.empty();
+        $.each(jsonData, function (index, item) {
+            tr = '<tr menuid="' + item.MenuId+'">';
+            tr += '<td><h5>'+item.MenuName+'</h5></td>';
+            tr += '<td></td>';
+            tr += '<td><input type="checkbox" class="iradio_flat-blue chkView" '+(item.View=="1"?"checked":"")+' /></td>';
+            tr += '<td><input type="checkbox" class="iradio_flat-blue chkEdit" ' + (item.Edit == "1" ? "checked" : "") + ' /></td>';
+            tr += '<td><input type="checkbox" class="iradio_flat-blue chkDelete" ' + (item.Delete == "1" ? "checked" : "") + ' /></td>';
+            tr += '</tr>';
+            tbBodyDisplay.append(tr);
+
+            if (item.SubMenus != null) {
+                $.each(item.SubMenus, function (index, subItem) {
+
+                    tr = '<tr menuid="' + subItem.MenuId + '" parentid="' + subItem.ParentId + '">';
+                    tr += '<td></td>';
+                    tr += '<td>' + subItem.MenuName + '</td>';
+                    tr += '<td><input type="checkbox" class="iradio_flat-blue chkView" ' + (subItem.View == "1" ? "checked" : "") + ' /></td>';
+                    tr += '<td><input type="checkbox" class="iradio_flat-blue chkEdit" ' + (subItem.Edit == "1" ? "checked" : "") + ' /></td>';
+                    tr += '<td><input type="checkbox" class="iradio_flat-blue chkDelete" ' + (subItem.Delete == "1" ? "checked" : "") + ' /></td>';
+                    tr += '</tr>';
+                    tbBodyDisplay.append(tr);
+                });
+            }
+        });
+
+
+
+    }
+
+
+
+
+</script>
+

@@ -1,0 +1,12 @@
+D:\Work\ประปา\Project\V1\Com.FrameWork.Security\Com.FrameWork.Security\bin\Debug\Com.FrameWork.Security.dll.config
+D:\Work\ประปา\Project\V1\Com.FrameWork.Security\Com.FrameWork.Security\bin\Debug\Com.FrameWork.Security.dll
+D:\Work\ประปา\Project\V1\Com.FrameWork.Security\Com.FrameWork.Security\bin\Debug\Com.FrameWork.Security.pdb
+D:\Work\ประปา\Project\V1\Com.FrameWork.Security\Com.FrameWork.Security\bin\Debug\EntityFramework.dll
+D:\Work\ประปา\Project\V1\Com.FrameWork.Security\Com.FrameWork.Security\bin\Debug\EntityFramework.SqlServer.dll
+D:\Work\ประปา\Project\V1\Com.FrameWork.Security\Com.FrameWork.Security\bin\Debug\EntityFramework.xml
+D:\Work\ประปา\Project\V1\Com.FrameWork.Security\Com.FrameWork.Security\bin\Debug\EntityFramework.SqlServer.xml
+D:\Work\ประปา\Project\V1\Com.FrameWork.Security\Com.FrameWork.Security\obj\Debug\Com.FrameWork.Security.csproj.CoreCompileInputs.cache
+D:\Work\ประปา\Project\V1\Com.FrameWork.Security\Com.FrameWork.Security\obj\Debug\Com.FrameWork.Security.csproj.CopyComplete
+D:\Work\ประปา\Project\V1\Com.FrameWork.Security\Com.FrameWork.Security\obj\Debug\Com.FrameWork.Security.dll
+D:\Work\ประปา\Project\V1\Com.FrameWork.Security\Com.FrameWork.Security\obj\Debug\Com.FrameWork.Security.pdb
+D:\Work\ประปา\Project\V1\Com.FrameWork.Security\Com.FrameWork.Security\obj\Debug\Com.FrameWork.Security.csprojAssemblyReference.cache

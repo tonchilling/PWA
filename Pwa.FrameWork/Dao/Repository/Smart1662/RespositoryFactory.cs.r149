@@ -1,0 +1,41 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Pwa.FrameWork.Dao.Repository.Smart1662.SqlServer;
+namespace Pwa.FrameWork.Dao.Repository.Smart1662
+{
+    public class RespositoryFactory
+    {
+        public static IIncidentRepository GetIncidentRepository()
+        {
+            return new Incident.IncidentRepository();
+        }
+
+        public static ISysChannelRespository GetSysChannelRespository()
+        {
+            return new SqlServer.SysChannelResponsitory();
+        }
+        public static ISysRequestTypeRespository GetSysRequestTypeRespository()
+        {
+            return new SqlServer.SysRequestTypeResponsitory();
+        }
+
+        public static SysMenuResponsitory GetSysMenuRepository(bool sqlserver)
+        {
+            return new SqlServer.SysMenuResponsitory();
+        }
+
+        public static SysRolPermissionReponsitory GetSysRolPermissionRepository(bool sqlserver)
+        {
+            return new SqlServer.SysRolPermissionReponsitory();
+        }
+
+
+        public static SysAccountReponsitory GetSysAccountReponsitory(bool sqlserver)
+        {
+            return new SqlServer.SysAccountReponsitory();
+        }
+    }
+}

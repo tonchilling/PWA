@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="GUI_015" targetNamespace="http://tempuri.org/GUI_015.xsd" xmlns:mstns="http://tempuri.org/GUI_015.xsd" xmlns="http://tempuri.org/GUI_015.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="GUI_015" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="GUI_015" msprop:Generator_UserDSName="GUI_015">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="GUI_015" msprop:Generator_TableClassName="GUI_015DataTable" msprop:Generator_TableVarName="tableGUI_015" msprop:Generator_RowChangedName="GUI_015RowChanged" msprop:Generator_TablePropName="_GUI_015" msprop:Generator_RowDeletingName="GUI_015RowDeleting" msprop:Generator_RowChangingName="GUI_015RowChanging" msprop:Generator_RowEvHandlerName="GUI_015RowChangeEventHandler" msprop:Generator_RowDeletedName="GUI_015RowDeleted" msprop:Generator_RowClassName="GUI_015Row" msprop:Generator_UserTableName="GUI_015" msprop:Generator_RowEvArgName="GUI_015RowChangeEvent">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="ROW_NO" msprop:Generator_ColumnVarNameInTable="columnROW_NO" msprop:Generator_ColumnPropNameInRow="ROW_NO" msprop:Generator_ColumnPropNameInTable="ROW_NOColumn" msprop:Generator_UserColumnName="ROW_NO" type="xs:string" minOccurs="0" />
+              <xs:element name="BRANCH" msprop:Generator_ColumnVarNameInTable="columnBRANCH" msprop:Generator_ColumnPropNameInRow="BRANCH" msprop:Generator_ColumnPropNameInTable="BRANCHColumn" msprop:Generator_UserColumnName="BRANCH" type="xs:string" minOccurs="0" />
+              <xs:element name="AMOUNT" msprop:Generator_ColumnVarNameInTable="columnAMOUNT" msprop:Generator_ColumnPropNameInRow="AMOUNT" msprop:Generator_ColumnPropNameInTable="AMOUNTColumn" msprop:Generator_UserColumnName="AMOUNT" type="xs:string" minOccurs="0" />
+              <xs:element name="CAT01_AMOUNT" msprop:Generator_ColumnVarNameInTable="columnCAT01_AMOUNT" msprop:Generator_ColumnPropNameInRow="CAT01_AMOUNT" msprop:Generator_ColumnPropNameInTable="CAT01_AMOUNTColumn" msprop:Generator_UserColumnName="CAT01_AMOUNT" type="xs:string" minOccurs="0" />
+              <xs:element name="CAT01_NOT_OVERDUE" msprop:Generator_ColumnVarNameInTable="columnCAT01_NOT_OVERDUE" msprop:Generator_ColumnPropNameInRow="CAT01_NOT_OVERDUE" msprop:Generator_ColumnPropNameInTable="CAT01_NOT_OVERDUEColumn" msprop:Generator_UserColumnName="CAT01_NOT_OVERDUE" type="xs:string" minOccurs="0" />
+              <xs:element name="CAT01_OVERDUE" msprop:Generator_ColumnVarNameInTable="columnCAT01_OVERDUE" msprop:Generator_ColumnPropNameInRow="CAT01_OVERDUE" msprop:Generator_ColumnPropNameInTable="CAT01_OVERDUEColumn" msprop:Generator_UserColumnName="CAT01_OVERDUE" type="xs:string" minOccurs="0" />
+              <xs:element name="CAT02_AMOUNT" msprop:Generator_ColumnVarNameInTable="columnCAT02_AMOUNT" msprop:Generator_ColumnPropNameInRow="CAT02_AMOUNT" msprop:Generator_ColumnPropNameInTable="CAT02_AMOUNTColumn" msprop:Generator_UserColumnName="CAT02_AMOUNT" type="xs:string" minOccurs="0" />
+              <xs:element name="CAT02_NOT_OVERDUE" msprop:Generator_ColumnVarNameInTable="columnCAT02_NOT_OVERDUE" msprop:Generator_ColumnPropNameInRow="CAT02_NOT_OVERDUE" msprop:Generator_ColumnPropNameInTable="CAT02_NOT_OVERDUEColumn" msprop:Generator_UserColumnName="CAT02_NOT_OVERDUE" type="xs:string" minOccurs="0" />
+              <xs:element name="CAT02_OVERDUE" msprop:Generator_ColumnVarNameInTable="columnCAT02_OVERDUE" msprop:Generator_ColumnPropNameInRow="CAT02_OVERDUE" msprop:Generator_ColumnPropNameInTable="CAT02_OVERDUEColumn" msprop:Generator_UserColumnName="CAT02_OVERDUE" type="xs:string" minOccurs="0" />
+              <xs:element name="CAT03_AMOUNT" msprop:Generator_ColumnVarNameInTable="columnCAT03_AMOUNT" msprop:Generator_ColumnPropNameInRow="CAT03_AMOUNT" msprop:Generator_ColumnPropNameInTable="CAT03_AMOUNTColumn" msprop:Generator_UserColumnName="CAT03_AMOUNT" type="xs:string" minOccurs="0" />
+              <xs:element name="CAT03_NOT_OVERDUE" msprop:Generator_ColumnVarNameInTable="columnCAT03_NOT_OVERDUE" msprop:Generator_ColumnPropNameInRow="CAT03_NOT_OVERDUE" msprop:Generator_ColumnPropNameInTable="CAT03_NOT_OVERDUEColumn" msprop:Generator_UserColumnName="CAT03_NOT_OVERDUE" type="xs:string" minOccurs="0" />
+              <xs:element name="CAT03_OVERDUE" msprop:Generator_ColumnVarNameInTable="columnCAT03_OVERDUE" msprop:Generator_ColumnPropNameInRow="CAT03_OVERDUE" msprop:Generator_ColumnPropNameInTable="CAT03_OVERDUEColumn" msprop:Generator_UserColumnName="CAT03_OVERDUE" type="xs:string" minOccurs="0" />
+              <xs:element name="CAT04_AMOUNT" msprop:Generator_ColumnVarNameInTable="columnCAT04_AMOUNT" msprop:Generator_ColumnPropNameInRow="CAT04_AMOUNT" msprop:Generator_ColumnPropNameInTable="CAT04_AMOUNTColumn" msprop:Generator_UserColumnName="CAT04_AMOUNT" type="xs:string" minOccurs="0" />
+              <xs:element name="CAT04_NOT_OVERDUE" msprop:Generator_ColumnVarNameInTable="columnCAT04_NOT_OVERDUE" msprop:Generator_ColumnPropNameInRow="CAT04_NOT_OVERDUE" msprop:Generator_ColumnPropNameInTable="CAT04_NOT_OVERDUEColumn" msprop:Generator_UserColumnName="CAT04_NOT_OVERDUE" type="xs:string" minOccurs="0" />
+              <xs:element name="CAT04_OVERDUE" msprop:Generator_ColumnVarNameInTable="columnCAT04_OVERDUE" msprop:Generator_ColumnPropNameInRow="CAT04_OVERDUE" msprop:Generator_ColumnPropNameInTable="CAT04_OVERDUEColumn" msprop:Generator_UserColumnName="CAT04_OVERDUE" type="xs:string" minOccurs="0" />
+              <xs:element name="CAT05_AMOUNT" msprop:Generator_ColumnVarNameInTable="columnCAT05_AMOUNT" msprop:Generator_ColumnPropNameInRow="CAT05_AMOUNT" msprop:Generator_ColumnPropNameInTable="CAT05_AMOUNTColumn" msprop:Generator_UserColumnName="CAT05_AMOUNT" type="xs:string" minOccurs="0" />
+              <xs:element name="CAT05_NOT_OVERDUE" msprop:Generator_ColumnVarNameInTable="columnCAT05_NOT_OVERDUE" msprop:Generator_ColumnPropNameInRow="CAT05_NOT_OVERDUE" msprop:Generator_ColumnPropNameInTable="CAT05_NOT_OVERDUEColumn" msprop:Generator_UserColumnName="CAT05_NOT_OVERDUE" type="xs:string" minOccurs="0" />
+              <xs:element name="CAT05_OVERDUE" msprop:Generator_ColumnVarNameInTable="columnCAT05_OVERDUE" msprop:Generator_ColumnPropNameInRow="CAT05_OVERDUE" msprop:Generator_ColumnPropNameInTable="CAT05_OVERDUEColumn" msprop:Generator_UserColumnName="CAT05_OVERDUE" type="xs:string" minOccurs="0" />
+              <xs:element name="POINT" msprop:Generator_ColumnVarNameInTable="columnPOINT" msprop:Generator_ColumnPropNameInRow="POINT" msprop:Generator_ColumnPropNameInTable="POINTColumn" msprop:Generator_UserColumnName="POINT" type="xs:string" minOccurs="0" />
+              <xs:element name="AMOUNT_TOTAL" msprop:Generator_ColumnVarNameInTable="columnAMOUNT_TOTAL" msprop:Generator_ColumnPropNameInRow="AMOUNT_TOTAL" msprop:Generator_ColumnPropNameInTable="AMOUNT_TOTALColumn" msprop:Generator_UserColumnName="AMOUNT_TOTAL" type="xs:string" minOccurs="0" />
+              <xs:element name="AMOUNT_TOTAL_NOT_OVERDUE" msprop:Generator_ColumnVarNameInTable="columnAMOUNT_TOTAL_NOT_OVERDUE" msprop:Generator_ColumnPropNameInRow="AMOUNT_TOTAL_NOT_OVERDUE" msprop:Generator_ColumnPropNameInTable="AMOUNT_TOTAL_NOT_OVERDUEColumn" msprop:Generator_UserColumnName="AMOUNT_TOTAL_NOT_OVERDUE" type="xs:string" minOccurs="0" />
+              <xs:element name="SLA50PERCEN" msprop:Generator_ColumnVarNameInTable="columnSLA50PERCEN" msprop:Generator_ColumnPropNameInRow="SLA50PERCEN" msprop:Generator_ColumnPropNameInTable="SLA50PERCENColumn" msprop:Generator_UserColumnName="SLA50PERCEN" type="xs:string" minOccurs="0" />
+              <xs:element name="POINT_OF_INTENSIVE" msprop:Generator_ColumnVarNameInTable="columnPOINT_OF_INTENSIVE" msprop:Generator_ColumnPropNameInRow="POINT_OF_INTENSIVE" msprop:Generator_ColumnPropNameInTable="POINT_OF_INTENSIVEColumn" msprop:Generator_UserColumnName="POINT_OF_INTENSIVE" type="xs:string" minOccurs="0" />
+              <xs:element name="TOTAL_AMOUNT" msprop:Generator_ColumnVarNameInTable="columnTOTAL_AMOUNT" msprop:Generator_ColumnPropNameInRow="TOTAL_AMOUNT" msprop:Generator_ColumnPropNameInTable="TOTAL_AMOUNTColumn" msprop:Generator_UserColumnName="TOTAL_AMOUNT" type="xs:string" minOccurs="0" />
+              <xs:element name="CAT06_AMOUNT" msprop:Generator_ColumnVarNameInTable="columnCAT06_AMOUNT" msprop:Generator_ColumnPropNameInRow="CAT06_AMOUNT" msprop:Generator_ColumnPropNameInTable="CAT06_AMOUNTColumn" msprop:Generator_UserColumnName="CAT06_AMOUNT" type="xs:string" minOccurs="0" />
+              <xs:element name="CAT06_NOT_OVERDUE" msprop:Generator_ColumnVarNameInTable="columnCAT06_NOT_OVERDUE" msprop:Generator_ColumnPropNameInRow="CAT06_NOT_OVERDUE" msprop:Generator_ColumnPropNameInTable="CAT06_NOT_OVERDUEColumn" msprop:Generator_UserColumnName="CAT06_NOT_OVERDUE" type="xs:string" minOccurs="0" />
+              <xs:element name="CAT06_OVERDUE" msprop:Generator_ColumnVarNameInTable="columnCAT06_OVERDUE" msprop:Generator_ColumnPropNameInRow="CAT06_OVERDUE" msprop:Generator_ColumnPropNameInTable="CAT06_OVERDUEColumn" msprop:Generator_UserColumnName="CAT06_OVERDUE" type="xs:string" minOccurs="0" />
+              <xs:element name="CAL30PERCEN" msprop:Generator_ColumnVarNameInTable="columnCAL30PERCEN" msprop:Generator_ColumnPropNameInRow="CAL30PERCEN" msprop:Generator_ColumnPropNameInTable="CAL30PERCENColumn" msprop:Generator_UserColumnName="CAL30PERCEN" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

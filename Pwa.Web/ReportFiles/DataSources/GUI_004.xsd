@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="GUI_004" targetNamespace="http://tempuri.org/GUI_004.xsd" xmlns:mstns="http://tempuri.org/GUI_004.xsd" xmlns="http://tempuri.org/GUI_004.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="GUI_004" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="GUI_004" msprop:Generator_UserDSName="GUI_004">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="GUI_004" msprop:Generator_TableClassName="GUI_004DataTable" msprop:Generator_TableVarName="tableGUI_004" msprop:Generator_TablePropName="_GUI_004" msprop:Generator_RowDeletingName="GUI_004RowDeleting" msprop:Generator_RowChangingName="GUI_004RowChanging" msprop:Generator_RowEvHandlerName="GUI_004RowChangeEventHandler" msprop:Generator_RowDeletedName="GUI_004RowDeleted" msprop:Generator_UserTableName="GUI_004" msprop:Generator_RowChangedName="GUI_004RowChanged" msprop:Generator_RowEvArgName="GUI_004RowChangeEvent" msprop:Generator_RowClassName="GUI_004Row">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="REQ_TYPE_ID" msprop:Generator_ColumnVarNameInTable="columnREQ_TYPE_ID" msprop:Generator_ColumnPropNameInRow="REQ_TYPE_ID" msprop:Generator_ColumnPropNameInTable="REQ_TYPE_IDColumn" msprop:Generator_UserColumnName="REQ_TYPE_ID" type="xs:string" minOccurs="0" />
+              <xs:element name="CATEGORY" msprop:Generator_ColumnVarNameInTable="columnCATEGORY" msprop:Generator_ColumnPropNameInRow="CATEGORY" msprop:Generator_ColumnPropNameInTable="CATEGORYColumn" msprop:Generator_UserColumnName="CATEGORY" type="xs:string" minOccurs="0" />
+              <xs:element name="REQ_CATEGORY_ID" msprop:Generator_ColumnVarNameInTable="columnREQ_CATEGORY_ID" msprop:Generator_ColumnPropNameInRow="REQ_CATEGORY_ID" msprop:Generator_ColumnPropNameInTable="REQ_CATEGORY_IDColumn" msprop:Generator_UserColumnName="REQ_CATEGORY_ID" type="xs:string" minOccurs="0" />
+              <xs:element name="COMPLAINT_TOPIC" msprop:Generator_ColumnVarNameInTable="columnCOMPLAINT_TOPIC" msprop:Generator_ColumnPropNameInRow="COMPLAINT_TOPIC" msprop:Generator_ColumnPropNameInTable="COMPLAINT_TOPICColumn" msprop:Generator_UserColumnName="COMPLAINT_TOPIC" type="xs:string" minOccurs="0" />
+              <xs:element name="TOTAL" msprop:Generator_ColumnVarNameInTable="columnTOTAL" msprop:Generator_ColumnPropNameInRow="TOTAL" msprop:Generator_ColumnPropNameInTable="TOTALColumn" msprop:Generator_UserColumnName="TOTAL" type="xs:string" minOccurs="0" />
+              <xs:element name="COMPLAINT_PERCEN" msprop:Generator_ColumnVarNameInTable="columnCOMPLAINT_PERCEN" msprop:Generator_ColumnPropNameInRow="COMPLAINT_PERCEN" msprop:Generator_ColumnPropNameInTable="COMPLAINT_PERCENColumn" msprop:Generator_UserColumnName="COMPLAINT_PERCEN" type="xs:string" minOccurs="0" />
+              <xs:element name="AVG_PER_DAY" msprop:Generator_ColumnVarNameInTable="columnAVG_PER_DAY" msprop:Generator_ColumnPropNameInRow="AVG_PER_DAY" msprop:Generator_ColumnPropNameInTable="AVG_PER_DAYColumn" msprop:Generator_UserColumnName="AVG_PER_DAY" type="xs:string" minOccurs="0" />
+              <xs:element name="OVERDUE" msprop:Generator_ColumnVarNameInTable="columnOVERDUE" msprop:Generator_ColumnPropNameInRow="OVERDUE" msprop:Generator_ColumnPropNameInTable="OVERDUEColumn" msprop:Generator_UserColumnName="OVERDUE" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

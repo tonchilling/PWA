@@ -1,0 +1,17 @@
+D:\Work\ประปา\Project\V1\IC360.ImportService\bin\Debug\IC360.ImportService.exe.config
+D:\Work\ประปา\Project\V1\IC360.ImportService\bin\Debug\IC360.ImportService.exe
+D:\Work\ประปา\Project\V1\IC360.ImportService\bin\Debug\IC360.ImportService.pdb
+D:\Work\ประปา\Project\V1\IC360.ImportService\bin\Debug\EntityFramework.dll
+D:\Work\ประปา\Project\V1\IC360.ImportService\bin\Debug\EntityFramework.SqlServer.dll
+D:\Work\ประปา\Project\V1\IC360.ImportService\bin\Debug\Pwa.FrameWork.dll
+D:\Work\ประปา\Project\V1\IC360.ImportService\bin\Debug\Npgsql.dll
+D:\Work\ประปา\Project\V1\IC360.ImportService\bin\Debug\System.Threading.Tasks.Extensions.dll
+D:\Work\ประปา\Project\V1\IC360.ImportService\bin\Debug\Pwa.FrameWork.pdb
+D:\Work\ประปา\Project\V1\IC360.ImportService\bin\Debug\Pwa.FrameWork.dll.config
+D:\Work\ประปา\Project\V1\IC360.ImportService\bin\Debug\EntityFramework.xml
+D:\Work\ประปา\Project\V1\IC360.ImportService\bin\Debug\EntityFramework.SqlServer.xml
+D:\Work\ประปา\Project\V1\IC360.ImportService\obj\Debug\IC360.ImportService.csprojAssemblyReference.cache
+D:\Work\ประปา\Project\V1\IC360.ImportService\obj\Debug\IC360.ImportService.csproj.CoreCompileInputs.cache
+D:\Work\ประปา\Project\V1\IC360.ImportService\obj\Debug\IC360.ImportService.csproj.CopyComplete
+D:\Work\ประปา\Project\V1\IC360.ImportService\obj\Debug\IC360.ImportService.exe
+D:\Work\ประปา\Project\V1\IC360.ImportService\obj\Debug\IC360.ImportService.pdb

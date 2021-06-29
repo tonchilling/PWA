@@ -1,0 +1,2422 @@
+﻿@using Pwa.FrameWork.Dto;
+@using Pwa.FrameWork.Dto.Smart1662;
+@using Pwa.FrameWork.Dto.Utils;
+@using Pwa.FrameWork.Dto.Smart1662.RepaireWork;
+@using Pwa.FrameWork.Dao.EF.Smart1662;
+@using Pwa.FrameWork.Dto.Smart1662.Incident;
+@using Pwa.FrameWork.Dto.Smart1662;
+@{
+    /**/
+
+    ViewBag.Title = "AddRepaire";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+
+    List<DropDownlistDto> sysRequestTypes = (List<DropDownlistDto>
+       )ViewBag.SysRequestType;
+
+    List<DropDownlistDto> SysRequestCategorys = (List<DropDownlistDto>
+    )ViewBag.SysRequestCategorys;
+
+    List<DropDownlistDto> SysRequestCategorySubjects = (List<DropDownlistDto>
+    )ViewBag.SysRequestCategorySubjects;
+
+    List<DropDownlistDto> SysItems = (List<DropDownlistDto>
+    )ViewBag.SysItems;
+
+    List<DropDownlistDto> SysUnit = (List<DropDownlistDto>
+    )ViewBag.SysUnit;
+
+    List<DropDownlistDto> SysBranch = (List<DropDownlistDto>
+    )ViewBag.SysBranch;
+
+    List<DropDownlistDto> Employees = (List<DropDownlistDto>
+    )ViewBag.Employees;
+
+    List<IncidentDto> incidentList = (List<IncidentDto>
+    )ViewBag.GetIncidents;
+    FileDto fileDto = null;
+}
+
+@model PwaRepaireWorkHeaderDto
+<style>
+
+    .table thead tr.bg-success th {
+        font-weight: 400;
+        color: #fff;
+        border-bottom-width: 1px;
+    }
+
+
+
+
+    /*   .popover {
+        height: 400px;
+        width: auto;
+    }
+
+    .popover img {
+        height: 100%;
+        width: auto;
+    }*/
+    .popover img {
+        max-height: 300px;
+    }
+
+   .mapdefault {
+        height: 400px;
+        width: 100%;
+    }
+
+    #mapSurvey {
+        height: 400px;
+        width: 100%;
+    }
+
+
+    .panel-heading {
+        display: flex
+    }
+
+        .panel-heading .form-group {
+            padding-top: 20px;
+        }
+
+    .pull-right {
+        right: 0;
+    }
+
+    .btnExpandMap {
+        position: absolute;
+        right: 20px;
+        bottom: 100px;
+        padding: 10px;
+        z-index: 400;
+    }
+
+    .fullScreen {
+        position: fixed;
+        top: 0;
+        right: 0;
+        width: 78%;
+        height: 100%;
+        z-index: 17000;
+    }
+
+    .mapfull {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+    }
+
+</style>
+
+
+
+
+
+
+<script>
+
+    var addUrl = '@Url.Action("SaveRepaireWork", "Complaint")';
+    var itemUrl = getBaseUrl() + 'api/Item/';
+    var sysRequestTypes = @Html.Raw(Json.Encode(sysRequestTypes));
+    var SysRequestCategorys = @Html.Raw(Json.Encode(SysRequestCategorys));
+    var SysRequestCategorySubjects = @Html.Raw(Json.Encode(SysRequestCategorySubjects));
+    var SysItems =@Html.Raw(Json.Encode(SysItems));
+    var SysUnit =@Html.Raw(Json.Encode(SysUnit));
+    var IncidentList = @Html.Raw(Json.Encode(incidentList));
+        var model = @Html.Raw(Json.Encode(Model));
+</script>
+<div class="row" data-plugin="matchHeight" data-by-row="true">
+    <div class="col-xxl-12">
+
+
+        <!-- Contacts Content -->
+        <div class="panel panel-primary panel-line">
+
+            <!-- Contacts Content Header -->
+            <div class="panel-heading">
+                <h1 class="panel-title">รายการแจ้งซ่อม > เพิ่ม/แก้ไข </h1>
+                <div class="page-header-actions">
+
+                </div>
+            </div>
+
+            <!-- Contacts Content -->
+            <div class="panel-body" data-plugin="selectable">
+
+                <!-- Actions -->
+                <div class="page-content-actions">
+                    <div class="row">
+                        <div class="col-md-3 col-lg-3">
+                            <div class="form-group ">
+                                <input type="text" class="form-control " disabled id="RWCode" value="@(Model !=null  ? Model.RWCode.ToString() :"")" placeholder="หมายเลขงาน" />
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-lg-3">
+                            <div class="form-group">
+                                <div class="input-group">
+
+                                    <input type="text" class="form-control datetime"
+                                           id="WorkingDate"
+                                           value="@(Model !=null  ? Model.WorkingDate.ToString() :"")"
+                                           placeholder="วันที่รับงาน" data-plugin="datepicker">
+                                    <span class="input-group-addon ">
+                                        <span class="glyphicon glyphicon-calendar"></span>
+                                    </span>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-md-2 col-lg-2">
+                            <div class="form-group">
+                                <div class="input-group clockpicker" data-placement="left" data-align="top" data-autoclose="true">
+                                    <input type="text" class="form-control" placeholder="เวลา"
+                                           id="WorkingTime"
+                                           value="@(Model !=null  ? Model.WorkingTime :"")">
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-lg-4">
+                            <div class="form-group">
+                                <select class="ddlAccountId"
+                                        id="ddlAccountId"
+                                        tabindex="-98">
+                                    <option value="0">เจ้าหน้าที่</option>
+                                    @foreach (DropDownlistDto it in Employees)
+                                    {
+                                        <option value="@it.Value" @(it.Value.Trim() == (Model != null ? Model.AccountId.Trim() : "") ? "selected" : "")>@it.Text </option>
+                                    }
+
+                                </select>
+
+                            </div>
+                        </div>
+
+
+
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4 col-lg-4">
+                            <div class="form-group">
+                                <select class="ddlRequestType"
+                                        id="ddlRequestType"
+                                        tabindex="-98">
+                                    <option value="0">ประเภทรับแจ้ง</option>
+                                    @foreach (DropDownlistDto it in sysRequestTypes)
+                                    {
+                                        <option value="@it.Value" @(it.Value == (Model != null ? Model.RequestType : "") ? "selected" : "")>@it.Text </option>
+                                    }
+
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-lg-3">
+                            <div class="form-group">
+                                <div class="input-group">
+
+                                    <input type="text" class="form-control datetime" placeholder="วันที่แจ้ง"
+                                           id="NotificationDate"
+                                           value="@(Model !=null  ? Model.NotificationDate :"")"
+                                           data-plugin="datepicker">
+                                    <span class="input-group-addon ">
+                                        <span class="glyphicon glyphicon-calendar"></span>
+                                    </span>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-md-2 col-lg-2">
+                            <div class="form-group">
+                                <div class="input-group clockpicker" data-placement="left" data-align="top" data-autoclose="true">
+                                    <input type="text" class="form-control" placeholder="เวลา"
+                                           id="NotificationTime"
+                                           value="@(Model !=null  ? Model.NotificationTime :"")">
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-lg-3">
+                            <div class="form-group">
+                                <select class="Status"
+                                        id="Status"
+                                        value="@(Model !=null  ? Model.Status :"")">
+                                    <option value="0">สถานะ</option>
+                                    <option value="1">ปิดงาน</option>
+
+                                </select>
+
+                            </div>
+
+
+                        </div>
+
+
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-3 col-lg-3">
+                            <div class="form-group">
+                                <select class="ddlRequestCategory"
+                                        id="ddlRequestCategory">
+                                    <option value="0">ด้านการร้องเรียน</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-7 col-lg-7">
+                            <div class="form-group">
+                                <select class="ddlRequestCategorySubject"
+                                        id="ddlRequestCategorySubject">
+                                    <option value="0">หัวข้อการร้องเรียน</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-2 col-lg-2">
+                            <div class="form-group">
+                                <input type="checkbox" class="icheckbox-primary" id="chkSLA"
+                                       name="inputiCheckCheckboxes"
+                                       @(Model != null && Model.SLA == "1" ? "checked" : "")
+                                       data-checkbox-class="icheckbox_flat-blue" />
+                                <label for="inputUnchecked">ยกเว้นSLA</label>
+                            </div>
+
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <!--        <div class="col-md-4 col-lg-4">
+                            <select data-plugin="selectpicker" class="selectpicker" id="ddlArea">
+                                <option>เลือกเขต</option>
+
+
+                            </select>
+                        </div>-->
+                        <div class="col-md-4 col-lg-4">
+                            <select class="" id="ddlBranch">
+                                <option value="0">เลือกสาขา</option>
+                                @foreach (DropDownlistDto it in SysBranch)
+                                {
+                                    <option value="@it.Value" @(it.Value == (Model != null ? Model.BranchId : "") ? "selected" : "")>@it.Text </option>
+                                }
+
+                            </select>
+                        </div>
+                        <div class="col-md-8 col-lg-8">
+                            <input type="text" class="form-control" placeholder="เหตุผล"
+                                   id="txtReason"
+                                   value="@(Model !=null  ? Model.Reason :"")">
+                        </div>
+                    </div>
+                    <div class="row">
+
+                        <div class="col-md-6 col-lg-6">
+                            <div style="padding-top:10px;">
+                                <button type="button" class="btn  btn-success btnAddRepaire">เพิ่มการแจ้ง</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row" style="padding-top:10px">
+                        <div class="col-md-12 col-lg-12">
+
+                            <div class="card border">
+
+                                <div class="table-responsive">
+                                    <table class="table table-striped" data-animate="fade" id="tblDisplay">
+                                        <thead>
+                                            <tr>
+                                                <th class="pre-cell"></th>
+                                                <th class="cell-30" scope="col">
+
+                                                </th>
+
+
+                                                <th class="" scope="col">วันเวลาที่รับแจ้ง</th>
+                                                <th class="" scope="col">เลขที่รับแจ้ง</th>
+                                                <th class="" scope="col">หัวข้อ</th>
+                                                <th scope="col" class="">รายละเอียดเรื่องรับแจ้ง</th>
+                                                <th class="" scope="col">สถานที่</th>
+
+
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @if (incidentList != null)
+                                            {
+                                                foreach (var data in incidentList)
+                                                {
+                                                    <tr data-url="panel.tpl" data="@data.PwaIncidentID">
+                                                        <td class="pre-cell"></td>
+                                                        <td class="cell-30">
+                                                            <span class="checkbox-custom checkbox-primary checkbox-lg">
+                                                                <input type="checkbox" class="contacts-checkbox chkItem" />
+                                                                <label for="contacts_1"></label>
+                                                            </span>
+                                                        </td>
+                                                        <td class="">@data.CreatedDate.ToString("dd/MM/yyyy")</td>
+                                                        <td class="">@data.PwaIncidentNo</td>
+                                                        <td class="">@data.RequestCategorySubject</td>
+                                                        <td class="">@data.CaseDetail</td>
+                                                        <td class="">@data.CaseLongtitude</td>
+
+
+
+                                                    </tr>
+
+                                                }
+                                            }
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    @if (Model != null)
+                    {
+                        <input type="hidden" id="hddTab1SurveyId" value="@(Model !=null && Model.Survey!=null ? Model.Survey.SurveyId :"")" />
+                        <input type="hidden" id="hddTab2EffectId" value="@(Model !=null && Model.Effect!=null ? Model.Effect.EffectId :"")" />
+                        <input type="hidden" id="hddTab3OpenCaseId" value="@(Model !=null && Model.OpenCase!=null ? Model.OpenCase.OpenCaseId :"")" />
+                        <input type="hidden" id="hddTab4ProcessId" value="@(Model !=null && Model.Process!=null ? Model.Process.ProcessId :"")" />
+                        <input type="hidden" id="hddTab5CloseJobId" value="@(Model !=null && Model.CloseJob!=null ? Model.CloseJob.CloseJobId :"")"
+                        <div class="row" style="padding-top:10px">
+                            <div class="col-md-12 col-lg-12">
+
+                                <ul class="nav nav-tabs nav-tabs-line">
+
+                                    <li class="nav-item"><a class="nav-link active" Status="5" data-toggle="tab" href="#menu1">สำรวจพื้นที่ และ ประเมินผลกระทบ</a></li>
+                                    @if (Model != null && Model.Survey != null)
+                                    { 
+                                    if (Converting.ToInt(Model.Status) >= 5)
+                                    {
+                                            <li class="nav-item"><a class="nav-link"  Status="6"  data-toggle="tab" href="#menu3">เปิดงานซ่อม</a></li>
+                                        }
+                                    }
+                                    @if (Model != null && Model.OpenCase != null)
+                                    {
+                                        <li class="nav-item"><a class="nav-link" Status="7"  data-toggle="tab" href="#menu4">ดำเนินการซ่อมภาคสนาม</a></li>
+                                    }
+                                    @if (Model != null && Model.Process != null)
+                                    {
+                                        <li class="nav-item"><a class="nav-link"  Status="8"  data-toggle="tab" href="#menu5">ปิดงานซ่อม</a></li>
+                                    }
+                                </ul>
+                                <div class="tab-content">
+                                    <!--Tab 1 สำรวจพื้นที่ -->
+
+                                    @if (Model != null)
+                                    {
+                                        <div id="menu1" class="tab-pane fade in active">
+                                            <div class="panel">
+                                                <div class="panel-heading">
+                                                    <div class="panel-title"></div>
+                                                </div>
+                                                <div class="panel-body">
+                                                    <div class="row">
+                                                        <div class="col-md-3 col-lg-3">
+                                                            <div class="form-group">
+                                                                <div class="input-group">
+
+                                                                    <input type="text" class="form-control datetime"
+                                                                           id="SurveyDate"
+                                                                           value="@(Model != null && Model.Survey != null ? Model.Survey.SurveyDate : "")"
+                                                                           placeholder="วันที่สำรวจ" data-plugin="datepicker">
+                                                                    <span class="input-group-addon ">
+                                                                        <span class="glyphicon glyphicon-calendar"></span>
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                        <div class="col-md-2 col-lg-2">
+                                                            <div class="form-group">
+                                                                <div class="input-group clockpicker" data-placement="left" data-align="top" data-autoclose="true">
+                                                                    <input type="text" class="form-control"
+                                                                           id="SurveyTime"
+                                                                           value="@(Model != null && Model.Survey != null ? Model.Survey.SurveyTime : "")"
+                                                                           placeholder="เวลา">
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-2 col-lg-2">
+                                                            <div class="form-group">
+                                                                <input type="checkbox" class="icheckbox-primary" id="IsBroken" name="IsBroken"
+                                                                       @(Model != null && Model.Survey != null && Model.Survey.IsBroken == "1" ? "checked" : "") />
+                                                                <label for="IsBroken">ท่อแตกรั่ว</label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-5 col-lg-5">
+                                                            <div class="form-group">
+
+                                                                <select class=" ddlSurveyAccountId"
+                                                                        id="ddlSurveyAccountId"
+                                                                        tabindex="-98">
+                                                                    <option value="0">ผู้สำรวจ...</option>
+                                                                    @foreach (DropDownlistDto it in Employees)
+                                                                    {
+                                                                        <option value="@it.Value" @(it.Value.Trim() == (Model != null && Model.Survey != null ? Model.Survey.SurveyAccountId.Trim() : "") ? "selected" : "")>@it.Text </option>
+                                                                    }
+
+                                                                </select>
+
+                                                            </div>
+
+                                                        </div>
+
+
+
+                                                    </div>
+                                                    <div class="row">
+
+                                                        <div class="col-md-5 col-lg-5">
+                                                            <div class="form-group">
+                                                                <input type="text" class="form-control"
+                                                                       id="BrokenAppearance"
+                                                                       value="@(Model != null && Model.Survey != null ? Model.Survey.BrokenAppearance : "")"
+                                                                       placeholder="ลักษณะการแตก-รั่วท่อ" />
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-4 col-lg-4">
+                                                            <div class="form-group">
+                                                                <input type="text" class="form-control"
+                                                                       id="PiplineType"
+                                                                       value="@(Model != null && Model.Survey != null ? Model.Survey.PiplineType : "")"
+                                                                       placeholder="ชนิดของท่อ" />
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3 col-lg-3">
+                                                            <div class="form-group">
+                                                                <input type="text" class="form-control"
+                                                                       id="PiplineSize"
+                                                                       value="@(Model != null && Model.Survey != null ? Model.Survey.PiplineSize : "")"
+                                                                       placeholder="ขนาดของท่อ" />
+                                                            </div>
+                                                        </div>
+
+
+                                                    </div>
+
+                                                    <div class="row">
+
+                                                        <div class="col-md-5 col-lg-5">
+                                                            <div class="form-group">
+                                                                <input type="text" class="form-control"
+                                                                       id="SurfaceAppearance"
+                                                                       value="@(Model != null && Model.Survey != null ? Model.Survey.SurfaceAppearance : "")"
+                                                                       placeholder="ลักษณะพื้นผิว" />
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6 col-lg-6">
+                                                            <div class="input-group">
+                                                                <input type="text" class="form-control"
+                                                                       id="SurveyReason"
+                                                                       value="@(Model != null && Model.Survey != null ? Model.Survey.Reason : "")"
+                                                                       placeholder="สาเหตุที่เกิดเหตุ" />
+
+                                                            </div>
+                                                        </div>
+                                                      
+
+
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <h5 class="card-title">ผู้ใช้น้ำที่ได้รับผลกระทบ</h5>
+                                                            <div class="table-responsive divCustEffect">
+                                                                <table class="table  table-hover">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th class="cell-300" scope="col">ชื่อ</th>
+                                                                            <th scope="col" class="cell-300">เบอร์โทร</th>
+                                                                            <th scope="col" class="cell-300">ที่อยู่</th>
+
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                    
+
+
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <div class="mapsection">
+                                                                <div id="mapid" class="mapdefault">
+
+
+                                                                </div>
+
+                                                                <button class="btn  btn-outline-success btnExpandMap">Full Map</button>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                 
+
+                                    <!--Tab 3 เปิดงานซ่อม -->
+                                    @if (Model != null && Model.Survey != null && Converting.ToInt(Model.Status) >= 5)
+                                    {
+                                        <div id="menu3" class="tab-pane fade">
+                                            <div class="panel">
+                                                <div class="panel-heading">
+                                                    <div class="panel-title"></div>
+                                                </div>
+                                                <div class="panel-body">
+                                                    <div class="row">
+                                                        <div class="col-md-2 col-lg-2">
+                                                            <div class="form-group">
+                                                                <input type="checkbox" class="icheckbox-primary"
+                                                                       @(Model != null && Model.OpenCase != null && Model.OpenCase.IsUrgent == "1" ? "checked" : "")
+                                                                       id="Tab3IsUrgent" />
+                                                                <label for="Tab3IsUrgent">ซ่อมด่วน</label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-2 col-lg-3">
+                                                            <div class="form-group">
+                                                                <input type="checkbox" class="icheckbox-primary"
+                                                                       @(Model != null && Model.OpenCase != null && Model.OpenCase.IsOutSource == "1" ? "checked" : "")
+                                                                       id="Tab3IsOutSource" />
+                                                                <label for="Tab3IsOutSource">จ้างเหมาซ่อมท่อ</label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-3 col-lg-3">
+                                                            <div class="form-group">
+                                                                <div class="input-group">
+
+                                                                    <input type="text" class="form-control datetime"
+                                                                           placeholder="วันที่เปิดงาน"
+                                                                           value="@(Model != null && Model.OpenCase != null ? Model.OpenCase.OpenDate : "")"
+                                                                           id="Tab3OpenDate"
+                                                                           data-plugin="datepicker">
+                                                                    <span class="input-group-addon ">
+                                                                        <span class="glyphicon glyphicon-calendar"></span>
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                        <div class="col-md-2 col-lg-2">
+                                                            <div class="form-group">
+                                                                <div class="input-group clockpicker"
+                                                                     data-placement="left" data-align="top" data-autoclose="true">
+                                                                    <input type="text" class="form-control"
+                                                                           value="@(Model != null && Model.OpenCase != null ? Model.OpenCase.OpenTime : "")"
+                                                                           id="Tab3OpenTime" placeholder="เวลา">
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-5 col-lg-5">
+                                                            <div class="form-group">
+
+                                                                <select class=" Tab3ResponAccountId"
+                                                                        id="Tab3ResponAccountId"
+                                                                        tabindex="-98">
+                                                                    <option value="0">ผู้สำรวจ...</option>
+                                                                    @foreach (DropDownlistDto it in Employees)
+                                                                    {
+                                                                        <option value="@it.Value" @(it.Value.Trim() == (Model != null && Model.OpenCase != null ? Model.OpenCase.ResponAccountId.Trim() : "") ? "selected" : "")>@it.Text </option>
+                                                                    }
+
+                                                                </select>
+
+                                                            </div>
+
+                                                        </div>
+                                                        <div class="col-md-5 col-lg-5">
+                                                            <div class="form-group">
+
+                                                                <select class=" Tab3SuperAccountId"
+                                                                        id="Tab3SuperAccountId"
+                                                                        tabindex="-98">
+                                                                    <option value="0">หัวหน้าชุดควบคุมงานซ่อม.</option>
+                                                                    @foreach (DropDownlistDto it in Employees)
+                                                                    {
+                                                                        <option value="@it.Value" @(it.Value.Trim() == (Model != null && Model.OpenCase != null ? Model.OpenCase.SuperAccountId.Trim() : "") ? "selected" : "")>@it.Text </option>
+                                                                    }
+
+                                                                </select>
+
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-12 col-lg-12">
+                                                            <div class="panel panel-success panel-line" style="border:0.5px solid #11c26d">
+                                                                <div class="panel-heading">
+                                                                    <div class="col-md-6">
+                                                                        <div class="panel-title">ผลการตรวจสภาพพื้นผิว</div>
+                                                                    </div>
+                                                                    <div class="col-md-6 text-right">
+                                                                        <div class="form-group">
+                                                                            <button class="btn btn-outline btn-warning" type="submit">พิมพ์ใบเปิดงานซ่อม</button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="panel-body">
+                                                                    <div class="row">
+                                                                        <div class="col-md-12 col-lg-12">
+
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-md-2 col-lg-2">
+                                                                            <div class="form-group">
+                                                                                <input type="checkbox" class="icheckbox-primary"
+                                                                                       @(Model != null && Model.OpenCase != null && Model.OpenCase.IsBroken == "1" ? "checked" : "")
+                                                                                       id="Tab3IsBroken" />
+                                                                                <label for="inputUnchecked">ท่อแตกรั่ว</label>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-3 col-lg-3">
+                                                                            <div class="form-group">
+                                                                                <div class="input-group">
+
+                                                                                    <input type="text" class="form-control datetime"
+                                                                                           placeholder="วันที่สำรวจ"
+                                                                                           value="@(Model != null && Model.OpenCase != null ? Model.OpenCase.SurveyDate : "")"
+                                                                                           id="Tab3SurveyDate"
+                                                                                           data-plugin="datepicker">
+                                                                                    <span class="input-group-addon ">
+                                                                                        <span class="glyphicon glyphicon-calendar"></span>
+                                                                                    </span>
+                                                                                </div>
+                                                                            </div>
+
+                                                                        </div>
+                                                                        <div class="col-md-2 col-lg-2">
+                                                                            <div class="form-group">
+                                                                                <div class="input-group clockpicker" data-placement="left" data-align="top" data-autoclose="true">
+                                                                                    <input type="text" class="form-control"
+                                                                                           value="@(Model != null && Model.OpenCase != null ? Model.OpenCase.SurveyTime : "")"
+                                                                                           id="Tab3SurveyTime"
+                                                                                           placeholder="เวลา">
+
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-5 col-lg-5">
+                                                                            <div class="form-group">
+
+                                                                                <select class="Tab3SurveyAccountId"
+                                                                                        id="Tab3SurveyAccountId"
+                                                                                        tabindex="-98">
+                                                                                    <option value="0">ผู้สำรวจ...</option>
+                                                                                    @foreach (DropDownlistDto it in Employees)
+                                                                                    {
+                                                                                        <option value="@it.Value" @(it.Value.Trim() == (Model != null && Model.OpenCase != null ? Model.OpenCase.SurveyAccountId.Trim() : "") ? "selected" : "")>@it.Text </option>
+                                                                                    }
+
+                                                                                </select>
+                                                                            
+                                                                            </div>
+
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-md-6 col-lg-6">
+                                                                            <div class="form-group">
+                                                                                <input type="text" class="form-control "
+                                                                                       value="@(Model != null && Model.OpenCase != null ? Model.OpenCase.BrokenAppearance : "")"
+                                                                                       id="Tab3BrokenAppearance"
+                                                                                       placeholder="ลักษณะการแตก-รั่วท่อ">
+                                                                            </div>
+
+                                                                        </div>
+                                                                        <div class="col-md-6 col-lg-6">
+                                                                            <div class="form-group">
+                                                                                <input type="text" class="form-control "
+                                                                                       value="@(Model != null && Model.OpenCase != null ? Model.OpenCase.PiplineType : "")"
+                                                                                       id="Tab3PiplineType"
+                                                                                       placeholder="ชนิด – ขนาด ของท่อ">
+                                                                            </div>
+
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-md-6 col-lg-6">
+                                                                            <div class="form-group">
+                                                                                <input type="text" class="form-control"
+                                                                                       value="@(Model != null && Model.OpenCase != null ? Model.OpenCase.SurfaceAppearance : "")"
+                                                                                       id="Tab3SurfaceAppearance"
+                                                                                       placeholder="ลักษณะพื้นผิว">
+                                                                            </div>
+
+                                                                        </div>
+                                                                        <div class="col-md-6 col-lg-6">
+                                                                            <div class="form-group">
+                                                                                <input type="text" class="form-control"
+                                                                                       value="@(Model != null && Model.OpenCase != null ? Model.OpenCase.Location : "")"
+                                                                                       id="Tab3Location"
+                                                                                       placeholder="สถานที่เกิดเหตุ">
+                                                                            </div>
+
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-md-12 col-lg-12">
+                                                                            <div class="form-group">
+                                                                                <textarea type="text" class="form-control marker"
+                                                                                          value="@(Model != null && Model.OpenCase != null ? Model.OpenCase.Comment : "")"
+                                                                                          id="Tab3Comment"
+                                                                                          placeholder="หมายเหตุ"> @(Model != null && Model.OpenCase != null ? Model.OpenCase.Comment : "") </textarea>
+                                                                            </div>
+
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div class="row">
+                                                                        <div class="col-md-4 col-lg-4">
+                                                                            <div class="form-group ">
+                                                                                <label>เบิกวัสดุอุปกรณ์ที่ใช้</label> <button type="button" class="btn btn-floating btn-success btn-sm btnAddNewItem"><i class="icon wb-plus" aria-hidden="true"></i></button>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-7 col-lg-7">
+                                                                            <div class="form-group">
+
+                                                                                <select class=" Tab3SysItemSetID select2"
+                                                                                        id="Tab3SysItemSetID">
+                                                                                    <option value="0">เลือก Template</option>
+                                                                                    @foreach (SysItem_SetDto it in ViewBag.SysItem_Set)
+                                                                                    {
+                                                                                        <option value="@it.SetID" @(it.SetID.Trim() == (Model != null && Model.OpenCase != null && Model.OpenCase.SysItemSetID != null ? Model.OpenCase.SysItemSetID.Trim() : "") ? "selected" : "")>@it.SetName </option>
+                                                                                    }
+
+                                                                                </select>
+
+                                                                            </div>
+
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="table-responsive divOpenCase">
+                                                                            @if (Model != null && Model.Process == null)
+                                                                            {
+                                                                                <div class="row">
+                                                                                    <div class="table-responsive divCloseJob">
+                                                                                        <div class="divItem">
+                                                                                            <table class="table tbItem" data-plugin="animateList" data-animate="fade" data-child="tr"
+                                                                                                   data-selectable="selectable">
+                                                                                                <thead>
+                                                                                                    <tr>
+
+
+                                                                                                        <th class="" scope="col">ลำดับที่</th>
+
+                                                                                                        <th scope="col" class="cell-200">รายการ</th>
+                                                                                                        <th class="cell-120" scope="col">หน่วยนับ</th>
+                                                                                                        <th scope="col" class="">จำนวน</th>
+                                                                                                        <th scope="col" class="">ราคาต่อหน่วย</th>
+                                                                                                        <th scope="col" class="cell-80">ราคารวม</th>
+                                                                                                        <th scope="col" class=""></th>
+
+                                                                                                    </tr>
+                                                                                                </thead>
+                                                                                                <tbody>
+
+                                                                                                    @if (Model != null && Model.Items != null)
+                                                                                                    {
+                                                                                                        foreach (PwaRepaireWork_ItemDto item in Model.Items)
+                                                                                                        {
+
+                                                                                                            <tr>
+
+                                                                                                                <td class=""><label class="lbNo">@item.No</label></td>
+                                                                                                                <td>
+
+                                                                                                                    <select class="form-control  selItem ">
+
+                                                                                                                        <option value="0">กรุณาเลือก</option>
+                                                                                                                        @foreach (DropDownlistDto it in SysItems)
+                                                                                                                        {
+                                                                                                                            <option value="@it.Value" @(item.ItemId == it.Value ? "Selected" : "")>@it.Text </option>
+                                                                                                                        }
+                                                                                                                    </select>
+
+
+                                                                                                                </td>
+                                                                                                                <td class="">
+                                                                                                                    <select class="form-control selUnit ">
+                                                                                                                        <option value="0">กรุณาเลือก</option>
+                                                                                                                        @foreach (DropDownlistDto it in SysUnit)
+                                                                                                                        {
+                                                                                                                            <option value="@it.Value" @(item.UnitId == it.Value ? "Selected" : "")>@it.Text </option>
+                                                                                                                        }
+                                                                                                                    </select>
+                                                                                                                </td>
+                                                                                                                <td class=""><input type="text" onkeypress="return isNumber(event)" value="@item.Qty" class="form-control txtQty" /></td>
+                                                                                                                <td class=""><input type="text" onkeypress="return isNumber(event)" value="@item.Price" class="form-control txtPrice" /></td>
+                                                                                                                <td class=""><label class="lbTotal">@item.Total</label></td>
+                                                                                                                <td>   <button type="button" class="btn btn-floating btn-danger btn-sm btnDeleteItem"><i class="icon wb-close" aria-hidden="true"></i></button></td>
+                                                                                                            </tr>
+                                                                                                        }
+                                                                                                    }
+                                                                                                    else
+                                                                                                    {
+                                                                                                        <tr>
+
+                                                                                                            <td class="">
+                                                                                                                <label class="lbNo">1</label>
+                                                                                                            </td>
+                                                                                                            <td>
+
+                                                                                                                <select class="form-control  selItem">
+
+                                                                                                                    <option value="0">กรุณาเลือก</option>
+                                                                                                                    @foreach (DropDownlistDto it in SysItems)
+                                                                                                                    {
+                                                                                                                        <option value="@it.Value"> @it.Text </option>
+                                                                                                                    }
+                                                                                                                </select>
+
+
+                                                                                                            </td>
+                                                                                                            <td class="">
+                                                                                                                <select class="form-control selUnit ">
+                                                                                                                    <option value="0">กรุณาเลือก</option>
+                                                                                                                    @foreach (DropDownlistDto it in SysUnit)
+                                                                                                                    {
+                                                                                                                        <option value="@it.Value"> @it.Text </option>
+                                                                                                                    }
+                                                                                                                </select>
+                                                                                                            </td>
+                                                                                                            <td class=""><input type="text" onkeypress="return isNumber(event)" class="form-control txtQty" /></td>
+                                                                                                            <td class=""><input type="text" onkeypress="return isNumber(event)" class="form-control txtPrice" /></td>
+                                                                                                            <td class=""><label class="lbTotal">0.00</label></td>
+                                                                                                            <td>   <button type="button" class="btn btn-floating btn-danger btn-sm btnDeleteItem"><i class="icon wb-close" aria-hidden="true"></i></button></td>
+                                                                                                        </tr>
+                                                                                                    }
+
+
+
+                                                                                                </tbody>
+                                                                                                <tfoot>
+                                                                                                    <tr class="bg-secondary">
+                                                                                                        <td colspan="5" class=""> <h3 class="text-success ">รวม</h3></td>
+                                                                                                        <td>
+                                                                                                            <h3 class=" text-success lblSummary">
+                                                                                                                @((Model != null && Model.Items != null) ? Model.Items.Sum(o => Converting.ToDoble(o.Total)).ToString("##,##0.00") : "0.00")
+
+                                                                                                            </h3>
+
+                                                                                                        </td>
+                                                                                                        <td></td>
+
+                                                                                                    </tr>
+
+                                                                                                </tfoot>
+                                                                                            </table>
+                                                                                        </div>
+                                                                                    </div>
+
+                                                                                </div>
+                                                                            }
+                                                                        </div>
+
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                    <!--Tab 4 ดำเนินการซ่อมภาคสนาม -->
+                                    @if (Model != null && Model.OpenCase != null && Converting.ToInt(Model.Status) >= 6)
+                                    {
+                                        <div id="menu4" class="tab-pane fade">
+                                            <div class="panel">
+                                                <div class="panel-heading">
+                                                    <div class="panel-title"></div>
+                                                </div>
+                                                <div class="panel-body">
+                                                    <div class="row">
+
+                                                        <div class="col-md-3 col-lg-3">
+                                                            <div class="form-group">
+                                                                <input type="checkbox"
+                                                                       class="icheckbox-primary"
+                                                                       id="Tab4IsSuccess"
+                                                                       @(Model != null && Model.Process != null && Model.Process.IsSuccess == "1" ? "checked" : "")
+                                                                       data-checkbox-class="icheckbox_flat-blue" />
+                                                                <label for="inputUnchecked">
+                                                                    ซ่อมเสร็จเรียบร้อย
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+
+                                                        <div class="col-md-3 col-lg-3">
+
+                                                            <div class="form-group">
+                                                                <div class="input-group">
+                                                                    <input type="text" class="form-control datetime"
+                                                                           id="Tab4FromProcessDate"
+                                                                           value="@(Model !=null && Model.Process != null && Model.Process.FromProcessDate!=null ? Model.Process.FromProcessDate :"")"
+                                                                           placeholder="จากวันที่" data-plugin="datepicker">
+                                                                    <span class="input-group-addon ">
+                                                                        <span class="glyphicon glyphicon-calendar"></span>
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                        <div class="col-md-2 col-lg-2">
+                                                            <div class="form-group">
+                                                                <div class="input-group clockpicker" data-placement="left" data-align="top" data-autoclose="true">
+                                                                    <input type="text" class="form-control"
+                                                                           id="Tab4FromProcessTime"
+                                                                           value="@(Model !=null && Model.Process != null && Model.Process!=null ? Model.Process.FromProcessTime :"")"
+                                                                           placeholder="เวลา">
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-3 col-lg-3">
+                                                            <div class="form-group">
+                                                                <div class="input-group">
+
+                                                                    <input type="text" class="form-control datetime"
+                                                                           id="Tab4ToProcessDate"
+                                                                           value="@(Model !=null && Model.Process != null && Model.Process!=null ? Model.Process.ToProcessDate :"")"
+                                                                           placeholder="ถึงวันที่" data-plugin="datepicker">
+                                                                    <span class="input-group-addon ">
+                                                                        <span class="glyphicon glyphicon-calendar"></span>
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                        <div class="col-md-2 col-lg-2">
+                                                            <div class="form-group">
+                                                                <div class="input-group clockpicker" data-placement="left" data-align="top" data-autoclose="true">
+                                                                    <input type="text" class="form-control"
+                                                                           id="Tab4ToProcessTime"
+                                                                           value="@(Model !=null && Model.Process != null && Model.Process.ToProcessTime!=null ? Model.Process.ToProcessTime :"")"
+                                                                           placeholder="เวลา">
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+
+                                                        <div class="col-md-3 col-lg-3">
+
+                                                            <div class="form-group">
+                                                                <div class="input-group">
+
+                                                                    <input type="text" class="form-control datetime" placeholder="วันที่ซ่อมพื้นผิว"
+                                                                           id="Tab4SurfaceFixedDate"
+                                                                           value="@(Model !=null && Model.Process != null && Model.Process.SurfaceFixedDate!=null ? Model.Process.SurfaceFixedDate :"")"
+                                                                           data-plugin="datepicker">
+                                                                    <span class="input-group-addon ">
+                                                                        <span class="glyphicon glyphicon-calendar"></span>
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                        <div class="col-md-2 col-lg-2">
+                                                            <div class="form-group">
+                                                                <div class="input-group clockpicker" data-placement="left" data-align="top" data-autoclose="true">
+                                                                    <input type="text" class="form-control"
+                                                                           id="Tab4SurfaceFixedTime"
+                                                                           value="@(Model !=null && Model.Process != null && Model.Process.SurfaceFixedTime!=null ? Model.Process.SurfaceFixedTime :"")"
+                                                                           placeholder="เวลา">
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-7 col-lg-7">
+                                                            <div class="form-group">
+
+                                                                <select class=" Tab4SuperAccountId "
+                                                                        id="Tab4SuperAccountId"
+                                                                        tabindex="-98">
+                                                                    <option value="0">จน.ผู้ควบคุมงานซ่อม</option>
+                                                                    @foreach (DropDownlistDto it in Employees)
+                                                                    {
+                                                                        <option value="@it.Value" @(it.Value.Trim() == (Model !=null && Model.Process != null  && Model.Process.SuperAccountId!=null  ? Model.Process.SuperAccountId.Trim() : "") ? "selected" : "")>@it.Text </option>
+                                                                    }
+
+                                                                </select>
+                                                         
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+
+                                                        <div class="col-md-6 col-lg-6">
+                                                            <div class="form-group">
+                                                                <input type="text" class="form-control"
+                                                                       id="Tab4BrokenAppearance"
+                                                                       value="@(Model !=null && Model.Process != null && Model.Process.BrokenAppearance!=null ? Model.Process.BrokenAppearance :"")"
+                                                                       placeholder="ลักษณะการแตกของท่อจริง" />
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6 col-lg-6">
+                                                            <div class="form-group">
+                                                                <input type="text" class="form-control"
+                                                                       id="Tab4SurfaceAppearance"
+                                                                       value="@(Model !=null && Model.Process != null && Model.Process.SurfaceAppearance!=null ? Model.Process.SurfaceAppearance :"")"
+                                                                       placeholder="ชนิดของพื้นผิว" />
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-2 col-lg-2">
+                                                            <div class="form-group">
+                                                                <label>
+                                                                    ขนาดหลุม
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-2 col-lg-2">
+                                                            <div class="form-group">
+                                                                <input type="text" class="form-control"
+                                                                       id="Tab4HoleWidth"
+                                                                       value="@(Model !=null && Model.Process != null && Model.Process.HoleWidth!=null ? Model.Process.HoleWidth :"")"
+                                                                       placeholder="กว้าง" />
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-2 col-lg-2">
+                                                            <div class="form-group">
+                                                                <input type="text" class="form-control"
+                                                                       id="Tab4HoleLength"
+                                                                       value="@(Model !=null && Model.Process != null && Model.Process.HoleLength!=null ? Model.Process.HoleLength :"")"
+                                                                       placeholder="ยาว" />
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-2 col-lg-2">
+                                                            <div class="form-group">
+                                                                <input type="text" class="form-control"
+                                                                       id="Tab4HoleDepth"
+                                                                       value="@(Model !=null && Model.Process != null && Model.Process.HoleDepth!=null ? Model.Process.HoleDepth :"")"
+                                                                       placeholder="ลึก" />
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-4 col-lg-4">
+                                                            <div class="form-group">
+                                                                <input type="text" class="form-control"
+                                                                       id="Tab4ToolType"
+                                                                       value="@(Model !=null && Model.Process != null && Model.Process.ToolType!=null ? Model.Process.ToolType :"")"
+                                                                       placeholder="เครื่องมือที่ใช้" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-3 col-lg-3">
+                                                            <div class="form-group">
+                                                                <input type="checkbox" class="icheckbox-primary "
+                                                                       id="Tab4IsOutSource"
+                                                                       @(Model != null && Model.Process != null && Model.Process.IsOutSource == "1" ? "checked" : "")
+                                                                       data-checkbox-class="icheckbox_flat-blue" />
+                                                                <label for="inputUnchecked">
+                                                                    จ้างเหมาซ่อมท่อ
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-12 col-lg-12">
+                                                            <div class="table-responsive">
+                                                                <table class="table  table-hover">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th width="10%">No</th>
+                                                                            <th width="40%">คำอธิบาย</th>
+                                                                            <th>ไฟล์</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        <tr>
+                                                                            <td>1</td>
+                                                                            <td>
+                                                                                ก่อนซ่อม
+                                                                            </td>
+                                                                            <td>
+                                                                                @if (Model != null && Model.Process != null
+                                                                                                             && Model.Process.Files != null
+                                                                                                             && Model.Process.Files.Count > 0
+                                                                                                            && Model.Process.Files.Find(o => o.No == "1") != null)
+                                                                                {
+                                                                                    fileDto = Model.Process.Files.Find(o => o.No == "1");
+                                                                                    <div class="d-flex">
+                                                                                        <label class="file-upload btn btn-info btn-outline invisible">
+                                                                                            Browse for file... <input type="file" id="file1" />
+                                                                                        </label>
+                                                                                        <img src="@Url.Content(fileDto.HtmlFile)"
+                                                                                             data-toggle="popover"
+                                                                                             data-html="true"
+                                                                                             data-content="<img src='@Url.Content(fileDto.HtmlFile)' style='width:100%'></img>"
+                                                                                             class="thumbnail" />
+                                                                                        <i class="glyphicon glyphicon-remove icon-2x text-danger btnDeletefile vertical-align-middle" data="@fileDto.FileID"></i>
+                                                                                    </div>
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                                    <label class="file-upload btn btn-info btn-outline">
+                                                                                        Browse for file... <input type="file" id="file1" />
+                                                                                    </label>
+
+                                                                                }
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>2</td>
+                                                                            <td> เตรียมการก่อนซ่อม</td>
+                                                                            <td>
+                                                                                @if (Model != null && Model.Process != null
+                                                                                                             && Model.Process.Files != null
+                                                                                                             && Model.Process.Files.Count > 0
+                                                                                                            && Model.Process.Files.Find(o => o.No == "2") != null)
+                                                                                {
+                                                                                    fileDto = Model.Process.Files.Find(o => o.No == "2");
+                                                                                    <div class="d-flex">
+                                                                                        <label class="file-upload btn btn-info btn-outline invisible">
+                                                                                            Browse for file... <input type="file" id="file2" />
+                                                                                        </label>
+                                                                                        <img src="@Url.Content(fileDto.HtmlFile)"
+                                                                                             data-toggle="popover"
+                                                                                             data-html="true"
+                                                                                             data-content="<img src='@Url.Content(fileDto.HtmlFile)' style='width:100%'></img>"
+                                                                                             class="thumbnail" />
+                                                                                        <i class="glyphicon glyphicon-remove icon-2x text-danger btnDeletefile" data="@fileDto.FileID"></i>
+                                                                                    </div>
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                                    <label class="file-upload btn btn-info btn-outline">
+                                                                                        Browse for file... <input type="file" id="file2" />
+                                                                                    </label>
+
+                                                                                }
+                                                                            </td>
+                                                                        </tr>
+
+                                                                        <tr>
+                                                                            <td>3</td>
+                                                                            <td>ระหว่างซ่อม</td>
+                                                                            <td>
+                                                                                @if (Model != null && Model.Process != null
+                                                                                                           && Model.Process.Files != null
+                                                                                                           && Model.Process.Files.Count > 0
+                                                                                                          && Model.Process.Files.Find(o => o.No == "3") != null)
+                                                                                {
+                                                                                    fileDto = Model.Process.Files.Find(o => o.No == "3");
+                                                                                    <div class="d-flex">
+                                                                                        <label class="file-upload btn btn-info btn-outline invisible">
+                                                                                            Browse for file... <input type="file" id="file3" />
+                                                                                        </label>
+                                                                                        <img src="@Url.Content(fileDto.HtmlFile)"
+                                                                                             data-toggle="popover"
+                                                                                             data-html="true"
+                                                                                             data-content="<img src='@Url.Content(fileDto.HtmlFile)' style='width:100%'></img>"
+                                                                                             class="thumbnail" />
+                                                                                        <i class="glyphicon glyphicon-remove icon-2x text-danger btnDeletefile" data="@fileDto.FileID"></i>
+                                                                                    </div>
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                                    <label class="file-upload btn btn-info btn-outline">
+                                                                                        Browse for file... <input type="file" id="file3" />
+                                                                                    </label>
+
+                                                                                }
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>4</td>
+                                                                            <td>
+                                                                                เก็บงานคือซ่อม
+                                                                            </td>
+                                                                            <td>
+                                                                                @if (Model != null && Model.Process != null
+                                                                                                           && Model.Process.Files != null
+                                                                                                           && Model.Process.Files.Count > 0
+                                                                                                          && Model.Process.Files.Find(o => o.No == "4") != null)
+                                                                                {
+                                                                                    fileDto = Model.Process.Files.Find(o => o.No == "4");
+                                                                                    <div class="d-flex">
+                                                                                        <label class="file-upload btn btn-info btn-outline invisible">
+                                                                                            Browse for file... <input type="file" id="file4" />
+                                                                                        </label>
+                                                                                        <img src="@Url.Content(fileDto.HtmlFile)"
+                                                                                             data-toggle="popover"
+                                                                                             data-html="true"
+                                                                                             data-content="<img src='@Url.Content(fileDto.HtmlFile)' style='width:100%'></img>"
+                                                                                             class="thumbnail" />
+                                                                                        <i class="glyphicon glyphicon-remove icon-2x text-danger btnDeletefile" data="@fileDto.FileID"></i>
+                                                                                    </div>
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                                    <label class="file-upload btn btn-info btn-outline">
+                                                                                        Browse for file... <input type="file" id="file4" />
+                                                                                    </label>
+
+                                                                                }
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>5</td>
+                                                                            <td>หลังซ่อม</td>
+                                                                            <td>
+                                                                                @if (Model != null && Model.Process != null
+                                                                                                    && Model.Process.Files != null
+                                                                                                    && Model.Process.Files.Count > 0
+                                                                                                   && Model.Process.Files.Find(o => o.No == "5") != null)
+                                                                                {
+                                                                                    fileDto = Model.Process.Files.Find(o => o.No == "5");
+                                                                                    <div class="d-flex">
+                                                                                        <label class="file-upload btn btn-info btn-outline invisible">
+                                                                                            Browse for file... <input type="file" id="file5" />
+                                                                                        </label>
+                                                                                        <img src="@Url.Content(fileDto.HtmlFile)"
+                                                                                             data-toggle="popover"
+                                                                                             data-html="true"
+                                                                                             data-content="<img src='@Url.Content(fileDto.HtmlFile)' style='width:100%'></img>"
+                                                                                             class="thumbnail" />
+                                                                                        <i class="glyphicon glyphicon-remove icon-2x text-danger btnDeletefile" data="@fileDto.FileID"></i>
+                                                                                    </div>
+
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                                    <label class="file-upload btn btn-info btn-outline">
+                                                                                        Browse for file... <input type="file" id="file5" />
+                                                                                    </label>
+
+                                                                                }
+                                                                            </td>
+                                                                        </tr>
+
+
+                                                                    </tbody>
+
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+
+                                    @if (Model != null && Model.Process != null && Converting.ToInt(Model.Status) >= 6)
+                                    {
+                                        <div id="menu5" class="tab-pane fade">
+                                            <div class="panel">
+                                                <div class="panel-heading">
+                                                    <div class="panel-title"></div>
+                                                </div>
+                                                <div class="panel-body">
+                                                    <div class="row">
+                                                        <div class="col-md-4 col-lg-4">
+                                                            <div class="form-group ">
+                                                                <input type="text" class="form-control " id="CloseJobNumber" value="@(Model !=null  && Model.CloseJob!=null ? Model.CloseJob.CloseJobNumber.ToString() :"")" placeholder="เลขที่ใบปิดงานซ่อม" />
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-3 col-lg-3">
+
+                                                            <div class="form-group">
+                                                                <div class="input-group">
+                                                                    <input type="text" class="form-control datetime"
+                                                                           id="Tab5CloseDate"
+                                                                           value="@(Model !=null  && Model.CloseJob!=null ? Model.CloseJob.CloseDate.ToString() :"")"
+                                                                           placeholder="จากวันที่" data-plugin="datepicker">
+                                                                    <span class="input-group-addon ">
+                                                                        <span class="glyphicon glyphicon-calendar"></span>
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                        <div class="col-md-2 col-lg-2">
+                                                            <div class="form-group">
+                                                                <div class="input-group clockpicker" data-placement="left" data-align="top" data-autoclose="true">
+                                                                    <input type="text" class="form-control"
+                                                                           value="@(Model !=null  && Model.CloseJob!=null ? Model.CloseJob.CloseTime.ToString() :"")"
+                                                                           id="Tab5CloseTime"
+                                                                           placeholder="เวลา">
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-4 col-lg-4">
+                                                            <div class="form-group ">
+                                                                <label>รายการวัสดุอุปกรณ์ที่ใช้</label> <button type="button" class="btn btn-floating btn-success btn-sm btnAddNewItem"><i class="icon wb-plus" aria-hidden="true"></i></button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="table-responsive divCloseJob">
+                                                            <div class="divItem">
+                                                                <table class="table tbItem" data-plugin="animateList" data-animate="fade" data-child="tr"
+                                                                       data-selectable="selectable">
+                                                                    <thead>
+                                                                        <tr>
+
+
+                                                                            <th class="" scope="col">ลำดับที่</th>
+
+                                                                            <th scope="col" class="cell-200">รายการ</th>
+                                                                            <th class="cell-120" scope="col">หน่วยนับ</th>
+                                                                            <th scope="col" class="">จำนวน</th>
+                                                                            <th scope="col" class="">ราคาต่อหน่วย</th>
+                                                                            <th scope="col" class="cell-80">ราคารวม</th>
+                                                                            <th scope="col" class=""></th>
+
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+
+                                                                        @if (Model != null  && Model.Items != null)
+                                                                        {
+                                                                            foreach (PwaRepaireWork_ItemDto item in Model.Items)
+                                                                            {
+
+                                                                                <tr>
+
+                                                                                    <td class=""><label class="lbNo">@item.No</label></td>
+                                                                                    <td>
+
+                                                                                        <select class="form-control  selItem ">
+
+                                                                                            <option value="0">กรุณาเลือก</option>
+                                                                                            @foreach (DropDownlistDto it in SysItems)
+                                                                                            {
+                                                                                                <option value="@it.Value" @(item.ItemId == it.Value ? "Selected" : "")>@it.Text </option>
+                                                                                            }
+                                                                                        </select>
+
+
+                                                                                    </td>
+                                                                                    <td class="">
+                                                                                        <select class="form-control selUnit ">
+                                                                                            <option value="0">กรุณาเลือก</option>
+                                                                                            @foreach (DropDownlistDto it in SysUnit)
+                                                                                            {
+                                                                                                <option value="@it.Value" @(item.UnitId == it.Value ? "Selected" : "")>@it.Text </option>
+                                                                                            }
+                                                                                        </select>
+                                                                                    </td>
+                                                                                    <td class=""><input type="text" onkeypress="return isNumber(event)" value="@item.Qty" class="form-control txtQty" /></td>
+                                                                                    <td class=""><input type="text" onkeypress="return isNumber(event)" value="@item.Price" class="form-control txtPrice" /></td>
+                                                                                    <td class=""><label class="lbTotal">@item.Total</label></td>
+                                                                                    <td>   <button type="button" class="btn btn-floating btn-danger btn-sm btnDeleteItem"><i class="icon wb-close" aria-hidden="true"></i></button></td>
+                                                                                </tr>
+                                                                            }
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <tr>
+
+                                                                                <td class="">
+                                                                                    <label class="lbNo">1</label>
+                                                                                </td>
+                                                                                <td>
+
+                                                                                    <select class="form-control  selItem">
+
+                                                                                        <option value="0">กรุณาเลือก</option>
+                                                                                        @foreach (DropDownlistDto it in SysItems)
+                                                                                        {
+                                                                                            <option value="@it.Value"> @it.Text </option>
+                                                                                        }
+                                                                                    </select>
+
+
+                                                                                </td>
+                                                                                <td class="">
+                                                                                    <select class="form-control selUnit ">
+                                                                                        <option value="0">กรุณาเลือก</option>
+                                                                                        @foreach (DropDownlistDto it in SysUnit)
+                                                                                        {
+                                                                                            <option value="@it.Value"> @it.Text </option>
+                                                                                        }
+                                                                                    </select>
+                                                                                </td>
+                                                                                <td class=""><input type="text" onkeypress="return isNumber(event)" class="form-control txtQty" /></td>
+                                                                                <td class=""><input type="text" onkeypress="return isNumber(event)" class="form-control txtPrice" /></td>
+                                                                                <td class=""><label class="lbTotal">0.00</label></td>
+                                                                                <td>   <button type="button" class="btn btn-floating btn-danger btn-sm btnDeleteItem"><i class="icon wb-close" aria-hidden="true"></i></button></td>
+                                                                            </tr>
+                                                                        }
+
+
+
+                                                                    </tbody>
+                                                                    <tfoot>
+                                                                        <tr class="bg-secondary">
+                                                                            <td colspan="5" class=""> <h3 class="text-success ">รวม</h3></td>
+                                                                            <td>
+                                                                                <h3 class=" text-success lblSummary">
+                                                                                    @((Model != null &&  Model.Items != null) ? Model.Items.Sum(o => Converting.ToDoble(o.Total)).ToString("##,##0.00") : "0.00")
+
+                                                                                </h3>
+
+                                                                            </td>
+                                                                            <td></td>
+
+                                                                        </tr>
+
+                                                                    </tfoot>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+
+                    }
+                    <div class="row" style="padding-top:10px">
+                        <div class="col-md-12  text-center">
+                            <input type="hidden" id="hddRWId" value="@(Model !=null  ? Model.RWId.ToString() :"")" />
+                            <input type="hidden" id="hddStatus" value="@(Model !=null  &&  Model.Status !=null  &&  Converting.ToInt(Model.Status)>0 ? Model.Status :"4")" />
+                            <button class="btn btn-outline btn-primary btnSave" type="submit">บันทึก</button>
+                            <a class="btn  btn-outline btn-default" data-dismiss="modal" href="javascript:void(0)">ล้างหน้าจอ</a>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+	var map;
+var keepDeleteFiles = [];
+    var locationEffectLalong;
+    var localCurrentLayer;
+    var currentLayer;
+    var editGroupLayers;
+
+    var incidentGroupLayer;
+    var incidentLayers = [];
+
+
+    var pipeGroupLayer;
+    var pipeLayers=[];
+
+    var customerGroupLayer;
+    var customerLayers = [];
+
+    var currentUrl = getBaseUrl();
+    var incidentStyle = L.Icon.extend({
+        options: {
+            iconSize: [27, 27],
+ 
+        }
+    });
+
+    var incidentMaker = new incidentStyle({ iconUrl : currentUrl+'/icon/incident.png' });
+
+
+
+var AddRepaire = '@Url.Action("AddRepaire", "Complaint", new { id = "" })'
+
+var PageController = {
+	init: function () {
+		$(document).ready(function () {
+
+			$(".datetime").datepicker()
+            $('.clockpicker').clockpicker();
+
+            if ($("#hddRWId").val() != "") {
+                PageController.LoadMap();
+                $('.file-upload').file_upload();
+            }
+
+       $(".selItem").select2({
+           maximumSelectionLength: 2,
+           width: '100%'
+       });
+
+            $("#Status").select2({
+                maximumSelectionLength: 2,
+                width: '100%'
+            });
+
+            
+
+            $(".ddlSurveyAccountId").select2({
+                maximumSelectionLength: 2,
+                width: '100%'
+            });
+            $(".Tab3SurveyAccountId").select2({
+                maximumSelectionLength: 2,
+                width: '100%'
+            });
+            
+            
+
+            $("#Tab3SysItemSetID").select2({
+                maximumSelectionLength: 2,
+                width: '100%'
+            });
+
+
+            $("#ddlAccountId").select2({
+                maximumSelectionLength: 2,
+                width: '100%'
+            });
+
+
+            $("#Tab3ResponAccountId").select2({
+                maximumSelectionLength: 2,
+                width: '100%'
+            });
+
+            $("#Tab3SuperAccountId").select2({
+                maximumSelectionLength: 2,
+                width: '100%'
+            });
+
+            $(".selUnit").select2({
+                maximumSelectionLength: 2,
+                width: '100%'
+            });
+
+            $("#ddlSurveyAccountId").select2({
+                maximumSelectionLength: 2,
+                width: '100%'
+            });
+
+            $("#ddlBranch").select2({
+                maximumSelectionLength: 2,
+                width: '100%'
+            });
+
+            $("#ddlRequestType").select2({
+                maximumSelectionLength: 2,
+                width: '100%'
+            });
+
+            $("#ddlRequestCategory").select2({
+                maximumSelectionLength: 2,
+                width: '100%'
+            });
+            $("#ddlRequestCategorySubject").select2({
+                maximumSelectionLength: 2,
+                width: '100%'
+            });
+
+			if (model != null) {
+				PageController.SetData(model);
+			}
+
+		})
+        PageController.LoadEvent();
+     //   PageController.LoadMap();
+	},
+	LoadEvent: function () {
+
+		$(document).on("click", "#Tab3IsUrgent", function () {
+
+
+			//  $("#chkTab3Fix2").prop('checked', !$(this).is(':checked'));
+        });
+
+        $(document).on("change", "#Tab3SysItemSetID", function (e) {
+
+            var SetID = $(this).val();
+            if ($('table.tbItem  > tbody  > tr').length > 1) {
+
+                PwaManager.PwaConfirm("Template", "คุณต้องการแทนที่วัสดุอุปกรณ์?", function (isConfirm) {
+                    if (!isConfirm) {
+                        swal.close();
+                        return;
+                    } else {
+
+                        var data = {};
+                        data.SetID = SetID;
+                        PwaManager.PwaPost(itemUrl + "GetTemplateBySetID", data, function (resObj) {
+                            swal.close();
+                            PageController.LoadOpenCaseItems(resObj);
+
+                        });
+                    }
+                });
+            } else {
+                var data = {};
+                data.SetID = SetID;
+                PwaManager.PwaPost(itemUrl + "GetTemplateBySetID", data, function (resObj) {
+                    swal.close();
+                    PageController.LoadOpenCaseItems(resObj);
+
+                });
+            }
+        
+        });
+
+
+
+        $(document).on("keyup", ".txtQty", function () {
+            var row = $(this).closest("tr");
+            PageController.CalculateItem(row.find(".selItem"),
+                row.find(".selUnit"),
+                row.find("input.txtQty"),
+                row.find("input.txtPrice"),
+                row.find(".lbTotal")
+                , true);
+        });
+
+        $(document).on("keyup", ".txtPrice", function () {
+            var row = $(this).closest("tr");
+            PageController.CalculateItem(row.find(".selItem"),
+                row.find(".selUnit"),
+                row.find("input.txtQty"),
+                row.find("input.txtPrice"),
+                row.find(".lbTotal")
+                ,true
+            );
+        });
+
+        $(document).on("change", ".selItem", function () {
+            var row = $(this).closest("tr");
+            PageController.CalculateItem(row.find(".selItem"),
+                row.find(".selUnit"),
+                row.find("input.txtQty"),
+                row.find("input.txtPrice"),
+                row.find(".lbTotal"));
+        });
+
+        $(document).on("change", ".selUnit", function () {
+            var row = $(this).closest("tr");
+            PageController.CalculateItem(row.find(".selItem"),
+                row.find(".selUnit"), 
+                row.find("input.txtQty"),
+                row.find("input.txtPrice"),
+                row.find(".lbTotal") );
+
+        });
+
+
+        $(document).on("click", ".btnExpandMap", function () {
+           
+
+            if ($("#mapid").hasClass("mapfull")) {
+                $(this).text("Full Size");
+                $(".mapsection").removeClass("fullScreen");
+                $("#mapid").removeClass("mapfull")
+            } else {
+                $(this).text("Normal Size");
+                $(".mapsection").addClass("fullScreen");
+                $("#mapid").addClass("mapfull")
+            }
+
+         
+            setTimeout(function () {
+              
+                map.invalidateSize();
+            }, 10);
+        });
+
+        
+		$(document).on("click", "#Tab3IsOutSource", function () {
+			//    $("#chkTab3Fix1").prop('checked', !$(this).is(':checked'));
+		});
+
+		$(document).on("click", ".nav-link", function () {
+			if ($(this).attr("href") == "#menu1") {
+				setTimeout(function () {
+					document.getElementById('menu1').style.display = 'block';
+					map.invalidateSize();
+				}, 10);
+			} else {
+				document.getElementById('menu1').style.display = '';
+			}
+        });
+
+        $(document).on("click", ".btnDeleteItem", function () {
+            var row = $(this).closest("tr");
+            row.remove();
+            PageController.CalculateSummary();
+        })
+
+
+        $(document).on("click", ".btnAddNewItem", function () {
+
+            var detailTable = $("table.tbItem > tbody");
+
+            var rowCount = $('table.tbItem tr').length
+            var newRow = "";
+            newRow += "<tr>";
+            newRow += "<td><label class='lbNo'>" + rowCount+"</label></td>";
+            newRow += "<td>   <select class='form-control  selItem'></select></td>";
+            newRow += "<td> <select class='form-control  selUnit'></select></td>";
+            newRow += "<td><input type='text'  onkeypress='return isNumber(event)' class='form-control txtQty' /></td>";
+            newRow += "<td><input type='text'  onkeypress='return isNumber(event)' class='form-control txtPrice' /></td>";
+            newRow += "<td><label class='lbTotal'>0.00</label></td>";
+            newRow += "<td>  <button type='button' class='btn btn-floating btn-danger btn-sm btnDeleteItem'><i class='icon wb-close' aria-hidden='true'></i></button></td>";
+            newRow += "</tr>";
+            detailTable.append(newRow);
+
+            $('table.tbItem  > tbody  > tr:last').each(function () {
+
+                var row = $(this);
+
+                PwaManager.PwaSelect2(row.find(".selItem"), SysItems);
+                PwaManager.PwaSelect2(row.find(".selUnit"), SysUnit);
+            });
+
+         /*   $trLast = $('.tbItem > tbody').find("tr:last"),
+                $trNew = $trLast.clone();
+            $trNew.find("td:eq(0)").text(rowCount)
+            $trNew.find("td:eq(4)").text("0.00")
+            $trNew.find("td:eq(2)").find("span.select2").remove();
+            $trNew.find("td:eq(2)").find("select").select2({
+                maximumSelectionLength: 2,
+                width: '100%'
+            });
+            $trLast.after($trNew);*/
+
+
+        /*    $trNew.find(".selUnit").select2({
+                maximumSelectionLength: 2,
+                width: '100%'
+            });
+
+            $trNew.find(".selItem").select2({
+                maximumSelectionLength: 2,
+                width: '100%'
+            });*/
+//$('.tbItem > tbody').append(newRow);
+        });
+
+
+		$(document).on("click", ".btnSave", function () {
+			$(this).attr("disabled", 'disabled');
+			PwaManager.PwaConfirm("บันทึก", "คุณต้องการบันทึกหรือไม่", function (isConfirm) {
+				if (isConfirm) {
+					var obj = PageController.GetData();
+					$("button.confirm").attr("disabled", 'disabled');
+					PwaManager.PwaPostFormData(addUrl, obj, function (resObj) {
+
+
+						swal({
+							title: "สำเร็จ!",
+							text: "บันทึกข้อมูลเรียบร้อย!",
+							timer: 1500
+						});
+
+						window.setTimeout(function () {
+							window.location.href = AddRepaire + "/" + resObj.RWId;
+						}, 1000);
+					});
+					/*   swal(
+					       {
+					           title: "สำเร็จ!",
+					           text: "บันทึกข้อมูลเรียบร้อย!",
+					           timer: 800
+					       });*/
+
+				} else {
+					$(".btnSave").removeAttr("disabled");
+					$("button.confirm").removeAttr("disabled");
+					swal.close();
+					$("#InputForm").modal({
+						backdrop: 'static',
+						keyboard: false
+					});
+				}
+			})
+
+		});
+		$(document).on("change", ".ddlRequestType", function (e) {
+
+			$("select.ddlRequestCategory").find('option').remove();
+			$("select.ddlRequestCategorySubject").find('option').remove();
+
+			var selCategory = SysRequestCategorys.filter(o => o.ParentId1 == $(this).val());
+
+			$.each(selCategory, function (index, item) {
+				$("select.ddlRequestCategory").append("<option value='" + item.Value + "'>" + item.Text + "</option>");
+			});
+			$("select.ddlRequestCategory").selectpicker('refresh');
+			$("select.ddlRequestCategorySubject").selectpicker('refresh');
+			$("select.ddlRequestCategory").trigger("change");
+			e.stopPropagation();
+		});
+
+		$(document).on("change", ".ddlRequestCategory", function (e) {
+
+			$("select.ddlRequestCategorySubject").find('option').remove();
+
+			//  alert($(this).val())
+			var selCategory = SysRequestCategorySubjects.filter(o => (o.ParentId1 == $(this).val() && o.ParentId2 == $(".ddlRequestType").selectpicker("val")));
+
+			$.each(selCategory, function (index, item) {
+				$("select.ddlRequestCategorySubject").append("<option value='" + item.Value + "'>" + item.Text + "</option>");
+			});
+			$("select.ddlRequestCategorySubject").selectpicker('refresh');
+			e.stopPropagation();
+		});
+
+		$(document).on('click', '.btnDeletefile', function (e) {
+
+
+            if ($(this).attr('data') != null) {
+                let objProcessFile = {};
+                objProcessFile.FileID = $(this).attr('data');
+                objProcessFile.RWId = $("#hddRWId").val();
+                objProcessFile.HtmlFile = $(this).closest("div").find("img").attr("src");
+                keepDeleteFiles.push(objProcessFile);
+				$(this).closest("div").find("img").remove();
+				$(this).closest("div").find("label.file-upload").removeClass("invisible");
+				$(this).remove();
+
+			}
+        });
+
+        $(document).on('click', '.nav-link', function (e) {
+            // Open case
+            if ($(this).attr("Status") == "6") {
+              
+                $(".divItem").appendTo('.divOpenCase')
+            }
+            // Close Job
+            else if ($(this).attr("Status") == "8") {
+                $(".divItem").appendTo('.divCloseJob')
+            
+              
+                }
+        });
+
+       
+
+    },
+    LoadOpenCaseItems(data) {
+        
+        var detailTable = $("table.tbItem > tbody");
+
+        detailTable.find("tr").remove();
+        var rowCount = $('table.tbItem tr').length;
+        var rowCount = 1;
+        var newRow = "";
+
+        $.each(data, function (index, item) {
+            newRow += "<tr>";
+            newRow += "<td><label class='lbNo'>" + rowCount + "</label></td>";
+            newRow += "<td>   <select class='form-control  selItem'></select></td>";
+            newRow += "<td> <select class='form-control  selUnit'></select></td>";
+            newRow += "<td><input type='text'  onkeypress='return isNumber(event)' class='form-control txtQty' /></td>";
+            newRow += "<td><input type='text'  value='" + item.Price+"'  onkeypress='return isNumber(event)' class='form-control txtPrice' /></td>";
+            newRow += "<td><label class='lbTotal'>0.00</label></td>";
+            newRow += "<td>  <button type='button' class='btn btn-floating btn-danger btn-sm btnDeleteItem'><i class='icon wb-close' aria-hidden='true'></i></button></td>";
+            newRow += "</tr>";
+            detailTable.append(newRow);
+            var row = $('table.tbItem  > tbody > tr:last');
+            PwaManager.PwaSelect2(row.find(".selItem"), SysItems, item.ItemId);
+            PwaManager.PwaSelect2(row.find(".selUnit"), SysUnit, item.UnitId);
+            rowCount++;
+            newRow = "";
+        });
+
+    
+
+    },
+    CalculateItem: function (ddlItem, ddlUnit, txtQty, txtPrice ,lbTotal,priceNotChange) {
+        var data = {};
+
+
+        data.ItemId = ddlItem.val();
+        data.UnitId = ddlUnit.val();
+        if (priceNotChange == null) {
+            PwaManager.PwaPost(itemUrl + "GetItemByIdAndUnit", data, function (resObj) {
+                if (resObj != null) {
+                    txtPrice.val(PwaManager.ConvertToFloating(resObj.Price));
+                    lbTotal.text(PwaManager.ConvertToFloating(PwaManager.ConvertToFloating(resObj.Price) * PwaManager.ConvertToFloating(txtQty.val())).toFixed(2));
+                } else {
+                    txtPrice.val(0);
+                    lbTotal.text(0);
+                }
+
+                PageController.CalculateSummary();
+
+            });
+        } else {
+            lbTotal.text(PwaManager.ConvertToFloating(PwaManager.ConvertToFloating(txtPrice.val()) * PwaManager.ConvertToFloating(txtQty.val())).toFixed(2));
+            PageController.CalculateSummary();
+          
+        }
+    },
+    CalculateSummary() {
+        var summary = 0.00;
+        $('table.tbItem  > tbody  > tr').each(function () {
+
+            var row = $(this);
+
+
+            summary = summary+ PwaManager.ConvertToFloating(row.find(".lbTotal").text());
+        });
+        $('table.tbItem  > tfoot  > tr:last').find(".lblSummary").text(PwaManager.ConvertToCurrentcy(summary));
+    },
+	LoadMap: function () {
+        map = L.map('mapid');
+
+
+		if (map != null) {
+
+			map.setView([13, 100], 6);
+            L.tileLayer('http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}', {
+                maxZoom:20,
+                subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+            }).addTo(map);
+
+            editGroupLayers = new L.FeatureGroup();
+            incidentGroupLayer = new L.FeatureGroup();
+            pipeGroupLayer = new L.FeatureGroup();
+            customerGroupLayer = new L.FeatureGroup();
+
+            map.addLayer(editGroupLayers);
+            map.addLayer(incidentGroupLayer);
+            map.addLayer(pipeGroupLayer);
+            map.addLayer(customerGroupLayer);
+
+			var options = {
+				position: 'topright',
+				draw: {
+					polyline: true,
+					polygon: {
+						allowIntersection: false, // Restricts shapes to simple polygons
+						drawError: {
+							color: '#e1e100', // Color the shape will turn when intersects
+							message: '<strong>Oh snap!<strong> you can\'t draw that!' // Message that will show when intersect
+        }
+        },
+
+        circle: false, // Turns off this drawing tool
+        rectangle: true,
+        marker: true
+        },
+
+        edit: {
+        featureGroup: editGroupLayers, //REQUIRED!!
+        remove: true
+        }
+        };
+
+
+        var drawControl = new L.Control.Draw(options);
+
+            map.addControl(drawControl);
+
+            map.on(L.Draw.Event.CREATED, function (e) {
+
+                editGroupLayers.clearLayers();
+
+                /*if (locationEffectLalong != null)
+                map.removeLayer(locationEffectLalong);
+                if (localCurrentLayer!=null)
+                map.removeLayer(localCurrentLayer)*/
+                var type = e.layerType,
+                    layer = e.layer;
+
+             /*   if (type == 'marker') {
+                    locationEffectLalong = layer.getLatLng();
+                } else {
+                    locationEffectLalong = layer.getLatLngs();
+
+                }*/
+
+                console.log(JSON.stringify(layer.toGeoJSON().geometry.coordinates))
+                locationEffectLalong = layer.toGeoJSON();
+             //   locationEffectLalong.geometry.coordinates = JSON.stringify(locationEffectLalong.geometry.coordinates);
+            //    alert(JSON.stringify(layer.toGeoJSON()))
+                if (type === 'marker') {
+                    layer.bindPopup('จุดที่พบจริง');
+                }
+
+                editGroupLayers.addLayer(layer);
+            });
+
+
+            var wmsLayer = L.tileLayer.wms(WMSUrl, {
+                layers: 'PG_WEBGIS:pipeall',
+                transparent: true,
+                format: 'image/png'
+            }).addTo(map);
+
+            /*      var reg_zone = L.titleLayer.betterWms(wms_host_orcl, {
+          Layers: 'PWA_GIS:ZONE',
+          transparent: true,
+          format: 'image/png',
+          opacity: 0.2
+      });*/
+
+
+          /*  var pipe_all = L.titleLayter.betterWms(WMSUrl, {
+                layers: 'PG_WEBGIS:pipeall',
+                format: 'image/png',
+            });
+
+            pipe_all.addTo(map);
+
+            var meter_all = L.titleLayer.betterWms(WMSUrl, {
+                layers: 'PG_WEBGIS:meterall',
+                format: 'image/png',
+            });*/
+
+        }
+        },
+        SetData: function (model) {
+
+        $(".ddlRequestType").trigger("change");
+        $(".ddlRequestCategory").val(model.RequestCategory).selectpicker("refresh");
+        $(".ddlRequestCategory").trigger("change");
+            $(".ddlRequestCategorySubject").val(model.RequestCategorySubject).selectpicker("refresh");
+
+            if (model.Effect != null && model.Effect.ShapeGeoJson != null && model.Effect.ShapeGeoJson != "")
+                {
+                locationEffectLalong = $.parseJSON(model.Effect.ShapeGeoJson);
+                localCurrentLayer = L.geoJson(locationEffectLalong, {});
+                editGroupLayers.addLayer(L.geoJson(locationEffectLalong, {}));
+
+                var cradius = 100;
+                var copts = {
+                    parts: 144
+                };
+
+
+             //   var polygon = turf.point(localCurrentLayer.getBounds().getCenter());
+             //   var point = turf.point([100, 13]);
+         //       var buffered = turf.buffer(point, 500, { units: 'miles' });
+           //     map.addLayer(buffered);
+          //      var buff = turf.buffer(localCurrentLayer, 1, { units: 'miles' });
+
+                
+
+             /*   editGroupLayers.eachLayer(function (layer) {
+                    map.fitBounds(layer.getBounds());
+                    map.setZoom(6);
+                    return false;
+                });*/
+
+                var html = "";
+            
+                $(".divCustEffect").empty();
+                   html +='<table class="table  table-hover">';
+                   html +="<thead>";
+                   html +="<tr>";
+                   html +=' <th>รหัส</th>';
+                   html +='<th>เบอร์โทร</th>';
+                   html +='<th>ที่อยู่</th>';
+                   html +=" </tr>";
+                   html +=" </thead>";
+                   html +=" <tbody>";
+
+                var geojsonMarkerOptions = {
+                   
+                    fillColor: 'green',
+                    color: 'black',
+                    weight: 1,
+                    opacity: 1,
+                    fillOpacity: 0.8
+                };
+
+                var customIcon = L.Icon.extend({
+                    options: {
+                        iconSize: [40.4, 44],
+
+                    }
+                });
+
+                if (IncidentList != null) {
+
+                    $.each(IncidentList, function (index, item) {
+                        var html = "";
+                        html += "เลขที่แจ้ง :" + item.PwaIncidentNo;
+                        html += "<br>ประเภท :" + item.RequestType;
+                        html += "<br>ด้าน :" + item.RequestCategory;
+                        html += "<br>หัวข้อ :" + item.RequestCategorySubject;
+
+                        incidentGroupLayer.addLayer(L.marker([item.CaseLatitude, item.CaseLongtitude], { icon: incidentMaker }).bindPopup(html));
+
+                    });
+                    incidentGroupLayer.getLayers()[0].openPopup();
+
+                    /*    mapSurvey.fitBounds(incidentGroupLayer.getBounds());
+                        mapSurvey.setZoom(5);
+                        IncidentLayers[0].openPopup();*/
+                }
+                if (model.Effect.PipeEffects != null) {
+                    $.each(model.Effect.PipeEffects, function (index, item) {
+                        //  item.Shape.coordinates = item.ShapeGeoJson.coordinates.replace(/["']/g, "");
+                        //    var markerLayer = L.geoJson(item.Shape, {}).bindPopup(item.CustCode)
+                        item.Shape.properties.party = "red";
+                        pipeGroupLayer.addLayer(L.geoJson(item.Shape, {
+                            style: function (feature) {
+                                switch (feature.properties.party) {
+                                    case 'red': return { color: "#19ABBD", opacity: 0.7, weight: 2.5, lineJoin: 'round' };
+                                    case 'Democrat': return { color: "#19ABBD", opacity: 0.7, weight: 2.5, lineJoin: 'round' };
+                                }
+                            }
+                        }));
+
+
+
+                    });
+
+                }
+                if (model.Effect.CustomerEffects != null) {
+                    $.each(model.Effect.CustomerEffects, function (index, item) {
+                
+                        item.Shape.geometry.coordinates = item.Shape.geometry.coordinates[0];
+                   /*     var markerLayer = L.geoJson(item.Shape, {
+                            pointToLayer: function (feature, latlng) {
+                                var smallIcon = new L.Icon({
+                                    iconSize: [27, 27],
+                                    iconAnchor: [13, 27],
+                                    popupAnchor: [1, -24],
+                                    iconUrl: 'https://www.pngjoy.com/pngl/347/6473115_ubicacion-green-pin-8-icon-png-download.png'
+                                });
+                                return L.marker(latlng, { icon: smallIcon });
+                            }
+                        }).bindPopup(item.CustCode)
+                        */
+                        customerGroupLayer.addLayer(L.geoJson(item.Shape, {
+                            pointToLayer: function (feature, latlng) {
+                                var smallIcon = new L.Icon({
+                                    iconSize: [32, 32],
+
+                                    iconUrl: currentUrl+'/icon/user.png'
+                                });
+                                return L.marker(latlng, { icon: smallIcon }).bindPopup(item.CustCode);
+                            }
+                        }));
+
+                      
+                       // customerGroupLayer.getLayers()[0].openPopup();
+                       map.fitBounds(customerGroupLayer.getLayers()[0].getBounds());
+                        map.setZoom(14);
+                        html += "<tr>";
+                        html += "<td>" + item.CustCode + "</td>";
+                        html += "<td></td>";
+                        html += "<td></td>";
+                        html += "</tr>";
+                    });
+                   
+                    html += " </tbody>";
+                    html += " </table>";
+                    $(".divCustEffect").append(html);
+                    $(".divCustEffect table").DataTable({ "searching": false, "bLengthChange": false });
+                    //.bindPopup("<b>INC000001</b><br />ท่อแตก."))
+                }
+
+   
+             
+            }
+
+      
+
+
+        },
+        GetData: function () {
+        var objData = {};
+        var formData = new FormData();
+        objData.RWId = $("#hddRWId").val();
+        objData.RWCode = $("#RWCode").val();
+        objData.WorkingDate = $("#WorkingDate").val();
+        objData.WorkingTime = $("#WorkingTime").val();
+      //  objData.RequestType = $("#ddlRequestType").val();
+        //    objData.RequestCategory = $("#ddlRequestCategory").val();
+         //   objData.RequestCategorySubject = $("#ddlRequestCategorySubject").val();
+            objData.RequestType = $("#ddlRequestType").select2("data")[0].id;
+            objData.RequestCategory = $("#ddlRequestCategory").select2("data")[0].id;
+            objData.RequestCategorySubject = $("#ddlRequestCategorySubject").select2("data")[0].id;
+        objData.NotificationDate = $("#NotificationDate").val();
+        objData.NotificationTime = $("#NotificationTime").val();
+            objData.AccountId = $("#ddlAccountId").select2("data")[0].id;
+            objData.BranchId = $("#ddlBranch").select2("data")[0].id;
+        objData.SLA = $("#chkSLA").is(':checked') ? "1" : "0";
+            objData.Reason = $("#txtReason").val();
+        objData.Status = $("#hddStatus").val();
+            objData.DeleteProcessFiles = keepDeleteFiles;
+
+            objData.Incidents = [];
+            var objItem = {};
+            $('#tblDisplay > tbody  > tr').each(function () {
+                var row = $(this);
+                objItem = {};
+                objItem.PwaIncidentID = row.attr("data");
+
+                objData.Incidents.push(objItem);
+            });
+
+
+            if (objData.RowState != "0"  && $("#hddRWId").val() !="" ){
+
+        // ------------------------------------ Tab 1  Survey ----------------------------------//
+        objData.Survey = {};
+        objData.Survey.SurveyId = $("#hddTab1SurveyId").val();
+        objData.Survey.RWId = $("#hddRWId").val();
+        objData.Survey.SurveyDate = $("#SurveyDate").val();
+        objData.Survey.SurveyTime = $("#SurveyTime").val();
+        objData.Survey.IsBroken = $("#IsBroken").is(':checked') ? "1" : "0";
+            objData.Survey.SurveyAccountId = $("#ddlSurveyAccountId").select2("data")[0].id;
+        objData.Survey.BrokenAppearance = $("#BrokenAppearance").val();
+        objData.Survey.PiplineType = $("#PiplineType").val();
+        objData.Survey.PiplineSize = $("#PiplineSize").val();
+        objData.Survey.SurfaceAppearance = $("#SurfaceAppearance").val();
+            objData.Survey.Reason = $("#SurveyReason").val();
+        objData.Survey.Latitude = "";
+            objData.Survey.Longtitude = "";
+                objData.Survey.ShapeGeoJson = "";
+             //   objData.Survey.Shape = "";
+
+                objData.Items = [];
+                var objItem = {};
+                $('table.tbItem  > tbody  > tr').each(function () {
+                    var row = $(this);
+
+                    if (row.find(".selItem").select2('data')[0].id != ""
+                        && row.find(".selUnit").select2("data")[0].id != ""
+                        && row.find("input.txtQty").val() != ""
+                        && row.find("input.txtPrice").val() != ""
+                    ) {
+                        objItem = {};
+                        //   objItem.RWId = objData.CloseJob.CloseJobId;
+                        objItem.No = row.find("label.lbNo").text();
+                        objItem.ItemId = row.find(".selItem").select2('data')[0].id
+                        objItem.ItemName = row.find(".selItem").select2('data')[0].text
+                        objItem.UnitId = row.find(".selUnit").select2("data")[0].id;
+                        objItem.UnitName = row.find(".selUnit").select2("data")[0].text;
+                        objItem.Qty = row.find("input.txtQty").val();
+                        objItem.Price = row.find("input.txtPrice").val();
+                        objData.Items.push(objItem);
+                    }
+                });
+  // ------------------------------------ Tab 2  Effect ----------------------------------//
+                if (locationEffectLalong != null) {
+                objData.Effect = {};
+                objData.Effect.EffectId = $("#hddTab2EffectId").val();
+                objData.Effect.RWId = $("#hddRWId").val();
+                objData.Effect.Buffer = "";
+
+                objData.Effect.ShapeGeoJson = locationEffectLalong != null ? JSON.stringify(locationEffectLalong) : "";
+
+                locationEffectLalong.geometry.coordinates = JSON.stringify(locationEffectLalong.geometry.coordinates);
+
+                    objData.Effect.Shape = locationEffectLalong;
+                }
+        // ------------------------------------ Tab 2  Open Case ----------------------------------//
+                if ($("#hddTab2EffectId").val() != "") {
+                }
+                objData.OpenCase = {};
+                objData.OpenCase.OpenCaseId = $("#hddTab3OpenCaseId").val();
+                objData.OpenCase.OpenDate = $("#Tab3OpenDate").val();
+                objData.OpenCase.OpenTime = $("#Tab3OpenTime").val();
+                objData.OpenCase.IsUrgent = $("#Tab3IsUrgent").is(':checked') ? "1" : "0";
+                objData.OpenCase.IsOutSource = $("#Tab3IsOutSource").is(':checked') ? "1" : "0";
+                objData.OpenCase.ResponAccountId = $("#Tab3ResponAccountId").select2("data")[0].id;
+                objData.OpenCase.SuperAccountId = $("#Tab3SuperAccountId").select2("data")[0].id;
+                objData.OpenCase.IsBroken = $("#Tab3IsBroken").is(':checked') ? "1" : "0";
+                objData.OpenCase.SurveyDate = $("#Tab3SurveyDate").val();
+                objData.OpenCase.SurveyTime = $("#Tab3SurveyTime").val();
+                objData.OpenCase.SurveyAccountId = $("#Tab3SurveyAccountId").val();
+                objData.OpenCase.BrokenAppearance = $("#Tab3BrokenAppearance").val();
+                objData.OpenCase.PiplineType = $("#Tab3PiplineType").val();
+                objData.OpenCase.SurfaceAppearance = $("#Tab3SurfaceAppearance").val();
+                objData.OpenCase.Location = $("#Tab3Location").val();
+                    objData.OpenCase.Comment = $("#Tab3Comment").val();
+
+          
+            
+
+        // ------------------------------------ Tab 4  Process ----------------------------------//
+
+            if ($("#hddTab3OpenCaseId").val() != "" && $("#hddStatus").val() >= 6) {
+                objData.Process = {};
+                objData.Process.ProcessId = $("#hddTab3ProcessId").val();
+                objData.Process.IsSuccess = $("#Tab4IsSuccess").is(':checked') ? "1" : "0";
+                objData.Process.FromProcessDate = $("#Tab4FromProcessDate").val();
+                objData.Process.FromProcessTime = $("#Tab4FromProcessTime").val();
+                objData.Process.ToProcessDate = $("#Tab4ToProcessDate").val();
+                objData.Process.ToProcessTime = $("#Tab4ToProcessTime").val();
+                objData.Process.SurfaceFixedDate = $("#Tab4SurfaceFixedDate").val();
+                objData.Process.SurfaceFixedTime = $("#Tab4SurfaceFixedTime").val();
+                objData.Process.SuperAccountId = $("#Tab4SuperAccountId").val();
+                objData.Process.BrokenAppearance = $("#Tab4BrokenAppearance").val();
+                objData.Process.SurfaceAppearance = $("#Tab4SurfaceAppearance").val();
+                objData.Process.ToolType = $("#Tab4ToolType").val();
+                objData.Process.HoleWidth = $("#Tab4HoleWidth").val();
+                objData.Process.HoleLength = $("#Tab4HoleLength").val();
+                objData.Process.HoleDepth = $("#Tab4HoleDepth").val();
+                objData.Process.IsOutSource = $("#Tab4IsOutSource").is(':checked') ? "1" : "0";
+                objData.Process.Comment = $("#Tab4Comment").val();
+                objData.Process.Status = $("#Tab4Status").val();
+
+           
+
+            }
+
+
+            if ($("#hddTab4ProcessId").val() != "" && $("#hddStatus").val() >= 7) {
+                objData.CloseJob = {};
+
+                objData.CloseJob.CloseJobId = $("#hddTab5CloseJobId").val()
+                objData.CloseJob.CloseDate = $("#Tab5CloseDate").val()
+                objData.CloseJob.CloseTime = $("#Tab5CloseTime").val()
+            
+
+             
+
+                }
+        }
+
+            if ($("#hddTab3OpenCaseId").val() != "") {
+                if ($("#file1")[0] != null) formData.append('file1', $("#file1")[0].files[0]);
+                if ($("#file2")[0] != null) formData.append('file2', $("#file2")[0].files[0]);
+                if ($("#file3")[0] != null) formData.append('file3', $("#file3")[0].files[0]);
+                if ($("#file4")[0] != null) formData.append('file4', $("#file4")[0].files[0]);
+                if ($("#file5")[0] != null) formData.append('file5', $("#file5")[0].files[0]);
+            }
+
+
+
+            formData.append("Obj", JSON.stringify(objData));
+        return formData;
+        }
+
+        }
+
+
+        PageController.init();
+
+
+</script>
+

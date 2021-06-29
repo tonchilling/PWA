@@ -1,0 +1,233 @@
+﻿@using ReportViewerForMvc
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    bool _reportViewStatus = (bool)ViewData["_reportViewStatus"];
+}
+
+@*<style>
+        .report-display iframe {
+            width:100%;
+        }
+    </style>*@
+
+@{
+    string[] month = new string[] { "มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พศจิกายน", "ธันวาคม" };
+}
+
+<style>
+    #frm_report_gui_002 iframe {
+        width:100%;
+    }
+
+    #frm_report_gui_002 .row {
+        padding-bottom: 10px;
+    }
+
+    .multiselect-selected-text + b.caret {
+        display: none;
+    }
+
+    select {
+        height:30px;
+    }
+</style>
+
+<link href="~/Content/bootstrap/multiselect/css/bootstrap-multiselect.css" rel="stylesheet" />
+<script src="~/Content/bootstrap/multiselect/js/bootstrap-multiselect.js"></script>
+
+<form id="frm_report_gui_002" method="post" action="@Url.Content("~/Report_GUI_002/Display")">
+    <div class="panel panel-primary panel-line">
+        <div class="panel-heading">
+            <h1 class="panel-title">รายงาน > รายงานการตอบข้อร้องเรียนของกปภ.สาขา เกินกำหนด SLA</h1>
+            <div class="page-header-actions">
+            </div>
+        </div>
+
+        <div id="" class="panel-body" data-plugin="selectable">
+            <div class="page-content-actions">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-6">
+                            <label>ประขำเดือน</label>
+                            <div>
+                                <select id="month_start" name="month_start">
+                                    @{
+                                        for (int i = 0; i < month.Length; i++)
+                                        {
+                                            <option value="@(i + 1)" @Html.Raw(Request["month_start"] == (i + 1).ToString() ? "selected" : "")>@month[i]</option>
+                                        }
+                                    }
+                                </select>
+                                <select id="year_start" name="year_start">
+                                    @{
+                                        for (int i = DateTime.Today.Year; i >= 2018; i--)
+                                        {
+                                            <option value="@(i)" @Html.Raw(Request["year_start"] == i.ToString() ? "selected" : "")>@(i + 543)</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <label>ถึงเดือน</label>
+                            <div>
+                                <select id="month_end" name="month_end">
+                                    @{
+                                        for (int i = 0; i < month.Length; i++)
+                                        {
+                                            <option value="@(i + 1)" @Html.Raw(Request["month_end"] == (i + 1).ToString() ? "selected" : "")>@month[i]</option>
+                                        }
+                                    }
+                                </select>
+                                <select id="year_end" name="year_end">
+                                    @{
+                                        for (int i = DateTime.Today.Year; i >= 2018; i--)
+                                        {
+                                            <option value="@(i)" @Html.Raw(Request["year_end"] == i.ToString() ? "selected" : "")>@(i + 543)</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <label>กปภ. เขต</label>
+                            <div>
+                                <select id="main_branch" name="main_branch" multiple="multiple">
+                                    @{
+                                        using (Pwa.FrameWork.Dao.EF.Smart1662.Smart1662Entities db = new Pwa.FrameWork.Dao.EF.Smart1662.Smart1662Entities())
+                                        {
+                                            string all_main = Request["main_branch"];
+                                            string[] tmp = (all_main == null ? new string[0] : all_main.Split(','));
+
+                                            var branch = db.SysBranch.Where(f => f.TypeCode == "3").OrderBy(f => f.AreaCode).ToArray();
+                                            foreach (var b in branch)
+                                            {
+                                                <option value="@b.Code" @Html.Raw(tmp != null && tmp.Length > 0 && tmp.Contains(b.Code) ? "selected" : "")>@b.Name</option>
+                                            }
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <label>กปภ. สาขา</label>
+                            <div>
+                                <select id="branch" name="branch" multiple="multiple" data-value="@Request["branch"]"></select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <label>ช่องทางที่แจ้ง</label>
+                            <div>
+                                <select id="channel" name="channel" multiple="multiple">
+                                    @{
+                                        using (Pwa.FrameWork.Dao.EF.Smart1662.Smart1662Entities db = new Pwa.FrameWork.Dao.EF.Smart1662.Smart1662Entities())
+                                        {
+                                            string all_channel = Request["channel"];
+                                            string[] tmp = (all_channel == null ? new string[0] : all_channel.Split(','));
+                                            int[] tmp_id = new int[tmp.Length];
+                                            for (int i = 0; i < tmp.Length; i++)
+                                            { tmp_id[i] = Convert.ToInt32(tmp[i]); }
+
+                                            var channel = db.SysChannel.OrderBy(f => f.OrderSeq).ToArray();
+                                            foreach (var c in channel)
+                                            {
+                                                <option value="@c.ChannelId" @Html.Raw(tmp != null && tmp.Length > 0 && tmp_id.Contains(c.ChannelId) ? "selected" : "")>@c.ChannelName</option>
+                                            }
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <label>Show Detail</label>
+                            <div>
+                                <select id="show_detail" name="show_detail">
+                                    <option value="0">No</option>
+                                    <option value="1" @Html.Raw(Request["show_detail"] == "1" ? "selected" : "")>Yes</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-6">
+                            <button type="submit" class="btn btn-outline btn-primary">ค้นหา</button>
+                            <button type="button" onclick="window.location.href = '@Url.Content("~/Report_GUI_002/Index")';" class="btn btn-outline btn-default">เริ่มใหม่</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-primary panel-line"></div>
+            <div class="report-display text-center">
+                @if (_reportViewStatus)
+                {
+                    @Html.ReportViewer(ViewBag.ReportViewer as Microsoft.Reporting.WebForms.ReportViewer, new { scrolling = "yes" })
+                }
+                @*<iframe src="@Url.Content("~/Report_GUI_002/Display")" style="width:100%; height:100%; background:#fff;"></iframe>*@
+            </div>
+        </div>
+    </div>
+</form>
+
+<script>
+    $('#main_branch').change(function () {
+        $('#branch').html('');
+        var main = ''
+        for (var i = 0; i < $(this).find('option:selected').length; i++) {
+            //console.log($(this).find('option:selected').eq(i).val());
+            if (i != 0) { main += "," }
+            main += $(this).find('option:selected').eq(i).val();
+        }
+
+        $.post('@Url.Content("~/Report_GUI_002/LoadBranchForMain")', {
+            main: main,
+            tm: (new Date()).getTime()
+        }, function (response) {
+                var data = response;
+                var all_branch = $('#branch').attr('data-value');
+                var tmp = (all_branch == null ? null : all_branch.split(','));
+            for (var i = 0; i < data.length; i++) {
+
+                $('#branch').append('<option value="' + data[i].code + '" ' + (tmp.includes(data[i].code) ? 'selected' : '') + '>' + data[i].name + '</option>');
+            }
+
+            $('#branch').multiselect('rebuild');
+        });
+    });
+
+    $('#main_branch').multiselect({
+        enableFiltering: true,
+        enableFullValueFiltering: true,
+        includeSelectAllOption: true,
+        selectAllText: 'ทั้งหมด',
+        nonSelectedText: 'ทั้งหมด',
+        maxHeight: 520
+    });
+
+    $('#branch').multiselect({
+        enableFiltering: true,
+        enableFullValueFiltering: true,
+        includeSelectAllOption: true,
+        selectAllText: 'ทั้งหมด',
+        nonSelectedText: 'ทั้งหมด',
+        maxHeight: 520
+    });
+
+    $('#channel').multiselect({
+        enableFiltering: true,
+        enableFullValueFiltering: true,
+        includeSelectAllOption: true,
+        selectAllText: 'ทั้งหมด',
+        nonSelectedText: 'ทั้งหมด',
+        maxHeight: 520
+    });
+
+    $('#main_branch').change();
+</script>

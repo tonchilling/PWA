@@ -1,0 +1,131 @@
+﻿
+
+@using Pwa.FrameWork.Dto;
+
+<style>
+    .pnlMap {
+        width: 900px;
+        height: 100vh;
+        position: relative;
+    }
+
+    #mapid {
+        width: 100%;
+        height: 100vh;
+        min-height: 600px;
+    }
+
+
+    .divBranchMap {
+        z-index: 1710;
+        position: absolute;
+        width: 20%;
+        top: 10px;
+        left: 50px;
+    }
+
+    .divToolSearch {
+        position: absolute;
+        z-index: 1700;
+        top: 10px;
+        left: 50px;
+        min-width: 500px;
+    }
+</style>
+
+@{
+
+    List<DropDownlistDto> SysBranchs = (List<DropDownlistDto>
+ )ViewBag.SysBranchs;
+}
+
+
+<div class="pnlMap">
+    <div class="panel panel-primary divToolSearch">
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-sm-8">
+                    <div class="input-search autocomplete">
+                        <input type="text" class="form-control txtSearch" name="" placeholder="ค้นหาพื้นที่...">
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <select class="ddlBranchSearch" id="ddlBranchSearch">
+                        <option value="0">เลือกสาขา</option>
+                        @foreach (DropDownlistDto it in SysBranchs)
+                        {
+                            <option value="@it.Value" @(it.Value == (Model != nu ll? Model.BranchId: sysCurrentUser.Ba) ? "selected" : "")>
+                                @it.Text
+                            </option>
+                        }
+
+                    </select>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
+    <div id="mapid"></div>
+</div>
+
+<script>
+    var map;
+    var SearchMarker;
+    var SearchLatLng;
+    var SearchLayerGroup, AreaLayerGroup;
+    var popup;
+    var googleStreets;
+
+    var MapController = {
+
+        init: function (mapid) {
+            map = L.map(mapid).setView([13, 100], 6);
+            popup = L.popup();
+            googleStreets = L.tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
+                maxZoom: 20,
+                subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+            }).addTo(map);
+
+            SearchLayerGroup = new L.FeatureGroup();
+            AreaLayerGroup = new L.FeatureGroup();
+            map.addLayer(SearchLayerGroup);
+            map.addLayer(AreaLayerGroup);
+
+
+            var options = {
+                position: 'topright',
+                draw: {
+                    polyline: false,
+                    polygon: false,
+
+                    circle: false, // Turns off this drawing tool
+                    rectangle: false,
+                    marker: false
+                },
+
+                edit: false
+            };
+            map.on('click', onMapClick);
+            function onMapClick(e) {
+
+                //    $("#txtIncidentAddress").val('');
+                SearchLayerGroup.clearLayers();
+                SearchMarker = new L.marker(e.latlng, { draggable: 'true' });
+                SearchLatLng = [e.latlng.lat, e.latlng.lng];
+                SearchLayerGroup.addLayer(SearchMarker);
+                SearchMarker.on('dragend', function (event) {
+                    var marker = event.target;
+
+                });
+
+
+            }
+
+
+            return map;
+        }
+    }
+
+</script>

@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="e30e0933db3b433c9ceea5d2de10d909" Name="Diagram1" ZoomLevel="80">
+        <EntityTypeShape EntityType="Smart1662Model.AppConfig" Width="1.5" PointX="5.75" PointY="8.75" />
+        <EntityTypeShape EntityType="Smart1662Model.BranchReject" Width="1.5" PointX="14.75" PointY="5.75" />
+        <EntityTypeShape EntityType="Smart1662Model.CIS_NUM_CUSTOMER" Width="1.5" PointX="14.75" PointY="14.75" />
+        <EntityTypeShape EntityType="Smart1662Model.CIS_TB_LT_CUSTOMER_GROUP" Width="1.5" PointX="0.75" PointY="15.75" />
+        <EntityTypeShape EntityType="Smart1662Model.CIS_TB_LT_ORGANIZATION" Width="1.5" PointX="2.75" PointY="15.75" />
+        <EntityTypeShape EntityType="Smart1662Model.CIS_TB_LT_USETYPE" Width="1.5" PointX="4.75" PointY="15.75" />
+        <EntityTypeShape EntityType="Smart1662Model.CIS_TB_MS_AMPHUR" Width="1.5" PointX="16.75" PointY="5.75" />
+        <EntityTypeShape EntityType="Smart1662Model.CIS_TB_MS_DISTRICT" Width="1.5" PointX="16.75" PointY="14.75" />
+        <EntityTypeShape EntityType="Smart1662Model.CIS_TB_MS_PROVINCE" Width="1.5" PointX="17.75" PointY="0.75" />
+        <EntityTypeShape EntityType="Smart1662Model.CIS_TB_MS_TITLENAME" Width="1.5" PointX="17.75" PointY="9.75" />
+        <EntityTypeShape EntityType="Smart1662Model.CIS_TB_TR_CUSADDR_INF" Width="1.5" PointX="12.75" PointY="18.75" />
+        <EntityTypeShape EntityType="Smart1662Model.CIS_TB_TR_CUSTOMER_INF" Width="1.5" PointX="18.75" PointY="4.75" />
+        <EntityTypeShape EntityType="Smart1662Model.CISAmphure" Width="1.5" PointX="18.75" PointY="13.75" />
+        <EntityTypeShape EntityType="Smart1662Model.CISDistrinct" Width="1.5" PointX="14.75" PointY="18.75" />
+        <EntityTypeShape EntityType="Smart1662Model.CISProvince" Width="1.5" PointX="16.75" PointY="18.75" />
+        <EntityTypeShape EntityType="Smart1662Model.GIS_PIPE_SIZE" Width="1.5" PointX="18.75" PointY="17.75" />
+        <EntityTypeShape EntityType="Smart1662Model.GIS_PIPE_TYPE" Width="1.5" PointX="0.75" PointY="12.375" />
+        <EntityTypeShape EntityType="Smart1662Model.IC360Mapping" Width="1.5" PointX="19.75" PointY="0.75" />
+        <EntityTypeShape EntityType="Smart1662Model.LogErrorIC360" Width="1.5" PointX="6.75" PointY="19.75" />
+        <EntityTypeShape EntityType="Smart1662Model.MappingCategoryIC360" Width="1.5" PointX="19.75" PointY="9.75" />
+        <EntityTypeShape EntityType="Smart1662Model.PwaBranchIncident" Width="1.5" PointX="20.75" PointY="3.75" />
+        <EntityTypeShape EntityType="Smart1662Model.PwaBranchReject" Width="1.5" PointX="20.75" PointY="12.75" />
+        <EntityTypeShape EntityType="Smart1662Model.PWACustomerInfo" Width="1.5" PointX="20.75" PointY="16.75" />
+        <EntityTypeShape EntityType="Smart1662Model.PWACustomerInfoMeter" Width="1.5" PointX="0.75" PointY="21.75" />
+        <EntityTypeShape EntityType="Smart1662Model.PWAEmployee" Width="1.5" PointX="18.75" PointY="21.75" />
+        <EntityTypeShape EntityType="Smart1662Model.PwaIncident" Width="1.5" PointX="12.75" PointY="6.375" />
+        <EntityTypeShape EntityType="Smart1662Model.PwaIncident_Files" Width="1.5" PointX="21.75" PointY="7.75" />
+        <EntityTypeShape EntityType="Smart1662Model.PwaIncidentFollower" Width="1.5" PointX="20.75" PointY="21.75" />
+        <EntityTypeShape EntityType="Smart1662Model.PwaIncidentGroup" Width="1.5" PointX="21.75" PointY="0.75" />
+        <EntityTypeShape EntityType="Smart1662Model.PwaIncidentRequestEdit" Width="1.5" PointX="2.75" PointY="22.75" />
+        <EntityTypeShape EntityType="Smart1662Model.PwaIncidentSmsTrack" Width="1.5" PointX="15" PointY="10.625" />
+        <EntityTypeShape EntityType="Smart1662Model.PwaIncidentType" Width="1.5" PointX="22.75" PointY="3.75" />
+        <EntityTypeShape EntityType="Smart1662Model.PwaIncidentWorker" Width="1.5" PointX="22.75" PointY="12.75" />
+        <EntityTypeShape EntityType="Smart1662Model.PwaIncidentWorkingStatus" Width="1.5" PointX="14.75" PointY="22.75" />
+        <EntityTypeShape EntityType="Smart1662Model.PwaInformChannel" Width="1.5" PointX="22.75" PointY="15.75" />
+        <EntityTypeShape EntityType="Smart1662Model.PwaInformer" Width="1.5" PointX="22.75" PointY="18.75" />
+        <EntityTypeShape EntityType="Smart1662Model.PwaRepaireWork_CloseJob_Files" Width="1.5" PointX="23.75" PointY="6.75" />
+        <EntityTypeShape EntityType="Smart1662Model.PwaRepaireWork_Effect" Width="1.5" PointX="10" PointY="2.25" />
+        <EntityTypeShape EntityType="Smart1662Model.PwaRepaireWork_Effect_Customers" Width="1.5" PointX="24.75" PointY="0.75" />
+        <EntityTypeShape EntityType="Smart1662Model.PwaRepaireWork_Effect_Pipelines" Width="1.5" PointX="24.75" PointY="11.75" />
+        <EntityTypeShape EntityType="Smart1662Model.PwaRepaireWork_Incident" Width="1.5" PointX="10" PointY="6.5" />
+        <EntityTypeShape EntityType="Smart1662Model.PwaRepaireWork_OpenCase" Width="1.5" PointX="10" PointY="23.5" />
+        <EntityTypeShape EntityType="Smart1662Model.PwaRepaireWork_Process" Width="1.5" PointX="10" PointY="10" />
+        <EntityTypeShape EntityType="Smart1662Model.PwaRepaireWork_Process_Files" Width="1.5" PointX="24.75" PointY="18.75" />
+        <EntityTypeShape EntityType="Smart1662Model.PwaRepaireWork_Survey" Width="1.5" PointX="10" PointY="17.375" />
+        <EntityTypeShape EntityType="Smart1662Model.PwaRepaireWorkHeader" Width="1.5" PointX="7.75" PointY="13.125" />
+        <EntityTypeShape EntityType="Smart1662Model.Sequence" Width="1.5" PointX="24.75" PointY="23.75" />
+        <EntityTypeShape EntityType="Smart1662Model.ShortUrl" Width="1.5" PointX="25.75" PointY="5.75" />
+        <EntityTypeShape EntityType="Smart1662Model.ShortUrlToken" Width="1.5" PointX="12.75" PointY="25.75" />
+        <EntityTypeShape EntityType="Smart1662Model.ShotUrlTokenSource" Width="1.5" PointX="14.75" PointY="25.75" />
+        <EntityTypeShape EntityType="Smart1662Model.SysAccount" Width="1.5" PointX="26.75" PointY="0.75" />
+        <EntityTypeShape EntityType="Smart1662Model.SysAccountRole" Width="1.5" PointX="2.75" PointY="26.75" />
+        <EntityTypeShape EntityType="Smart1662Model.SysArea" Width="1.5" PointX="26.75" PointY="9.75" />
+        <EntityTypeShape EntityType="Smart1662Model.SysBranch" Width="1.5" PointX="26.75" PointY="13.75" />
+        <EntityTypeShape EntityType="Smart1662Model.SysChannel" Width="1.5" PointX="15" PointY="1" />
+        <EntityTypeShape EntityType="Smart1662Model.SysChannelCategory" Width="1.5" PointX="12.75" PointY="1.125" />
+        <EntityTypeShape EntityType="Smart1662Model.SysConplainant" Width="1.5" PointX="26.75" PointY="18.75" />
+        <EntityTypeShape EntityType="Smart1662Model.SysDepartment" Width="1.5" PointX="20.75" PointY="26.75" />
+        <EntityTypeShape EntityType="Smart1662Model.sysdiagrams" Width="1.5" PointX="22.75" PointY="26.75" />
+        <EntityTypeShape EntityType="Smart1662Model.SysDocumentType" Width="1.5" PointX="26.75" PointY="23.75" />
+        <EntityTypeShape EntityType="Smart1662Model.SysEmployee" Width="1.5" PointX="24.75" PointY="27.75" />
+        <EntityTypeShape EntityType="Smart1662Model.SysEnmPrefix" Width="1.5" PointX="27.75" PointY="5.75" />
+        <EntityTypeShape EntityType="Smart1662Model.SysEnmStatusEmployee" Width="1.5" PointX="26.75" PointY="27.75" />
+        <EntityTypeShape EntityType="Smart1662Model.SysHoliday" Width="1.5" PointX="28.75" PointY="0.75" />
+        <EntityTypeShape EntityType="Smart1662Model.SysItem" Width="1.5" PointX="28.75" PointY="8.75" />
+        <EntityTypeShape EntityType="Smart1662Model.SysItem_Branch" Width="1.5" PointX="28.75" PointY="12.75" />
+        <EntityTypeShape EntityType="Smart1662Model.SysItem_Set" Width="1.5" PointX="28.75" PointY="16.75" />
+        <EntityTypeShape EntityType="Smart1662Model.SysMenu" Width="1.5" PointX="3" PointY="1.375" />
+        <EntityTypeShape EntityType="Smart1662Model.SysMenuActive" Width="1.5" PointX="5.25" PointY="5.5" />
+        <EntityTypeShape EntityType="Smart1662Model.SysMessagesIncident" Width="1.5" PointX="16.75" PointY="28.75" />
+        <EntityTypeShape EntityType="Smart1662Model.SysOverSlaReason" Width="1.5" PointX="28.75" PointY="20.75" />
+        <EntityTypeShape EntityType="Smart1662Model.SysPosition" Width="1.5" PointX="28.75" PointY="24.75" />
+        <EntityTypeShape EntityType="Smart1662Model.SysProblem" Width="1.5" PointX="28.75" PointY="27.75" />
+        <EntityTypeShape EntityType="Smart1662Model.SysReason" Width="1.5" PointX="2.75" PointY="29.75" />
+        <EntityTypeShape EntityType="Smart1662Model.SysRepairType" Width="1.5" PointX="29.75" PointY="3.75" />
+        <EntityTypeShape EntityType="Smart1662Model.SysRequestCategory" Width="1.5" PointX="4.75" PointY="29.75" />
+        <EntityTypeShape EntityType="Smart1662Model.SysRequestCategorySubject" Width="1.5" PointX="6.75" PointY="29.75" />
+        <EntityTypeShape EntityType="Smart1662Model.SysRequestType" Width="1.5" PointX="12.75" PointY="29.75" />
+        <EntityTypeShape EntityType="Smart1662Model.SysRole" Width="1.5" PointX="3" PointY="6.875" />
+        <EntityTypeShape EntityType="Smart1662Model.SysRolePermission" Width="1.5" PointX="5.25" PointY="2.5" />
+        <EntityTypeShape EntityType="Smart1662Model.SysSite" Width="1.5" PointX="0.75" PointY="2.75" />
+        <EntityTypeShape EntityType="Smart1662Model.SysSizeOfPipe" Width="1.5" PointX="3" PointY="12" />
+        <EntityTypeShape EntityType="Smart1662Model.SysStatus" Width="1.5" PointX="18.75" PointY="29.75" />
+        <EntityTypeShape EntityType="Smart1662Model.SysSurface" Width="1.5" PointX="20.75" PointY="29.75" />
+        <EntityTypeShape EntityType="Smart1662Model.SysTeam" Width="1.5" PointX="30.75" PointY="7.75" />
+        <EntityTypeShape EntityType="Smart1662Model.SysTeamMember" Width="1.5" PointX="30.75" PointY="0.75" />
+        <EntityTypeShape EntityType="Smart1662Model.SysUnit" Width="1.5" PointX="8.75" PointY="30.75" />
+        <EntityTypeShape EntityType="Smart1662Model.SysUnitOfItem" Width="1.5" PointX="30.75" PointY="11.75" />
+        <EntityTypeShape EntityType="Smart1662Model.SysWorkingStatus" Width="1.5" PointX="30.75" PointY="15.75" />
+        <EntityTypeShape EntityType="Smart1662Model.test" Width="1.5" PointX="30.75" PointY="18.75" />
+        <EntityTypeShape EntityType="Smart1662Model.TrnIncident" Width="1.5" PointX="30.75" PointY="21.75" />
+        <EntityTypeShape EntityType="Smart1662Model.PwaRepaireWork_CloseJob" Width="1.5" PointX="26.75" PointY="30.75" />
+        <EntityTypeShape EntityType="Smart1662Model.SysItem_SetItem" Width="1.5" PointX="30.75" PointY="27.75" />
+        <EntityTypeShape EntityType="Smart1662Model.SysTitle" Width="1.5" PointX="31.75" PointY="3.75" />
+        <EntityTypeShape EntityType="Smart1662Model.SysTopic" Width="1.5" PointX="14.75" PointY="31.75" />
+        <EntityTypeShape EntityType="Smart1662Model.vw_report_gui_002" Width="1.5" PointX="28.75" PointY="31.75" />
+        <EntityTypeShape EntityType="Smart1662Model.VwIncidentList" Width="1.5" PointX="30.75" PointY="31.75" />
+        <EntityTypeShape EntityType="Smart1662Model.VwIncidentListV2" Width="1.5" PointX="32.75" PointY="6.75" />
+        <EntityTypeShape EntityType="Smart1662Model.VwLocation" Width="1.5" PointX="32.75" PointY="0.75" />
+        <EntityTypeShape EntityType="Smart1662Model.VwPwaBranchReject" Width="1.5" PointX="32.75" PointY="13.75" />
+        <EntityTypeShape EntityType="Smart1662Model.VwSearchIncident" Width="1.5" PointX="16.75" PointY="32.75" />
+        <AssociationConnector Association="Smart1662Model.FK_SYSSIZEO_REFERENCE_GIS_PIPE" />
+        <AssociationConnector Association="Smart1662Model.FK_PWAPWAIN_REFERENCE_PWAINCID" />
+        <AssociationConnector Association="Smart1662Model.FK_PwaRepaireWork_Effect_PwaRepaireWorkHeader" />
+        <AssociationConnector Association="Smart1662Model.FK_PwaRepaireWork_Incident_PwaRepaireWorkHeader" />
+        <AssociationConnector Association="Smart1662Model.FK_PwaRepaireWork_OpenCase_PwaRepaireWorkHeader" />
+        <AssociationConnector Association="Smart1662Model.FK_PwaRepaireWork_Process_PwaRepaireWorkHeader" />
+        <AssociationConnector Association="Smart1662Model.FK_PwaRepaireWork_Survey_PwaRepaireWorkHeader" />
+        <AssociationConnector Association="Smart1662Model.FK_SysChannelCategoryId" />
+        <AssociationConnector Association="Smart1662Model.FK_SysMenu_Parent" />
+        <AssociationConnector Association="Smart1662Model.FK_SysMenu_Site" />
+        <AssociationConnector Association="Smart1662Model.FK_SysMenuActive_Id" />
+        <AssociationConnector Association="Smart1662Model.FK_SysRolePermission_SysMenu" />
+        <AssociationConnector Association="Smart1662Model.FK_SysRolePermission_SysRole" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

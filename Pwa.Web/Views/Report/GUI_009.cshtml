@@ -1,0 +1,108 @@
+﻿@using System.Data;
+@{
+    /**/
+
+    /**/
+
+    ViewBag.Title = "รายงานร้อยละของการบริหารจัดการข้อร้องเรียน แยกตามช่องทางร้องเรียน (ครส.)";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    DataTable DataResult = (DataTable)ViewBag.Data;
+}
+
+
+<form id="frmReport" method="post">
+
+
+
+    <div class="panel panel-primary panel-line">
+
+        <!-- Contacts Content Header -->
+        <div class="panel-heading">
+            <h1 class="panel-title">รายงาน  > รายงานร้อยละของการบริหารจัดการข้อร้องเรียน แยกตามช่องทางร้องเรียน (ครส.) </h1>
+            <div class="page-header-actions">
+
+            </div>
+        </div>
+
+        <!-- Contacts Content -->
+        <div id="contactsContent" class="panel-body" data-plugin="selectable">
+
+            <!-- Actions -->
+            <div class="page-content-actions">
+                @Html.Partial("~/Views/Shared/ReportSearchPartial.cshtml")
+            </div>
+
+
+            <!-- Contacts -->
+            <div class="table-responsive divTable">
+                <table class="table is-indent tblDisplay"
+                       id="tblDisplay" name="tblDisplay"
+                       data-plugin="animateList">
+                    <thead>
+                        <tr>
+                            <th scope="col" class="cell-100">ช่องทางร้องเรียน</th>
+                            <th scope="col" class="cell-100">เรื่อง</th>
+                            <th scope="col" class="cell-100">ร้อยละ</th>
+                            <th scope="col" class="cell-100">ปิดงานได้ตาม SLA (เรื่อง)</th>
+                            <th scope="col" class="cell-100">ร้อยละ</th>
+                            <th scope="col" class="cell-100">ปิดงานได้แต่เกิน SLA (เรื่อง)</th>
+                            <th scope="col" class="cell-100">ร้อยละ</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (DataResult != null)
+                        {
+                            foreach (DataRow dr in DataResult.Rows)
+                            {
+                        <tr>
+                            <td>@dr["COMPLAINT_TOPIC"]</td>
+                            <td align="right">@dr["C_COMPLAINT"]</td>
+                            <td align="right">@dr["COMPLAINT_PERCENTAGE"]</td>
+                            <td align="right">@dr["SLA_CLOSE"]</td>
+                            <td align="right">@dr["SLA_PERCENTAGE"]</td>
+                            <td align="right">@dr["SLA_OVER_DUE"]</td>
+                            <td align="right">@dr["SLA_OVER_DUE_PERCENTAGE"]</td>
+                        </tr>
+                            }
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+
+
+    <script>
+
+        $(document).ready(function () {
+           // $("#tblDisplay").DataTable({ "searching": false, "bLengthChange": false });
+        });
+        $(document).on("click", "#btnSearch", function () {
+
+            $("#ReportType").val('');
+            $("#Action").val('search');
+            $("#frmReport").submit();
+
+        });
+
+        $(document).on("click", "#btnExportPDF", function () {
+
+            $("#ReportType").val('pdf');
+            $("#Action").val('export');
+            $("#frmReport").submit();
+
+        });
+
+        $(document).on("click", "#btnExportExcel", function () {
+            $("#ReportType").val('excel');
+            $("#Action").val('export');
+            $("#frmReport").submit();
+
+        });
+
+    </script>
+</form>
+

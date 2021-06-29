@@ -1,0 +1,104 @@
+﻿@using System.Data;
+@{
+    /**/
+
+    /**/
+
+    ViewBag.Title = "รายงานการตอบข้อร้องเรียนของกปภ.สาขา เกินกำหนด SLA";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    DataTable DataResult = (DataTable)ViewBag.Data;
+}
+
+
+<form id="frmReport" method="post">
+
+
+
+    <div class="panel panel-primary panel-line">
+
+        <!-- Contacts Content Header -->
+        <div class="panel-heading">
+            <h1 class="panel-title">รายงานการตอบข้อร้องเรียนของกปภ.สาขา เกินกำหนด SLA</h1>
+            <div class="page-header-actions">
+
+            </div>
+        </div>
+
+        <!-- Contacts Content -->
+        <div id="contactsContent" class="panel-body" data-plugin="selectable">
+
+            <!-- Actions -->
+            <div class="page-content-actions">
+                @Html.Partial("~/Views/Shared/ReportSearchPartial.cshtml")
+            </div>
+
+
+            <!-- Contacts -->
+            <div class="table-responsive divTable">
+                <table class="table is-indent tblDisplay"
+                       id="tblDisplay" name="tblDisplay"
+                       data-plugin="animateList">
+                    <thead>
+                        <tr>
+                            <th scope="col" class="cell-100">ลำดับที่</th>
+                            <th scope="col" class="cell-100">หัวข้อ</th>
+                            <th scope="col" class="cell-200">การร้องเรียนใหม่</th>
+                            <th scope="col" class="cell-300">การติดตามเร่งรัดข้อขัดเรียนเดิม</th>
+                            <th scope="col" class="cell-200">การสอบถามทั่วไป</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (DataResult != null)
+                        {
+                            /* foreach (DataRow dr in DataResult.Rows)
+                             {
+                                 <tr>
+                                     <td>@dr["TOPIC_ORDER"]</td>
+                                     <td>@dr["TOPIC"]</td>
+                                     <td align="right">@dr["Complan"]</td>
+                                     <td align="right">@dr["Monitoring"]</td>
+                                     <td align="right">@dr["AskForInformation"]</td>
+                                 </tr>
+                             }*/
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+
+
+    <script>
+
+        $(document).ready(function () {
+           // $("#tblDisplay").DataTable({ "searching": false, "bLengthChange": false });
+        });
+        $(document).on("click", "#btnSearch", function () {
+
+            $("#ReportType").val('');
+            $("#Action").val('search');
+            $("#frmReport").submit();
+
+        });
+
+        $(document).on("click", "#btnExportPDF", function () {
+
+            $("#ReportType").val('pdf');
+            $("#Action").val('export');
+            $("#frmReport").submit();
+
+        });
+
+        $(document).on("click", "#btnExportExcel", function () {
+            $("#ReportType").val('excel');
+            $("#Action").val('export');
+            $("#frmReport").submit();
+
+        });
+
+    </script>
+</form>
+

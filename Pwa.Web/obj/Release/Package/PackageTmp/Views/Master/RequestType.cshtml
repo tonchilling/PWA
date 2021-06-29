@@ -1,0 +1,335 @@
+﻿@using Pwa.FrameWork.Dao.EF.Smart1662;
+@using Pwa.FrameWork.Bal.Smart1662;
+@using Pwa.FrameWork.Dto.Smart1662;
+@using Pwa.FrameWork.Dto;
+@{
+    ViewBag.Title = "RequestType";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    List<RequestTypeDto> AllRequestType = (List<RequestTypeDto>)ViewBag.AllRequestType;
+}
+
+<div class="panel panel-primary panel-line">
+
+    <!-- Contacts Content Header -->
+    <div class="panel-heading">
+        <h1 class="panel-title">ข้อมูลพื้นฐาน  > ช่องทางการแจ้ง</h1>
+        <div class="page-header-actions">
+            <form></form>
+        </div>
+    </div>
+
+    <!-- Contacts Content -->
+    <div id="contactsContent" class="panel-body" data-plugin="selectable">
+
+        <!-- Actions -->
+        <div class="page-content-actions">
+            <div class="row">
+
+                <div class="col-md-3 col-lg-3">
+                    <div class="form-group ">
+                        <label class="pt-3">การรับแจ้ง</label>
+                        <input type="text" class="form-control" name="search_name" id="search_name" placeholder="" />
+                    </div>
+                </div>
+                <div class="col-md-3 col-lg-3">
+                    <div class="form-group">
+                        <label class="pt-3">สถานะ</label>
+                        <select data-plugin="selectpicker" class="selectpicker" tabindex="-98" name="search_status" id="search_status">
+                            <option value="">ทุกสถานะ</option>
+                            <option value="1">ใช้งาน</option>
+                            <option value="0">ไม่ใช้งาน</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 col-lg-12">
+                    <div class="pull-right">
+                        <button type="button" class="btn btn-outline btn-primary btnSearch">ค้นหา</button>
+                        @*<button type="button" class="btn btn-outline btn-default">ยกเลิก</button>*@
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+
+        <!-- Contacts -->
+        <div class="table-responsive divTable">
+            <table class="table is-indent tblDisplay" id="tblDisplay" name="tblDisplay" data-plugin="animateList" data-animate="fade" data-child="tr"
+                   data-selectable="selectable">
+                <thead>
+                    <tr>
+                        <th class="cell-50" scope="col">รหัส</th>
+                        <th scope="col" class="cell-300">ประเภทการรับแจ้ง</th>
+                        <th scope="col" class="cell-100">สถานะ</th>
+                        <th scope="col" class="cell-100">UpdatedDate</th>
+                        <th scope="col" class="cell-50">UpdatedBy</th>
+                        <th scope="col" class="cell-50"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var ss in AllRequestType)
+                    {
+                    <tr data-url="panel.tpl">
+                        <td>@ss.Id</td>
+                        <td>@ss.Name</td>
+                        <td>@(ss.Status == "1" ? "ใช้งาน" : "ไม่ใช้งาน") </td>
+                        <td>@ss.UpdatedDate</td>
+                        <td>@ss.UpdatedByName</td>
+                        <td>
+                            <button type="button" data="@ss.Id" class="btn btn-floating btn-success btn-sm btnEdit"><i class="icon wb-pencil" aria-hidden="true"></i></button>
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+<div class="site-action" data-plugin="actionBtn">
+    <button type="button" class="btn-raised btn btn-success btn-floating btnAdd">
+        <i class="front-icon wb-plus animation-scale-up" aria-hidden="true"></i>
+        <i class="back-icon wb-close animation-scale-up" aria-hidden="true"></i>
+    </button>
+    <div class="site-action-buttons">
+        <button type="button" data-action="trash" class="btn-raised btn btn-success btn-floating animation-slide-bottom">
+            <i class="icon wb-trash" aria-hidden="true"></i>
+        </button>
+        <button type="button" data-action="folder" class="btn-raised btn btn-success btn-floating animation-slide-bottom">
+            <i class="icon wb-folder" aria-hidden="true"></i>
+        </button>
+    </div>
+</div>
+
+<div class="modal fade" id="InputForm" aria-hidden="true" aria-labelledby="InputForm"
+     role="dialog">
+    <div class="modal-dialog modal-primary  modal-simple modal-lg">
+        <div class="modal-content">
+            <div class="modal-header ">
+                <button type="button" class="close" aria-hidden="true" data-dismiss="modal">×</button>
+                <h4 class="modal-title">บันทึก</h4>
+            </div>
+            <div class="modal-body" style="background-color:#f1f4f5;padding-top:10px">
+                <div class="panel panel-primary panel-line">
+                    <div class="panel-heading">
+                        <div class="panel-title">ประเภทการรับแจ้ง</div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-4 col-lg-4">
+                                <div class="form-group ">
+                                    <label class="pt-3">การรับแจ้ง</label>
+                                    <input type="text" class="form-control" id="tb_Name" name="tb_Name" placeholder="" value="" />
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-lg-4">
+                                <div class="form-group">
+       
+                                        <label class="inputBasicOn">สถานะ</label>
+                                        <br />
+                                        <input type="checkbox" id="cb_status" name="cb_status"
+                                               data-color="#17b3a3" class="switchery js-switch" checked />
+
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline btn-primary btnSave" data-dismiss="modal" type="submit">บันทึก</button>
+                <a class="btn btn-outline  btn-default" data-dismiss="modal" href="javascript:void(0)">ยกเลิก</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var PageController = {
+
+        init: function (){
+
+            $(document).ready(function () {
+
+                var elem = document.querySelector('.js-switch');
+                var init = new Switchery(elem);
+                PageController.LoadEvent();
+                $("#tblDisplay").DataTable({ "searching": false, "bLengthChange": false });
+
+            });
+
+    },
+        LoadEvent: function ()
+        {
+
+             $(document).on("click", ".btnEdit", function () {
+            PwaManager.PwaWaiting(true);
+            PwaManager.PwaPost('@Url.Action("getRequestTypeById", new { controller = "Master" })', { "id": $(this).attr("data") },
+                function (data) {
+                    PageController.GetEditData(data)
+                    PwaManager.PwaWaiting(false);
+                }
+                , PageController.GetError);
+            $("#InputForm").modal({ backdrop: 'static', keyboard: false });
+            });
+            $(document).on("click", ".btnAdd", function () {
+                $("#InputForm").modal({ backdrop: 'static', keyboard: false });
+                PageController.AddNew();
+            });
+
+            $(document).on("click", ".btnDelete", function () {
+                PwaConfirm("ลบ", "คุณต้องการลบข้อมูหรือไม่", function (isConfirm) {
+                    if (isConfirm) {
+                        swal(
+                            {
+                                title: "สำเร็จ!",
+                                text: "ลบข้อมูลเรียบร้อย!",
+                                timer: 800
+                            });
+
+                    } else {
+                        swal.close();
+
+                    }
+                })
+            });
+
+            $(document).on("click", ".btnSave", function () {
+
+                    var dataList = [];
+
+                    // ---------------------    validate fields ---------------------------------//
+                    if ($("#tb_Name").val() == "") {
+                        $("#tb_Name").closest('.form-group').addClass('has-error');
+                        return false;
+                    } else {
+                        $("#tb_Name").closest('.form-group').removeClass('has-error');
+                    }
+                    // ---------------------    validate fields ---------------------------------//
+
+                var row = $(this);
+
+                var dataDetail = {};
+                dataDetail.Id = $("#tb_Name").attr("data");
+                dataDetail.Name = $("#tb_Name").val();
+                dataDetail.Status = ($("#cb_status").is(":checked") ? "1" : "0");
+                dataList.push(dataDetail);
+
+                PwaManager.PwaConfirm("บันทึก", "คุณต้องการบันทึกหรือไม่", function (isConfirm) {
+                    if (isConfirm) {
+                       PwaManager.PwaWaiting(true);
+
+                        PwaManager.PwaPost('@Url.Action("SaveRequestType", new { controller = "Master" })', { "Requests": dataDetail },
+
+                                function (data) {
+
+                                    PwaManager.PwaWaiting(false);
+                                    PageController.GetSuccess(data);
+                                    swal(
+                                        {
+                                            title: "สำเร็จ!",
+                                            text: "บันทึกข้อมูลเรียบร้อย!",
+                                            timer: 800
+                                        });
+                                }
+                            , PageController.GetError);
+
+                    } else {
+                        swal.close();
+
+                    }
+                })
+
+            });
+
+            $(document).on("click", ".btnSearch", function () {
+                Waiting(true);
+                var dataDetail = {};
+                //dataDetail.ChannelName = $("#search_name").val();
+                //dataDetail.Status = $("#selectStatus").val();
+                var name = $("#search_name").val();
+                var status = $("#search_status").val();
+                //dataList.push(dataDetail);
+                //PwaManager.PwaPost('@Url.Action("SearchRequestType", new { controller = "Master" })', { "Requests": dataDetail }, GetSuccess, GetError);
+                PwaManager.PwaPost('@Url.Action("SearchRequestType", new { controller = "Master" })', { "name": name, "status": status }, PageController.GetSuccess, PageController.GetError);
+                setTimeout(function () {
+                    Waiting(false);
+                }, 1000);
+
+            });
+        },
+        GetError: function(error) {
+            alert('Failed : ' + error.responseJSON.Message);
+            swal.close();
+            PwaManager.PwaWaiting(false);
+        },
+
+
+        GetEditData: function(jsonData) {
+        var dvstatus = $("#cbstatus");
+        var cb = "";
+            dvstatus.empty();
+            $("#tb_Name").val(jsonData.Name);
+            $("#tb_Name").removeAttr("data", "");
+            $("#tb_Name").attr("data", jsonData.Id);
+        cb += '<input type="checkbox" id="cb_status" name="cb_status" data-color="#17b3a3" class="switchery js-switch"' + (jsonData.Status == "1" ? "Checked" : "") + '/>';
+        dvstatus.append(cb);
+    },
+        AddNew: function() {
+        var dvstatus = $("#cbstatus");
+        var cb = "";
+        dvstatus.empty();
+        $("#tb_Name").val("");
+        $("#tb_Name").removeAttr("data", "");
+        cb += '<input type="checkbox" id="cb_status" name="cb_status" data-color="#17b3a3" class="switchery js-switch" Checked />';
+        dvstatus.append(cb);
+    },
+
+     GetSuccess: function(jsonData) {
+         var html = "";
+         $('.divTable').empty();
+         html += '<table class="table is-indent tblDisplay" id="tblDisplay" name="tblDisplay" data-plugin="animateList" data-animate="fade" data-child="tr" data-selectable="selectable">';
+         html += '<thead>';
+         html += '<tr>';
+         html += '<th class="" scope="col">รหัส</th>';
+         html += '<th class="" scope="col">ประเภทการร้องเรียน</th>';
+         html += '<th scope="col" class="">สถานะ</th>';
+         html += '<th scope="col" class="">UpdatedDate</th>';
+         html += '<th scope="col" class="">UpdatedBy</th>';
+         html += '<th scope="col" class=""></th>';
+         html += '</tr>';
+         html += '</thead>';
+         html += '<tbody>';
+
+        $.each(jsonData, function (index, item) {
+            html += '<tr data-url="panel.tpl">';
+            html += '<td>' + item.Id + '</td>';
+            html += '<td>' + item.Name + '</td>';
+            html += '<td>' + (item.Status == "1" ? "ใช้งาน" : "ไม่ใช้งาน") + '</td>';
+            html += '<td>' + item.UpdatedDate + '</td>';
+            html += '<td>' + item.UpdatedByName + '</td>';
+            html += '<td><button type="button" data="' + item.Id + '" class="btn btn-floating btn-success btn-sm btnEdit"><i class="icon wb-pencil" aria-hidden="true"></i></button></td>';
+            html += '</tr>';
+        });
+         html += '</tbody>';
+         html += '</table>';
+         $('.divTable').append(html);
+         $('.divTable table').DataTable({ "searching": false, "bLengthChange": false });
+
+    }
+
+    }
+
+    PageController.init();
+
+
+
+
+
+
+</script>
+

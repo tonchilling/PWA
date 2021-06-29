@@ -1,0 +1,365 @@
+﻿@using Pwa.FrameWork.Dao.EF.Smart1662;
+@using Pwa.FrameWork.Bal.Smart1662;
+@using Pwa.FrameWork.Dto.Smart1662;
+@using Pwa.FrameWork.Dto;
+@{
+    ViewBag.Title = "User Management";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    //List<UnitDto> AllItem = (List<UnitDto>)ViewBag.AllItem;
+
+}
+<form id="frm" method="post" action="@Url.Action("UserManagementEdit", "User")">
+    <div class="panel panel-primary panel-line">
+
+        <!-- Contacts Content Header -->
+        <div class="panel-heading">
+            <h1 class="panel-title">ข้อมูลระบบ  > การจัดการผู้ใช้งานระบบ</h1>
+            <div class="page-header-actions">
+                
+            </div>
+        </div>
+
+        <!-- Contacts Content -->
+        <div id="contactsContent" class="panel-body" data-plugin="selectable">
+
+            <!-- Actions -->
+            <div class="page-content-actions">
+                <div class="row">
+                    <div class="col-md-4 col-lg-4">
+                        <div class="form-group ">
+                            <label class="pt-3">รหัสพนักงาน/User Login</label>
+                            <input type="text" class="form-control" name="search_userLogin" id="search_userLogin" placeholder="" />
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-lg-4">
+                        <div class="form-group ">
+                            <label class="pt-3">ชื่อ-สกุล</label>
+                            <input type="text" class="form-control" name="search_name" id="search_name" placeholder="" />
+                        </div>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-md-4 col-lg-4">
+                        <div class="form-group ">
+                            <label class="pt-3">เขต/สาขา/ส่วนกลาง</label>
+                            <div class="form-group ">
+                                <select tabindex="-98" class="search_Branch select2" name="search_Branch" id="search_Branch">
+                                    <option value="">เลือก กปภ.</option>
+                                    @foreach (DropDownlistDto obj in ViewBag.Branch)
+                                    {
+                                        <option value="@obj.Value" data="@obj.Id">@obj.Text</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-lg-4">
+                        <div class="form-group">
+                            <label class="pt-3">สถานะ</label>
+                            <select data-plugin="selectpicker" class="selectpicker" tabindex="-98" name="search_status" id="search_status">
+                                <option value="">ทุกสถานะ</option>
+                                <option value="1">ใช้งาน</option>
+                                <option value="0">ไม่ใช้งาน</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 col-lg-12">
+                        <div class="pull-right">
+                            <button type="button" class="btn btn-outline btn-primary btnSearch">ค้นหา</button>
+                            @*<button type="button" class="btn btn-outline btn-default">ยกเลิก</button>*@
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+
+            <!-- Contacts -->
+
+            <div class="table-responsive divTable">
+                <label class="pt-3">Display data top 1,000 records</label>
+                <table class="table is-indent tblDisplay" id="tblDisplay" name="tblDisplay" data-plugin="animateList" data-animate="fade" data-child="tr"
+                       data-selectable="selectable">
+                    <thead>
+                        <tr>
+                            <th scope="col">Login</th>
+                            <th scope="col">ชื่อ-สกุล</th>
+                            @*<th scope="col">Email</th>*@
+                            <th scope="col">สิทธิ์การใช้งาน</th>
+                            <th scope="col">สาขา</th>
+                            <th scope="col">สถานะ</th>
+                            <th scope="col">วันที่แก้ไขล่าสุด</th>
+                            <th scope="col">ผู้แก้ไขล่าสุด</th>
+                            <th scope="col"></th>
+                            <th scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var ss in ViewBag.ListAccount)
+                        {
+                            //var year = Convert.ToInt32(ss.UpdatedDate.Split('/')[2]);
+                            //if (year < 2500)
+                            //{
+                            //    year = year + 543;
+                            //}
+                            //var UpdatedDate = ss.UpdatedDate.Split('/')[0] + '/' + ss.UpdatedDate.Split('/')[1] + '/' + year;// + ' ' + ss.UpdatedTime;
+                            <tr data-url="panel.tpl">
+                                <td>@ss.UserLogin</td>
+                                <td>@ss.AccountFirstName @ss.AccountLastName</td>
+                                @*<td>@ss.AccountEmail</td>*@
+                                <td>@ss.RoleName</td>
+                                <td>@ss.BranchName</td>
+                                <td>@(ss.FlagStatus == "1" ? "ใช้งาน" : "ไม่ใช้งาน") </td>
+                                <td>@ss.UpdatedDate</td>
+                                <td>@ss.UpdatedByName</td>
+                                <td>
+                                    <button type="button" data="@ss.AccountId" class="btn btn-floating btn-success btn-sm btnEdit"><i class="icon wb-pencil" aria-hidden="true"></i></button>
+                                </td>
+                                <td>
+                                    <button type="button" data="@ss.AccountId" class="btn btn-floating btn-danger btn-sm btnDelete"><i class="icon wb-close" aria-hidden="true"></i></button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+    <div class="site-action" data-plugin="actionBtn">
+        <button type="button" class="btn-raised btn btn-success btn-floating btnAdd">
+            <i class="front-icon wb-plus animation-scale-up" aria-hidden="true"></i>
+            <i class="back-icon wb-close animation-scale-up" aria-hidden="true"></i>
+        </button>
+        <div class="site-action-buttons">
+            <button type="button" data-action="trash" class="btn-raised btn btn-success btn-floating animation-slide-bottom">
+                <i class="icon wb-trash" aria-hidden="true"></i>
+            </button>
+            <button type="button" data-action="folder" class="btn-raised btn btn-success btn-floating animation-slide-bottom">
+                <i class="icon wb-folder" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div>
+
+    <div class="modal fade" id="InputForm" aria-hidden="true" aria-labelledby="InputForm"
+         role="dialog">
+        <div class="modal-dialog modal-primary  modal-simple modal-lg">
+            <div class="modal-content">
+                <div class="modal-header ">
+                    <button type="button" class="close" aria-hidden="true" data-dismiss="modal">×</button>
+                    <h4 class="modal-title">บันทึก</h4>
+                </div>
+                <div class="modal-body" style="background-color:#f1f4f5;padding-top:10px">
+                    <div class="panel panel-primary panel-line">
+                        <div class="panel-heading">
+                            <div class="panel-title">หน่วย</div>
+                        </div>
+                        <div class="panel-body">
+                            <div class="row">
+                                @*<div class="col-md-2 col-lg-2">
+                                    <div class="form-group ">
+                                        <label class="pt-3">รหัส</label>*@
+                                <input type="hidden" class="form-control" id="tb_UnitId" name="tb_UnitId" placeholder="" value="" />
+                                @*</div>
+                                    </div>*@
+                                <div class="col-md-4 col-lg-4">
+                                    <div class="form-group ">
+                                        <label class="pt-3">ชื่อหน่วยอุปกรณ์</label>
+                                        <input type="text" class="form-control" id="tb_UnitName" name="tb_UnitName" placeholder="" value="" />
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4 col-lg-4">
+                                    <div class="form-group" id="cbstatus">
+                                        <label class="pt-3">ใช้งาน</label>
+                                        <br />
+                                        <input type="checkbox" id="cb_status" name="cb_status"
+                                               data-color="#17b3a3" class="switchery js-switch" checked />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-outline btn-primary btnSave" data-dismiss="modal" type="submit">บันทึก</button>
+                    <a class="btn btn-outline  btn-default" data-dismiss="modal" href="javascript:void(0)">ยกเลิก</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <input type="hidden" id="hdd_action" name="hdd_action" />
+    <input type="hidden" id="hdd_accountid" name="hdd_accountid" />
+</form>
+    <script>
+        var AccountEditUrl = '@Url.Action("UserManagementEdit", "User")';
+        var PageController = {
+
+            init: function (){
+
+                $(document).ready(function () {
+
+                    var elem = document.querySelector('.js-switch');
+                    var init = new Switchery(elem);
+                    PageController.LoadEvent();
+                    $("#tblDisplay").DataTable({ "searching": false, "bLengthChange": false });
+                    $("#search_Branch").select2({ maximumSelectionLength: 2, width: '100%' });
+                });
+        },
+        LoadEvent: function ()
+        {
+             $(document).on("click", ".btnEdit", function () {
+                 //$("#frm").attr('action', AccountEditUrl);
+                 $("#hdd_action").val("U"); 
+                 $("#hdd_accountid").val($(this).attr("data")); 
+                 $("#frm").submit();
+
+            });
+            $(document).on("click", ".btnAdd", function () {
+                $("#hdd_action").val('I');
+                $("#frm").submit();
+            });
+
+            
+            $(document).on("click", ".btnDelete", function () {
+
+                var row = $(this);
+
+                var dataDetail = {};
+                dataDetail.AccountId = $(this).attr("data");
+                dataDetail.Action = "D";
+
+                PwaManager.PwaConfirm("บันทึก", "คุณต้องการลบข้อมูหรือไม่", function (isConfirm) {
+                    if (isConfirm) {
+                       PwaManager.PwaWaiting(true);
+
+                        PwaManager.PwaPost('@Url.Action("DeleteAccount", new { controller = "User" })', { "Requests": dataDetail },
+
+                                function (data) {
+
+                                    PwaManager.PwaWaiting(false);
+                                    PageController.GetSuccess(data);
+                                    swal(
+                                        {
+                                            title: "สำเร็จ!",
+                                            text: "ลบข้อมูลเรียบร้อย!",
+                                            timer: 800
+                                        });
+                                }
+                            , PageController.GetError);
+
+                    } else {
+                        swal.close();
+
+                    }
+                })
+
+            });
+
+            $(document).on("click", ".btnSearch", function () {
+                Waiting(true);
+                var dataDetail = {};
+                var UserLogin = $("#search_userLogin").val();
+                var Name = $("#search_name").val();
+                var BaCode = $("#search_Branch").val();
+                var Status = $("#search_status").val();
+
+                PwaManager.PwaPost('@Url.Action("SearchUser", new { controller = "User" })', { "AccountId": "", "UserLogin": UserLogin, "Name": Name, "BaCode": BaCode, "Status": Status }, PageController.GetSuccess, PageController.GetError);
+                setTimeout(function () {
+                    Waiting(false);
+                }, 1000);
+
+            });
+        },
+        GetError: function(error) {
+            alert('Failed : ' + error.responseJSON.Message);
+            swal.close();
+            PwaManager.PwaWaiting(false);
+        },
+
+
+        GetEditData: function(jsonData) {
+            var dvstatus = $("#cbstatus");
+            dvstatus.empty();
+            var cb = '<label class="pt-3">ใช้งาน</label><br/>';
+
+            $.each(jsonData, function (index, i) {
+                $("#tb_UnitId").val(i.UnitId);
+                //$("#tb_UnitId").removeAttr("data", "");
+                //$("#tb_UnitId").attr("data", i.Id);
+                $("#tb_UnitId").attr("act", "U");
+                $("#tb_UnitName").val(i.UnitName);
+                cb += '<input type="checkbox" id="cb_status" name="cb_status" data-color="#17b3a3" class="js-switch"' + (i.Status == "1" ? "Checked" : "") + '/>';
+            });
+            dvstatus.append(cb);
+
+        },
+        AddNew: function() {
+            var dvstatus = $("#cbstatus");
+            dvstatus.empty();
+            var cb = '<label class="pt-3">ใช้งาน</label><br/>';
+            $("#tb_UnitId").val("");
+            //$("#tb_UnitId").removeAttr("data", "");
+            $("#tb_UnitId").attr("act", "I");
+            $("#tb_UnitName").val("");
+            cb += '<input type="checkbox" id="cb_status" name="cb_status" data-color="#17b3a3" class="js-switch" Checked />';
+            dvstatus.append(cb);
+        },
+
+     GetSuccess: function(jsonData) {
+         var html = "";
+         $('.divTable').empty();
+
+         html += '<table class="table is-indent tblDisplay" id="tblDisplay" name="tblDisplay" data-plugin="animateList" data-animate="fade" data-child="tr" data-selectable="selectable">';
+         html += '<thead>';
+         html += '<tr>';
+
+         html += '<th class="" scope="col">Login</th>';
+         html += '<th class="" scope="col">ชื่อ-สกุล</th>';
+         //html += '<th class="" scope="col">Email</th>';
+         html += '<th class="" scope="col">สิทธิ์การใช้งาน</th>';
+         html += '<th class="" scope="col">สาขา</th>';
+         html += '<th scope="col" class="">สถานะ</th>';
+         html += '<th scope="col" class="">วันที่แก้ไขล่าสุด</th>';
+         html += '<th scope="col" class="">ผู้แก้ไขล่าสุด</th>';
+         html += '<th scope="col" class=""></th>';
+         html += '<th scope="col" class=""></th>';
+         html += '</tr>';
+         html += '</thead>';
+         html += '<tbody>';
+         $.each(jsonData, function (index, item) {
+             html += '<tr data-url="panel.tpl">';
+             html += '<td>' + item.UserLogin + '</td>';
+             html += '<td>' + item.AccountFirstName + ' ' + item.AccountLastName + '</td>';
+             //html += '<td>' + item.AccountEmail + '</td>';
+             html += '<td>' + item.RoleName + '</td>';
+             html += '<td>' + item.BranchName + '</td>';
+             html += '<td>' + (item.FlagStatus == "1" ? "ใช้งาน" : "ไม่ใช้งาน") + '</td>';
+             html += '<td>' + item.UpdatedDate + '</td>';
+             html += '<td>' + item.UpdatedByName + '</td>';
+             html += '<td><button type="button" data="' + item.AccountId + '" class="btn btn-floating btn-success btn-sm btnEdit"><i class="icon wb-pencil" aria-hidden="true"></i></button></td>';
+             html += '<td><button type="button" data="' + item.AccountId + '" class="btn btn-floating btn-danger btn-sm btnDelete"><i class="icon wb-close" aria-hidden="true"></i></button></td>';
+             html += '</tr>';
+        });
+         html += '</tbody>';
+         html += '</table>';
+         $('.divTable').append(html);
+         $('.divTable table').DataTable({ "searching": false, "bLengthChange": false });
+
+    }
+
+    }
+
+    PageController.init();
+
+
+
+
+
+
+    </script>
+

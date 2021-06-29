@@ -1,0 +1,1564 @@
+﻿@using Pwa.FrameWork.Dao.EF.Smart1662;
+@using Pwa.FrameWork.Dto;
+@using Pwa.FrameWork.Dto.Smart1662;
+@using Pwa.FrameWork.Dto.Smart1662.Incident
+
+@{
+
+    ViewBag.Title = "การติดตามงาน";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+
+    List<DropDownlistDto> SysBranchs = (List<DropDownlistDto>
+    )ViewBag.SysBranchs;
+
+    List<DropDownlistDto> SysChannels = (List<DropDownlistDto>
+    )ViewBag.SysChannels;
+
+    List<DropDownlistDto> Employees = (List<DropDownlistDto>
+    )ViewBag.Employees;
+
+    List<DropDownlistDto> Titles = (List<DropDownlistDto>
+    )ViewBag.Titles;
+    FileDto fileDto = null;
+
+    List<DropDownlistDto> Tumbols = (List<DropDownlistDto>
+)ViewBag.Tumbols;
+
+    var incidentTypes = ViewBag.incidentTypes;
+
+
+}
+
+@section Scripts
+{
+    <!-- -->
+    @*<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>*@
+    <script src="~/Scripts/moment.js"></script>
+    <script src="~/Scripts/bootstrap-datetimepicker.min.js"></script>
+
+
+
+    <link href="~/Content/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+
+    @*<script src="@Url.Content("~/Scripts/Build/IncidentCaseReceive/bundle.js?ver=1.xxxxx")"></script>*@
+
+    <script type="text/javascript">
+        var GetCustomerUrl = '@Url.Action("GetCustomer", "Incident")';
+        var GetEmployees = '@Url.Action("GetEmployees", "Incident")';
+
+        var _incidentTypes = @Html.Raw(Json.Encode(ViewBag.IncidentTypes)) ;
+        @*var _provinces = @Html.Raw(Json.Encode(ViewBag.Provinces)) ;
+        var _distincts = @Html.Raw(Json.Encode(ViewBag.Distincts)) ;*@
+        var _pageInfo = @Html.Raw(Json.Encode(ViewBag.PageInfo)) ;
+        var incidentStyle = L.Icon.extend({
+            options: {
+                iconSize: [27, 27],
+                iconAnchor: [38, 86],
+                popupAnchor: [-20, -80]
+            }
+        });
+
+    </script>
+
+    <style>
+
+        .chkSLA {
+            padding-top: 30px;
+        }
+
+        #mapid {
+            height: 600px;
+            width: 100%;
+        }
+
+        .tab-content {
+            padding-top: 15px;
+        }
+
+
+        select2Error span {
+            outline: none;
+            border: 1px solid #800000;
+            box-shadow: 0 0 5px 1px #800000;
+        }
+
+    </style>
+
+}
+<script>
+    var incidentUrl = '@Url.Action("Index", "Incident")';
+    var SaveFollowerUrl = '@Url.Action("SaveFollower", "Incident")';
+    
+    var SaveFollowerUrl = '@Url.Action("SaveFollower", "Incident")'
+    
+    </script>
+
+@model IncidentDisplayDto
+
+<form id="frmReceiveIncident" action="" class="needs-validation" data-toggle="validator" role="form">
+    <div class="container">
+        <div class="row" data-plugin="matchHeight" data-by-row="true">
+            <div class="col-xxl-12">
+
+
+                <!-- Contacts Content -->
+                <div class="panel panel-primary panel-line">
+
+                    <!-- Contacts Content Header -->
+                    <div class="panel-heading">
+                        <h1 class="panel-title">รายการร้องเรียน > ติดตามงาน </h1>
+                    </div>
+
+                    <!-- Contacts Content -->
+                    <div class="panel-body" data-plugin="selectable">
+                        <div class="row">
+                            <div class="panel-title">ผู้แจ้ง</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-2 col-lg-2">
+                                <div class="form-group">
+                                    <label for="ddlTitle">คำนำหน้า</label>
+                                    <select id="ddlTitle" class="select2" disabled>
+                                        <option value="0"></option>
+                                        @foreach (DropDownlistDto it in ViewBag.Titles)
+                                        {
+                                            <option value="@it.Value" @(it.Value == (Model != null ? Model.Title : "") ? "selected" : "")>@it.Text </option>
+                                        }
+                                    </select>
+
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-6">
+                                <div class="form-group">
+                                    <label for="ddlCustomer">ชื่อ-สกุล</label>
+                                    <input type="text" class="form-control" id="ddlCustomer" name="ddlCustomer" readonly
+                                           value="@(Model !=null  ? Model.FirstName + " " + Model.LastName :"") "
+                                           placeholder="" required />
+                                    @*<select id="ddlCustomer" class="select2" disabled>
+                                        <option value="0"></option>
+                                        @foreach (SelectListItem it in ViewBag.Customers)
+                                        {
+                                            <option value="@it.Value" @(it.Value == (Model != null ? Model.CustomerID : "") ? "selected" : "")>@it.Text </option>
+                                        }
+                                    </select>*@
+
+
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-lg-4">
+                                <input type="hidden" id="hddInformID" v-model="incident.InformID" value="" />
+                                <div class="form-group">
+                                    <label for="ddlCustCode">รหัสผู้ใช้น้ำ</label>
+                                    <input type="text" class="form-control" id="ddlCustCode" name="ddlCustCode" readonly
+                                           value="@(Model !=null  ? Model.CustCode :"") "
+                                           placeholder="" required />
+                                    @*<select id="ddlCustCode" class="select2" disabled>
+            <option value="0"></option>
+            @foreach (DropDownlistDto it in ViewBag.PWACustomerCodes)
+            {
+                <option value="@it.Value" @(it.Value == (Model != null ? Model.CustCode : "") ? "selected" : "")>@it.Text </option>
+            }
+        </select>*@
+
+                                </div>
+                            </div>
+                            <div class="col-md-8 col-lg-8">
+                                <div class="form-group ">
+                                    <label for="txtAddress">ที่อยู่</label>
+                                    <textarea type="text" class="form-control" id="txtAddress" name="txtAddress" readonly
+                                              placeholder="">@(Model !=null  ? Model.CustomerAddress :"") </textarea>
+                                </div>
+
+                            </div>
+
+                            <div class="col-md-4 col-lg-4">
+                                <label for="txtTelephone">เบอร์โทรศัพท์</label>
+                                <input type="text" class="form-control" id="txtTelephone" name="txtTelephone" readonly
+                                       value="@(Model !=null  ? Model.Telephone :"") "
+                                       placeholder="" required />
+                            </div>
+                            <div class="col-md-8 col-lg-4">
+                                <div class="form-group">
+                                    <label for="ddlSubDistrict">ตำบล</label>
+                                    <div class="autocomplete">
+                                        <input type="text" class="form-control txtSubDistrict" name="" placeholder="" value="@(ViewBag.SubDistinct !=null  ? ViewBag.SubDistinct :"")" readonly>
+                                        @*<input type="hidden" id="hddSubDistrictID" value="@(Model !=null  ? Model.SubDistrict :"")" />*@
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-lg-4">
+                                <div class="form-group">
+                                    <label for="txtDistrict">อำเภอ</label>
+                                    <div class="autocomplete">
+                                        <input type="text" class="form-control txtDistrict" name="" placeholder="" value="@(ViewBag.Distinct !=null  ? ViewBag.Distinct :"")" readonly>
+                                        @*<input type="hidden" id="hddDistrictID" value="@(Model !=null  ? Model.District :"")" />*@
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-lg-4 ">
+                                <div class="form-group">
+                                    <label for="txtProvince">จังหวัด</label>
+                                    <div class="autocomplete">
+                                        <input type="text" class="form-control txtProvince" name="" placeholder="" value="@(ViewBag.Province !=null  ? ViewBag.Province :"")" readonly>
+                                        @*<input type="hidden" id="hddProvinceID" value="@(Model !=null  ? Model.Province :"")" />*@
+
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-lg-4">
+                                <div class="form-group">
+                                    <label for="ddlInformChannelID">ช่องทางการแจ้ง</label>
+                                    <select id="ddlInformChannelID" class="select2" disabled>
+                                        <option value="">ช่องทาง</option>
+                                        @foreach (DropDownlistDto it in SysChannels)
+                                        {
+                                            <option value="@it.Value" @(it.Value == (Model != null ? Model.InformChannelID : "") ? "selected" : "")>@it.Text </option>
+                                        }
+                                    </select>
+
+
+
+                                </div>
+                            </div>
+                            <div class="col-md-8 col-lg-8">
+                                <div class="form-group">
+                                    <label for="ddlInformReference">รายละเอียดช่องทางการแจ้ง</label>
+                                    <input type="text" class="form-control" id="ddlInformReference"
+                                           value="@(Model !=null  ? Model.InformReference :"") " placeholder="" readonly/>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xxl-12">
+                <div class="panel panel-success panel-line" style="border:0.5px solid #11c26d">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">บันทึกการติดตามงาน</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-3 col-lg-3">
+                                <div class="form-group ">
+                                    <label class="pt-3">เลขที่รับแจ้ง</label>
+                                    <input type="hidden" id="tb_IncidentId" name="tb_IncidentId" value="@(Model !=null  ? Model.PwaIncidentID.ToString() :"")" />
+
+                                    <input type="text" class="form-control" id="tb_IncidentNo" name="tb_IncidentNo" value="@(Model !=null  ? Model.PwaIncidentNo :"")" placeholder=""  readonly />
+                                </div>
+                            </div>
+                            <div class="col-md-2 col-lg-2">
+                                <div class="form-group ">
+                                    <label class="pt-3">ติดตามครั้งที่</label>
+                                    @{
+                                        var No = 0;
+                                        foreach (FollowerDto it in ViewBag.Follower)
+                                        {
+                                            No++;
+                                        }
+                                        No = No + 1;
+                                    }
+
+                                    <input type="text" class="form-control" id="tb_No" name="tb_No" placeholder="" value="@No" readonly />
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-lg-3">
+                                <div class="form-group ">
+                                    <label class="pt-3">วันที่รับแจ้ง</label>
+                                    @{
+                                        var today = DateTime.Now;
+                                        var dd = today.Day.ToString("00");
+                                        var mm = today.Month.ToString("00");
+                                        var yyyy = today.Year;
+                                        if (yyyy < 2500)
+                                        {
+                                            yyyy = yyyy + 543;
+                                        }
+                                        var now = dd + '/' + mm + '/' + yyyy;
+                                    }
+                                    <input type="text" class="form-control" id="tb_FollowerDate" name="tb_FollowerDate" placeholder="" value="@now" readonly />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-5 col-lg-5">
+                                <div class="form-group">
+                                    <label class="pt-3"><font class="font-size-20 text-danger">*</font> ข้อมูลเพิ่มเติม</label>
+                                    <textarea type="text" class="form-control" rows="4" style="min-width: 100%" id="tb_Information" name="tb_Information" placeholder=""></textarea>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-lg-3">
+                                <div class="form-group xddl_ChannelFollower">
+                                    <label class="pt-3"><font class="font-size-20 text-danger">*</font> ช่องทาง</label>
+                                    <select class="form-control ChannelFollower select2" tabindex="-98" name="ddl_ChannelFollower" id="ddl_ChannelFollower">
+                                        <option value="">เลือกช่องทาง</option>
+                                        @foreach (DropDownlistDto obj in SysChannels)
+                                        {
+                                            <option value="@obj.Value">@obj.Text</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-xxl-12 text-center">
+                                <button class="btn btn-outline btn-success btnSaveFollowUp" data-dismiss="modal" type="submit">บันทึก</button>
+                                <a class="btn btn-outline  btn-default" data-dismiss="modal" href="@Url.Action("Index", "Incident")">ยกเลิก</a>
+                            </div>
+                        </div>
+                        <div class="row">
+                                <h3 class="panel-title">ประวัติการติดตามงาน</h3>
+                        </div>
+                        <div class="row">
+                            <div class="table-responsive divTable">
+                                <table class="table is-indent tblDisplay" id="tblDisplay" name="tblDisplay" data-plugin="animateList" data-animate="fade" data-child="tr"
+                                       data-selectable="selectable">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col" class="cell-50">ครั้งที่</th>
+                                            <th scope="col">วันเวลาที่แจ้ง</th>
+                                            <th scope="col">ผู้รับแจ้ง</th>
+                                            <th scope="col">ช่องทาง</th>
+                                            <th scope="col">ข้อมูลเพิ่มเติม</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (FollowerDto it in ViewBag.Follower)
+                                        {
+                                            var year = Convert.ToInt32(it.FollowerDate.Split('/')[2]);
+                                            if (year < 2500)
+                                            {
+                                                year = year + 543;
+                                            }
+                                            var FollowerDatetime = it.FollowerDate.Split('/')[0] + '/' + it.FollowerDate.Split('/')[1] + '/' + year + ' ' + it.FollowerTime;
+                                            <tr data-url="panel.tpl">
+                                                <td>@it.No</td>
+                                                <td>@FollowerDatetime</td>
+                                                <td>@it.UpdatedByName</td>
+                                                <td>@it.ChannelName</td>
+                                                <td>@it.Information</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="col-xxl-12">
+                <!-- Contacts Content -->
+                <div class="panel panel-primary panel-line">
+                    <div class="panel-heading">
+                        <div class="panel-title">การรับแจ้งร้องเรียน</div>
+                    </div>
+                    <!-- Contacts Content -->
+                    <div class="panel-body" data-plugin="selectable">
+
+                        <div class="row">
+                            <div class="col-md-3 col-lg-3">
+                                <div class="form-group">
+
+                                    <label for="ddlPwaIncidentTypeID">ประเภทการรับแจ้ง</label>
+                                    <select id="ddlPwaIncidentTypeID" class="select2" disabled>
+                                        <option value="0"></option>
+                                        @foreach (DropDownlistDto it in ViewBag.sysRequestTypes)
+                                        {
+                                            <option value="@it.Value" @(it.Value == (Model != null ? Model.PwaIncidentTypeID.Trim() : "") ? "selected" : "")>@it.Text </option>
+                                        }
+
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-lg-3">
+                                <div class="form-group ">
+                                    <label for="txtIncidentNo">เลขที่รับแจ้ง</label>
+                                    <input type="text" id="PwaIncidentNo" class="form-control"
+                                           placeholder="เลขที่รับแจ้ง"
+                                           value="@(Model !=null  ? Model.PwaIncidentNo :"") "
+                                           readonly />
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-lg-3">
+                                <div class="form-group">
+                                    <label for="txtIncidentNo">ผู้รับแจ้ง</label>
+                                    <select class="ddlPwaInformReceiver select2"
+                                            id="ddlPwaInformReceiver"
+                                            tabindex="-98" disabled>
+                                        <option value="0"></option>
+                                        @foreach (DropDownlistDto it in Employees)
+                                        {
+                                            <option value="@it.Value" @(it.Value == (Model != null ? Model.PwaInformReceiver : "") ? "selected" : "")>@it.Text </option>
+                                        }
+
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-lg-3">
+                                <label for="dtpReceiveCaseDate">วันที่รับแจ้ง</label>
+                                <div class='input-group date  incdatetime' id='dtpReceiveCaseDate'>
+                                    <input type='text' class="form-control" id="txtReceivedCaseDate" value="@(Model !=null  ? Model.ReceivedCaseDate :"") " readonly />
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-lg-3">
+                                <div class="form-group">
+                                    <input type="hidden" id="hddPwaIncidentGroupID" value="@(Model !=null  ? Model.PwaIncidentGroupID :"") " />
+                                    <label for="ddlPwaIncidentGroupID">ด้านการร้องเรียน</label>
+                                    <select id="ddlPwaIncidentGroupID" class="select2" disabled>
+                                        <option></option>
+                                    </select>
+                                </div>
+
+
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group chkSLA">
+                                    <input type="checkbox" class="icheckbox-primary" id="chkSLA"
+                                           @((Model != null && Model.Sla ? "checked" : ""))
+                                           data-checkbox-class="icheckbox_flat-blue " disabled />
+                                    <label for="inputUnchecked">ยกเว้น SLA</label>
+                                </div>
+
+                            </div>
+                            <div class="col-md-4 col-lg-4">
+                                <div class="form-group">
+                                    <label for="">เหตุผล</label>
+                                    <select id="ddlSlaDetail" class="select2" v-model="incident.SlaDetail" disabled>
+                                        <option value="0"></option>
+                                        @foreach (DropDownlistDto it in ViewBag.Reasons)
+                                        {
+                                            <option value="@it.Value" @(it.Value == (Model != null ? Model.SlaDetail : "") ? "selected" : "")>@it.Text </option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-lg-3">
+                                <label for="dtpCompletedCaseDate">วันเวลาที่เสร็จ</label>
+                                <div class='input-group date  incdatetime' id='dtpCompletedCaseDate'>
+                                    <input type='text' class="form-control" id="txtCompletedCaseDate" value="@(Model !=null  ? Model.CompletedCaseDate :"") " readonly/>
+                                    <span class="input-group-addon">
+                                        <span class="glyphicon glyphicon-calendar"></span>
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-5 col-lg-5">
+                                <div class="form-group">
+                                    <input type="hidden" id="hddCaseTitle" value="@(Model !=null  ? Model.CaseTitle :"") " />
+                                    <label for="ddlCaseTitle">หัวข้อการร้องเรียน</label>
+                                    <select id="ddlCaseTitle" class="select2" tabindex="-98" disabled>
+                                        <option></option>
+                                    </select>
+
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-lg-4">
+
+                                <div class="form-group">
+                                    <label for="ddlBranch">สาขา</label>
+                                    <select id="ddlBranch" class="select2" v-model="incident.BracnchNo" disabled>
+
+                                        @foreach (DropDownlistDto it in SysBranchs)
+                                        {
+                                            <option value="@it.Value" @(it.Value == (Model != null ? Model.BracnchNo : "") ? "selected" : "")>@it.Text </option>
+                                        }
+
+                                    </select>
+
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-lg-3">
+                                <label for="ddlIncidentStatus">สถานะการดำเนินงาน</label>
+                                <select id="ddlIncidentStatus" class="select2"
+                                         disabled
+                                        tabindex="-98">
+                                    <option value="1">รับเรื่อง</option>
+                                    <option value="9">ปิดเรื่อง</option>
+                                </select>
+                            </div>
+                            <div class="col-md-8 col-lg-8">
+
+                                <div class="form-group">
+                                    <label for="">รายละเอียดการรับแจ้ง</label>
+                                    <textarea type="text" class="form-control"
+                                              data-iconlibrary="fa"
+                                              rows="2" id="txtCaseDetail" readonly
+                                              name="address" placeholder="รายละเอียด" value="@(Model !=null  ? Model.CaseDetail : "") ">
+                                    </textarea>
+                                </div>
+                                @if (Model != null
+                                    && Model.Files != null
+                                    && Model.Files.Count > 0
+                                     && Model.Files.Find(o => o.No == "1") != null)
+                                {
+                                    fileDto = Model.Files.Find(o => o.No == "1");
+                                    <div class="d-flex">
+                                        @*<label class="file-upload btn btn-info btn-outline invisible">
+                        เลือกไฟล์ <input type="file" id="fIncidentImage" />
+                    </label>*@
+                                        @*<img src="@Url.Content(fileDto.HtmlFile)"
+                    data-toggle="popover"
+                    data-html="true"
+                    data-content="<img src='@Url.Content(fileDto.HtmlFile)' style='width:100%'></img>"
+                    class="thumbnail" />*@
+                                        @*<i class="glyphicon glyphicon-remove icon-2x text-danger btnDeletefile vertical-align-middle" data="@fileDto.FileID"></i>*@
+                                    </div>
+                                }
+                                else
+                                {
+                                    @*<label class="file-upload btn btn-info btn-outline">
+                    เลือกไฟล์ <input type="file" id="fIncidentImage" />
+                </label>*@
+
+
+                                }
+                            </div>
+                            <div class="col-md-4 col-lg-4">
+                                <div class="form-group">
+                                    <label for="txtIncidentAddress">สถานที่เกิดเหตุ</label>
+                                    <div class="input-group">
+                                        <input type="hidden" id="hdCaseLatitude" value="@(Model !=null  ? Model.CaseLatitude : "")" />
+                                        <input type="hidden" id="hdCaseLongtitude" value="@(Model !=null  ? Model.CaseLongtitude : "")" />
+                                        <input type="text" class="form-control" id="txtIncidentAddress"
+                                               name="txtIncidentAddress" placeholder=""
+                                               value="@(Model !=null  ? Model.PwsIncidentAddress : "")" readonly />
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+
+            </div>
+            <div class="col-xxl-12">
+                <div class="panel panel-primary panel-line" style="border:0.5px solid #11c26d">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">การแก้ไขปัญหา</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-12 col-lg-12">
+                                <div class="form-group">
+                                    <textarea type="text" class="form-control"
+                                              data-iconlibrary="fa"
+                                              rows="2"
+                                              name="address" placeholder="" v-model="incident.ResolvedDetail" disabled></textarea>
+
+
+                                    @if (Model != null
+                                   && Model.Files != null
+                                   && Model.Files.Count > 0
+                                    && Model.Files.Find(o => o.No == "2") != null)
+                                    {
+                                        fileDto = Model.Files.Find(o => o.No == "2");
+                                        <div class="d-flex">
+                                            @*<label class="file-upload btn btn-success btn-outline invisible" style="margin-top:20px">
+                            เลือกไฟล์ <input type="file" id="fResolveImage" />
+                        </label>*@
+                                            @*<img src="@Url.Content(fileDto.HtmlFile)"
+                        data-toggle="popover"
+                        data-html="true"
+                        data-content="<img src='@Url.Content(fileDto.HtmlFile)' style='width:100%'></img>"
+                        class="thumbnail" disabled />*@
+
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        @*<label class="file-upload btn btn-success btn-outline " style="margin-top:20px">
+                        เลือกไฟล์ <input type="file" id="fResolveImage" />
+                    </label>*@
+
+
+                                    }
+
+
+
+                                </div>
+
+                            </div>
+                            <div class="col-md-3 col-lg-3">
+
+                                <div class="form-group">
+                                    <label for="txtIncidentNo">ผู้บันทึก</label>
+                                    <select class="ddlRecorder select2"
+                                            id="ddlRecorder"
+                                            tabindex="-98" disabled>
+                                        <option value="0"></option>
+                                        @foreach (DropDownlistDto it in Employees)
+                                        {
+                                            <option value="@it.Value" @(it.Value == (Model != null ? Model.Recorder : "") ? "selected" : "")>@it.Text </option>
+                                        }
+
+                                    </select>
+
+                                </div>
+
+
+                            </div>
+                            <div class="col-md-3 col-lg-3">
+                                <div class="form-group">
+                                    <label for="txtIncidentNo">วันเวลาที่บันทึก</label>
+                                    <input type="text" class="form-control datetime"
+                                           id="txtIncidentRecordDate" placeholder="วันที่บันทึก"
+                                           value="@(Model !=null  ? Model.RecordDate : "")" readonly>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</form>
+
+
+<div class="modal modal-primary  fade" id="mdAddCustomer" aria-hidden="true" aria-labelledby="mdAddCustomer"
+     role="dialog" tabindex="-1">
+    <div class="modal-dialog modal-simple">
+        <div class="modal-content">
+            <div class="modal-header modal-primary">
+                <button type="button" class="close" aria-hidden="true" data-dismiss="modal">×</button>
+                <h4 class="modal-title"> ผู้แจ้งร้องเรียน</h4>
+            </div>
+            <div class="modal-body" style="padding-top:10px">
+
+                <div class="row">
+                    <div class="col-md-3 col-lg-3">
+                        <div class="form-group">
+                            <select data-plugin="selectpicker" class="selectpicker" ย tabindex="-98">
+                                <option>นาย</option>
+                                <option>นาง</option>
+                                <option>นางสาว</option>
+                            </select>
+
+                        </div>
+
+                    </div>
+                    <div class="col-md-4 col-lg-4">
+                        <div class="form-group ">
+                            <input type="text" class="form-control" name="name" placeholder="ชื่อ" />
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-lg-5">
+                        <div class="form-group">
+                            <input type="text" class="form-control" name="phone" placeholder="นามสกุล" />
+                        </div>
+                    </div>
+
+
+
+
+                </div>
+                <div class="row">
+
+                    <div class="col-md-4 col-lg-4">
+                        <div class="form-group">
+                            <input type="text" class="form-control" name="Line" placeholder="เบอร์โทร" />
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-lg-4">
+                        <div class="form-group">
+                            <input type="text" class="form-control" name="address" placeholder="รหัสผู้ใช้น้ำ" />
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-lg-4">
+                        <div class="form-group">
+                            <input type="text" class="form-control" name="address" placeholder="รหัสมิเตอร์" />
+                        </div>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-md-12 col-lg-12">
+
+                        <textarea type="text" class="form-control" name="desc" placeholder="ที่อยู่"></textarea>
+
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" data-dismiss="modal" type="submit">Save</button>
+                <a class="btn btn-sm btn-white" data-dismiss="modal" href="javascript:void(0)">Cancel</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal modal-primary  fade" id="mdMap" aria-hidden="true" aria-labelledby="mdMap"
+     role="dialog" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header modal-primary">
+                <button type="button" class="close" aria-hidden="true" data-dismiss="modal">×</button>
+                <h4 class="modal-title">เลือกพื้นที่ผลกระทบ</h4>
+            </div>
+            <div class="modal-body" style="padding-top:10px">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <div class="input-search">
+                                <input type="text" class="input-block-level form-control" name="" placeholder="ค้นหาพื้นที่...">
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="row">
+                            <div class="panel panel-primary panel-line" style="border:0.5px solid #3e8ef7">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">ค้นหาข้อร้องเรียน</h3>
+                                </div>
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="col-md-12 col-lg-12">
+                                            <div class="form-group">
+
+                                                <select id="ddlProviceSearch" class="selectpicker" style="z-index:10000">
+                                                    <option>จังหวัด</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12 col-lg-12">
+                                            <div class="form-group">
+
+                                                <select id="ddlDetailSearch" class="selectpicker" tabindex="1500">
+                                                    <option>รายละเอียด</option>
+
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12 col-lg-12">
+                                            <div class="form-group">
+                                                <select id="ddlDetailSearch" class="selectpicker" tabindex="1500">
+                                                    <option>บริเวณ</option>
+
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 col-lg-6">
+                                            <div class="form-group">
+                                                <input type='text' class="form-control datetime" placeholder="จากวันที่" />
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 col-lg-6">
+                                            <div class="form-group">
+                                                <input type='text' class="form-control datetime" placeholder="ถึงวันที่" />
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12 col-lg-12">
+                                            <div class="form-group">
+                                                <select id="ddlStatus" class="selectpicker" tabindex="1500">
+                                                    <option>ทั้งหมด</option>
+                                                    <option>ยังไม่เสร็จ</option>
+                                                    <option>เสร็จแล้ว</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-xl-12">
+                                            <div class=" form-group">
+                                                <button class="btn btn-outline-primary">ค้นหา</button>
+                                                <button class="btn btn-outline-default">ล้างข้อมูล</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="row">
+                            <table class="table table-striped" data-animate="fade">
+                                <thead>
+                                    <tr>
+
+                                        <th class="" scope="col">วันเวลาที่รับแจ้ง</th>
+                                        <th class="" scope="col">เลขที่รับแจ้ง</th>
+                                        <th class="" scope="col">รายละเอียด</th>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>30/7/2563</td>
+                                        <td>S202007020002</td>
+                                        <td>ท่อรั่ว</td>
+                                    </tr>
+
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div id="mapid"></div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+
+    var objSearch;
+    var locationSearch = [
+        "ActionScript",
+        "AppleScript",
+        "Asp",
+        "BASIC",
+        "C",
+        "C++",
+        "Clojure",
+        "COBOL",
+        "ColdFusion",
+        "Erlang",
+        "Fortran",
+        "Groovy",
+        "Haskell",
+        "Java",
+        "JavaScript",
+        "Lisp",
+        "Perl",
+        "PHP",
+        "Python",
+        "Ruby",
+        "Scala",
+        "Scheme"
+    ];
+    var selectLayer;
+    var map = L.map('mapid').setView([13, 100], 6);
+    var lalong;
+    var keepDeleteFiles = [];
+    var countries = ["Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Anguilla", "Antigua &amp; Barbuda", "Argentina", "Armenia", "Aruba", "Australia", "Austria", "Azerbaijan", "Bahamas", "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium", "Belize", "Benin", "Bermuda", "Bhutan", "Bolivia", "Bosnia &amp; Herzegovina", "Botswana", "Brazil", "British Virgin Islands", "Brunei", "Bulgaria", "Burkina Faso", "Burundi", "Cambodia", "Cameroon", "Canada", "Cape Verde", "Cayman Islands", "Central Arfrican Republic", "Chad", "Chile", "China", "Colombia", "Congo", "Cook Islands", "Costa Rica", "Cote D Ivoire", "Croatia", "Cuba", "Curacao", "Cyprus", "Czech Republic", "Denmark", "Djibouti", "Dominica", "Dominican Republic", "Ecuador", "Egypt", "El Salvador", "Equatorial Guinea", "Eritrea", "Estonia", "Ethiopia", "Falkland Islands", "Faroe Islands", "Fiji", "Finland", "France", "French Polynesia", "French West Indies", "Gabon", "Gambia", "Georgia", "Germany", "Ghana", "Gibraltar", "Greece", "Greenland", "Grenada", "Guam", "Guatemala", "Guernsey", "Guinea", "Guinea Bissau", "Guyana", "Haiti", "Honduras", "Hong Kong", "Hungary", "Iceland", "India", "Indonesia", "Iran", "Iraq", "Ireland", "Isle of Man", "Israel", "Italy", "Jamaica", "Japan", "Jersey", "Jordan", "Kazakhstan", "Kenya", "Kiribati", "Kosovo", "Kuwait", "Kyrgyzstan", "Laos", "Latvia", "Lebanon", "Lesotho", "Liberia", "Libya", "Liechtenstein", "Lithuania", "Luxembourg", "Macau", "Macedonia", "Madagascar", "Malawi", "Malaysia", "Maldives", "Mali", "Malta", "Marshall Islands", "Mauritania", "Mauritius", "Mexico", "Micronesia", "Moldova", "Monaco", "Mongolia", "Montenegro", "Montserrat", "Morocco", "Mozambique", "Myanmar", "Namibia", "Nauro", "Nepal", "Netherlands", "Netherlands Antilles", "New Caledonia", "New Zealand", "Nicaragua", "Niger", "Nigeria", "North Korea", "Norway", "Oman", "Pakistan", "Palau", "Palestine", "Panama", "Papua New Guinea", "Paraguay", "Peru", "Philippines", "Poland", "Portugal", "Puerto Rico", "Qatar", "Reunion", "Romania", "Russia", "Rwanda", "Saint Pierre &amp; Miquelon", "Samoa", "San Marino", "Sao Tome and Principe", "Saudi Arabia", "Senegal", "Serbia", "Seychelles", "Sierra Leone", "Singapore", "Slovakia", "Slovenia", "Solomon Islands", "Somalia", "South Africa", "South Korea", "South Sudan", "Spain", "Sri Lanka", "St Kitts &amp; Nevis", "St Lucia", "St Vincent", "Sudan", "Suriname", "Swaziland", "Sweden", "Switzerland", "Syria", "Taiwan", "Tajikistan", "Tanzania", "Thailand", "Timor L'Este", "Togo", "Tonga", "Trinidad &amp; Tobago", "Tunisia", "Turkey", "Turkmenistan", "Turks &amp; Caicos", "Tuvalu", "Uganda", "Ukraine", "United Arab Emirates", "United Kingdom", "United States of America", "Uruguay", "Uzbekistan", "Vanuatu", "Vatican City", "Venezuela", "Vietnam", "Virgin Islands (US)", "Yemen", "Zambia", "Zimbabwe"];
+    var incidentStyle = L.Icon.extend({
+        options: {
+            iconSize: [27, 27],
+            iconAnchor: [38, 86],
+            popupAnchor: [-20, -80]
+        }
+    });
+
+    var incidentMaker = new incidentStyle({ iconUrl: getBaseUrl() + '/icon/incident.png' });
+
+    let GeoSearch = {
+        token: "08a38faa15b0302ae1e415d18db8d78f3e3fabbd409c10e5de1ab15b8aa2f67573ad03bede273520",
+        search: (searchKey, onSuccess) => {
+            let searchData = {
+                keyword: searchKey,
+                key: GeoSearch.token,
+                maxResult: 20
+            }
+            console.log(searchData);
+
+            /**/
+            $.ajax({
+
+                url: "https://geosearch.cdg.co.th/g/search/autocomplete",
+                data: searchData,
+                type: "POST",
+                dataType: "json",
+
+                error: function (request, status, error) {
+
+                    console.log(request);
+                },
+                success: function (data) {
+                    console.log(data);
+                    onSuccess(data);
+                }
+            });
+
+
+
+
+        },
+        getDetail: (key, onSuccess) => {
+            let searchData = {
+                locationid: key,
+                key: GeoSearch.token
+            }
+
+            /**/
+            $.ajax({
+
+                url: "https://geosearch.cdg.co.th/g/search/details",
+                data: searchData,
+                type: "POST",
+                dataType: "json",
+
+                error: function (request, status, error) {
+
+                    console.log(request);
+                },
+                success: function (data) {
+                    console.log(data);
+                    onSuccess(data);
+                }
+            });
+
+
+
+
+        }
+    }
+
+    var PageController = {
+        init: function () {
+            $(document).ready(function () {
+                PageController.LoadMap();
+                PageController.LoadEvent();
+                if ($("#hddPwaIncidentID").val() != "") {
+                    $('#pnlFollow').css("display", "block");
+
+
+                    $('#ddlProvince').trigger("change");
+
+                }
+
+
+                let customerCode = $('#ddlCustCode').val();
+                let province = $('#ddlProvince').val();
+                $(".select2").select2({ width: '100%' });
+                //$("#ddl_ChannelFollower").select2({ maximumSelectionLength: 2, width: '100%' });
+
+                PageController.SearchIncident(customerCode, province, '', '', null, null)
+                /*      $('#ddlPwaIncidentTypeID').empty();
+                      $.each(_incidentTypes, function (i, item) {
+                          $('#ddlPwaIncidentTypeID').append($('<option>', {
+                              value: item.ID,
+                              text: item.Name
+                          }));
+                      });*/
+
+                $(".select2").select2({ width: '100%' });
+
+                $('.incdatetime').datetimepicker({
+                    format: 'DD/MM/YYYY HH:mm',
+                    showTodayButton: true
+                });
+
+                $(".marker").markdown({
+                    autofocus: false,
+                    height: 120,
+                    iconlibrary: 'fa',
+                    onShow: function (e) {
+                        //e.hideButtons('cmdPreview');
+                        e.change(e);
+                    }
+                });
+                $(".datetime").datepicker()
+                $('.clockpicker').clockpicker();
+                $(IncidentMenu).addClass("active");
+
+
+
+
+            });
+        },
+        LoadEvent: function () {
+
+            PageController.OnIncidentTypeChange();
+            $(document).on("click", ".btnSaveFollowUp", function () {
+
+
+                // ---------------------    validate fields ---------------------------------//
+                var validate1 = false;
+                if ($("#tb_Information").val() == "") {
+                    validate1 = false;
+                    $("#tb_Information").closest('.form-group').addClass('has-error');
+                    //return false;
+                } else {
+                    validate1 = true;
+                    $("#tb_Information").closest('.form-group').removeClass('has-error');
+                }
+                var validate2 = false;
+                if ($("#ddl_ChannelFollower").val() == "") {
+                    validate2 = false;
+                    $("#ddl_ChannelFollower").closest('.form-group').find('.select2').addClass('has-error');
+                    //return false;
+                } else {
+                    validate2 = true;
+                    $("#ddl_ChannelFollower").closest('.form-group').find('.select2').removeClass('has-error');
+                }
+                if (!validate1 || !validate2) return false;
+                // ---------------------    validate fields ---------------------------------//
+                var row = $(this);
+                var dataList = [];
+                var dataDetail = {};
+                dataDetail.PwaIncidentId = $("#tb_IncidentId").val();
+                dataDetail.PwaIncidentNo = $("#tb_IncidentNo").val();
+                dataDetail.Information = $("#tb_Information").val();
+                dataDetail.ChannelId = $("#ddl_ChannelFollower").val();
+                dataDetail.ChannelName = $("#ddl_ChannelFollower option:selected").text();
+                dataList.push(dataDetail);
+
+                PwaManager.PwaConfirm("บันทึก", "คุณต้องการบันทึกหรือไม่", function (isConfirm) {
+                    if (isConfirm) {
+                        PwaManager.PwaWaiting(true);
+                        PwaManager.PwaPost(SaveFollowerUrl, { "Requests": dataDetail },
+                            function (data) {
+
+                                PwaManager.PwaWaiting(false);
+                                PageController.GetSuccess();
+                                swal(
+                                    {
+                                        title: "สำเร็จ!",
+                                        text: "บันทึกข้อมูลเรียบร้อย!",
+                                        timer: 3000
+                                    });
+                            }
+                            , PageController.GetError);
+                    } else {
+                        swal.close();
+                    }
+                })
+
+                return false;
+
+            });
+           
+
+          
+
+            $(document).on("change", "#ddlPwaIncidentTypeID", function (e) {
+                PageController.OnIncidentTypeChange();
+            });
+            $(document).on("change", "#ddlPwaIncidentGroupID", function (e) {
+                PageController.OnIncidentCategoryChange();
+            });
+
+            //$('#ddlProvince').change(function () {
+            //    PageController.OnProvinceChange();
+            //});
+
+            //$('#ddlDistrict').change(function () {
+            //    PageController.OnDistrictChange();
+            //});
+
+            //$('.txtProvince').on('input', function () {
+
+            //    objSearch = _provinces.filter(function (obj, i) {
+            //        return obj.Text.indexOf($(".txtProvince").val()) > -1;
+            //    });
+            //    PwaManager.PwaAutoComplete($(".txtProvince"), objSearch, (val) => {
+            //        $("#hddProvinceID").val(val);
+            //    });
+            //});
+
+            //$('.txtDistrict').on('input', function () {
+            //    objSearch = _distincts.filter(function (obj, i) {
+            //        return obj.Text.indexOf($(".txtDistrict").val()) > -1;
+            //    });
+            //    PwaManager.PwaAutoComplete($(".txtDistrict"), objSearch, (val) => {
+            //        $("#hddDistrict").val(val);
+            //        $("#hddProvinceID").val(objSearch[0].ProvinceID);
+            //        $(".txtProvince").val(objSearch[0].ProvinceName);
+            //    });
+            //});
+            $('.txtSearch').focus(function () { $(this).select(); });
+            $('.txtSearch').on('input', function () {
+
+                //autocompletex(this.value);
+                GeoSearch.search(this.value, (data) => {
+                    var list = [];
+
+                    $.each(data.data, function (i, item) {
+                        list.push({
+                            'Text': item.FormattedAddress,
+                            'Value': item.LocationID
+                        })
+                    });
+                    console.log(list);
+                    PwaManager.PwaAutoComplete($(".txtSearch"), list, (val) => {
+
+
+                        GeoSearch.getDetail(val, (result) => {
+                            if (result.success) {
+                                let lat_long = '';
+                                let lat = '';
+                                let long = '';
+
+                                if (selectLayer != null) {
+                                    selectLayer.remove();
+                                }
+                                for (let key in result.data) {
+                                    if (key == 'LAT_LON' && result.data.hasOwnProperty(key)) {
+                                        lat_long = result.data[key];
+                                    }
+                                }
+
+                                if (lat_long != null && lat_long != '') {
+                                    var splitResult = lat_long.split(',');
+                                    lat = splitResult[0];
+                                    long = splitResult[1];
+                                    selectLayer = L.marker([lat * 1, long * 1]).addTo(map).bindPopup(this.value);
+                                    map.setView([lat * 1, long * 1], 12);
+                                }
+
+                            }
+                        });
+
+                    });
+
+                });
+                /*if (this.value.length > 3) {
+                    GeoSearch.search(this.value);
+                }*/
+            });
+
+            $(".btnAddCustomer").on("click", function () {
+                $("#mdAddCustomer").modal("show");
+            });
+            $(document).on('change', '#ddlCustomer', function (e) {
+                if ($(this).val() != null && $(this).val() != "") {
+                    //   $("#ddlCustCode").unbind('change');
+
+
+                    PageController.SearchCustomer($(this).val(), null);
+                }
+            });
+
+            $(document).on('change', '#ddlCustCode', function (e) {
+                if ($(this).val() != null && $(this).val() != "") {
+                    //  $("#ddlCustomer").unbind('change');
+
+
+                    //    SearchCustomer(null, $(this).val());
+                }
+            });
+
+
+
+           
+            $(document).on("show.bs.modal", "#mdMap", function () {
+                setTimeout(function () {
+                    document.getElementById('mdMap').style.display = 'block';
+                    map.invalidateSize();
+                }, 10);
+            });
+            $(document).on("click", ".btnAddMap", function () {
+
+                $("#mdMap").modal("show");
+
+            });
+
+        },
+
+        GetSuccess: function() {
+            window.location.href = incidentUrl;
+        },
+        GetError: function(error) {
+            swal.close();
+            alert('Failed : ' + error.responseJSON.Message);
+            PwaManager.PwaWaiting(false);
+        },
+
+        OnIncidentTypeChange: function () {
+            let incType = $('#ddlPwaIncidentTypeID').val() * 1;
+            let target = _incidentTypes.find(inc => inc.ID == incType);
+
+            if (target != null) {
+                $('#ddlPwaIncidentGroupID').html("");
+                $.each(target.Categories, function (i, item) {
+                    $('#ddlPwaIncidentGroupID').append($('<option>', {
+                        value: item.ID,
+                        text: item.Name
+                    }));
+                });
+
+                if ($("#hddPwaIncidentGroupID").val() != "") {
+                    $('#ddlPwaIncidentGroupID').val($("#hddPwaIncidentGroupID").val().trim()).trigger("change");
+                    $("#hddPwaIncidentGroupID").val('');
+                }
+                /*$('#ddlIncidentCategory').selectpicker('refresh');*/
+                PageController.OnIncidentCategoryChange();
+            }
+        },
+        OnIncidentCategoryChange: function () {
+            let incType = $('#ddlPwaIncidentTypeID').val() * 1;
+            let target = _incidentTypes.find(inc => inc.ID == incType);
+
+            if (target != null) {
+                let incCategory = $('#ddlPwaIncidentGroupID').val() * 1;
+                let targetCategory = target.Categories.find(inc => inc.ID == incCategory);
+
+
+                $('#ddlCaseTitle').html("");
+                if (targetCategory != null)
+                    $.each(targetCategory.Subjects, function (i, item) {
+                        $('#ddlCaseTitle').append($('<option>', {
+                            value: item.ID,
+                            text: item.Name
+                        }));
+                    });
+
+                if ($("#hddCaseTitle").val() != "") {
+                    $('#ddlCaseTitle').val($("#hddCaseTitle").val().trim()).trigger("change");
+                    $("#hddCaseTitle").val('');
+                }
+            }
+            /*$('#ddlIncidentTitle').selectpicker('refresh');*/
+
+
+
+
+        },
+        OnProvinceChange: function () {
+            var province = $('#ddlProvince').val();
+            PageController.GetAjaxData('DISTRICT', province, (data) => {
+
+                if (data.length > 0) {
+                    $('#ddlDistrict').html("");
+                    $.each(data, function (i, item) {
+                        $('#ddlDistrict').append($('<option>', {
+                            value: item.ID,
+                            text: item.Name
+                        }));
+                    });
+                    $('#ddlDistrict').selectpicker('refresh');
+                    PageController.OnDistrictChange();
+                }
+
+            }, (error => {
+                alert(error.responseText);
+            }));
+        },
+        OnDistrictChange: function () {
+            var district = $('#ddlDistrict').val();
+            PageController.GetAjaxData('SUBDISTRICT', district, (data) => {
+
+
+                if (data.length > 0) {
+                    $('#ddlSubDistrict').html("");
+                    $.each(data, function (i, item) {
+                        $('#ddlSubDistrict').append($('<option>', {
+                            value: item.ID,
+                            text: item.Name
+                        }));
+                    });
+                    $('#ddlSubDistrict').selectpicker('refresh');
+                }
+
+            }, (error => {
+                alert(error.responseText);
+            }));
+        },
+        GetAjaxData: function (module, parentid, onSuccess, onError) {
+
+            var pData = { 'Module': module, 'ParentID': parentid };
+
+            $.ajax({
+
+                url: getBaseUrl() + 'api/Incident/GetData/',
+                data: pData,
+                type: "POST",
+                dataType: "json",
+
+                error: function (request, status, error) {
+                    onError(request);
+                },
+                success: function (data) {
+                    onSuccess(data);
+                }
+            });
+        },
+        SearchCustomer: function (CustomerId, CustomerCode) {
+            var obj = {}
+            obj.CustomerId = CustomerId;
+            obj.CustomerCode = CustomerCode;
+
+            PwaManager.PwaPost(GetCustomerUrl, obj, function (resObj) {
+                $("#txtAddress").val(resObj.address_no);
+                $("#txtTelephone").val("0909846981")
+                //$("#txtTelephone").val(resObj.tel);
+                //     if (CustomerId == null)
+                $("#ddlCustCode").val(resObj.CustCode).trigger('change')
+                //      else if (CustomerCode == null)
+                //   $("#ddlCustomer").val(resObj.CustId).trigger('change').unbind('change');
+                //    $("#ddlProvince").val(resObj.province).trigger('change');
+                //     $("#ddlDistrict").val(resObj.amphur).trigger('change');
+                $("#ddlSubDistrict").val(resObj.district).trigger('change');
+                $("#ddlTitle").val(resObj.Title).trigger('change');
+                /*
+                ddlCustomer
+        txtAddress
+
+
+        ddlProvince
+        ddlDistrict
+        ddlSubDistrict
+                 */
+                console.log(resObj);
+            });
+        },
+        GetIdBySelect2: function (obj) {
+            var result = obj.select2("data") != null && obj.select2("data").length > 0 ? obj.select2("data")[0].id : null;
+            return result;
+        },
+        GetIdBySelect2: function (obj, def) {
+            var result = obj.select2("data") != null && obj.select2("data").length > 0 ? obj.select2("data")[0].id : def;
+            return result;
+        },
+        SaveData: function () {
+
+            var submitUrl = "";
+
+            var formData = new FormData();
+
+            formData.append("model", JSON.stringify(PageController.GetData()));
+
+            if ($("#fIncidentImage")[0] != null)
+                formData.append("file1", $("#fIncidentImage")[0].files[0]);
+
+            if ($("#fResolveImage")[0] != null)
+                formData.append("file2", $("#fResolveImage")[0].files[0]);
+
+            PwaManager.PwaWaiting(true);
+            submitUrl = getBaseUrl() + '/api/Incident/AddIncident';
+            if ($("#hddPwaIncidentID").val().length > 0) {
+                submitUrl = getBaseUrl() + '/api/Incident/SaveEditIncident';
+            }
+
+            $.ajax({
+
+                url: submitUrl,
+                data: formData,
+                type: "POST",
+                //dataType: "json",
+                processData: false,
+                contentType: false,
+                error: function (request, status, error) {
+                    alert(request.responseText);
+                },
+                success: function (data) {
+
+                    PwaManager.PwaWaiting(false);
+                    swal(
+                        {
+                            title: "สำเร็จ!",
+                            text: "บันทึกข้อมูลเรียบร้อย!",
+                            timer: 1500
+                        });
+
+                    setTimeout(function () {
+                        document.location.href = getBaseUrl() + '/Incident/index'
+                    }, 1500);
+                }
+            });
+
+
+        },
+        GetData: function () {
+            var Incident = {
+                PwaIncidentID: $("#hddPwaIncidentID").val(),
+                PwaIncidentNo: $("#PwaIncidentNo").val(),
+
+                PwaInformReceiver: PageController.GetIdBySelect2($("#ddlPwaInformReceiver")),
+                PwaInformDate: null,
+
+                PwaIncidentTypeID: PageController.GetIdBySelect2($("#ddlPwaIncidentTypeID")),
+                PwaIncidentGroupID: PageController.GetIdBySelect2($("#ddlPwaIncidentGroupID")),
+                PwaInformChannel: PageController.GetIdBySelect2($("#ddlInformChannelID")),
+                CaseTitle: PageController.GetIdBySelect2($("#ddlCaseTitle")),
+                CaseTitleDetail: "",
+                CaseDetail: $("textarea#txtCaseDetail").val(),
+                ResolvedDetail: $("textarea#txtResolvedDetail").val(),
+                Sla: $("#chkSLA").is(':checked'),
+                SlaDetail: PageController.GetIdBySelect2($("#ddlSlaDetail")),
+                ReceivedCaseDate: $("#txtReceivedCaseDate").val(),
+                CompletedCaseDate: $("#txtCompletedCaseDate").val(),
+                CaseLatitude: $('#hdCaseLatitude').val(),
+                CaseLongtitude: $('#hdCaseLongtitude').val(),
+                PwsIncidentAddress: $("#txtIncidentAddress").val(),
+                BracnchNo: PageController.GetIdBySelect2($("#ddlBranch")),
+                Recorder: PageController.GetIdBySelect2($("#ddlRecorder")),
+                RecordDate: $("#txtIncidentRecordDate").val(),
+                IncidentStatus: 1,
+
+                ImageFile: ''
+
+            }
+            Incident.Informers = [];
+            Incident.Informers.push({
+                InformerID: $("#hddInformID").val(),
+                CustomerID: PageController.GetIdBySelect2($("#ddlCustomer")),
+                Title: PageController.GetIdBySelect2($("#ddlTitle")),
+                FirstName: "",
+                LastName: "",
+                MeterNo: "",
+                Telephone: $("#txtTelephone").val(),
+                InformChannelID: PageController.GetIdBySelect2($("#ddlInformChannelID")),
+                InformReference: $("#ddlInformReference").val(),
+                CustCode: PageController.GetIdBySelect2($("#ddlCustCode")),
+                Province: PageController.GetIdBySelect2($("#ddlProvince")),
+                District: PageController.GetIdBySelect2($("#ddlDistrict")),
+                SubDistrict: PageController.GetIdBySelect2($("#ddlSubDistrict")),
+                CustomerAddress: $("textarea#txtAddress").val()
+
+            });
+
+            return Incident;
+        },
+        LoadMap: function () {
+
+
+            L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+            var editableLayers = new L.FeatureGroup();
+            map.addLayer(editableLayers);
+
+            if ($('#hdCaseLatitude').val().length > 0)
+                editableLayers.addLayer(L.marker([$('#hdCaseLatitude').val() * 1, $('#hdCaseLongtitude').val() * 1]));
+
+            var options = {
+                position: 'topright',
+                draw: {
+                    polyline: false,
+                    polygon: false,
+
+                    circle: false, // Turns off this drawing tool
+                    rectangle: false,
+                    marker: true
+                },
+
+                edit: {
+                    featureGroup: editableLayers, //REQUIRED!!
+                    remove: true
+                }
+            };
+
+
+            var drawControl = new L.Control.Draw(options);
+            map.addControl(drawControl);
+
+            map.on(L.Draw.Event.CREATED, function (e) {
+                editableLayers.clearLayers();
+                var type = e.layerType,
+                    layer = e.layer;
+
+                var lalong = layer.getLatLng();
+
+                console.log(JSON.stringify(lalong));
+
+                try {
+
+
+                    $('#hdCaseLatitude').val(lalong.lat);
+                    $('#hdCaseLongtitude').val(lalong.lng);
+
+
+                } catch (e) {
+                    alert(e.message);
+                }
+
+                editableLayers.addLayer(layer);
+            });
+
+            /*  L.marker([13.756, 100.2018]).addTo(map)
+                  .bindPopup("<b>สาขา แจ้งวัฒนะ!</b><br />ที่อยู่.....").openPopup();
+              L.marker([13.256, 100.2018]).addTo(map)
+                  .bindPopup("<b>สาขา รังสิต!</b><br />ที่อยู่.....").openPopup();*/
+        },
+        SearchIncident: function (customer, provinceId, detail, area, startDate, endDate) {
+
+            var criteria = {
+                CustomerNo: customer,
+                ProvinceID: provinceId,
+                Detail: detail,
+                Area: area,
+                StartDate: startDate,
+                EndDate: endDate,
+
+            };
+
+            PwaManager.PwaWaiting(true);
+            $.ajax({
+
+                url: getBaseUrl() + '/api/Incident/SearchBranchIncidents',
+                data: criteria,
+                type: "POST",
+                dataType: "json",
+
+                error: function (request, status, error) {
+                    alert(request.responseText);
+                },
+                success: function (data) {
+
+                    $('#divResult').html('');
+                    var html = '<table class="table table-striped table table-hover" data-animate="fade">';
+                    html += '    <thead>';
+                    html += '            <tr>';
+
+                    html += '                <th class="" scope="col">วันเวลาที่รับแจ้ง</th>';
+                    html += '                <th class="" scope="col">เลขที่รับแจ้ง</th>';
+                    html += '                <th class="" scope="col">รายละเอียด</th>';
+                    html += '                        </thead>';
+                    html += '            <tbody>';
+                    if (data.Result != null && data.Result.Incidents != null && data.Result.Incidents.length > 0) {
+                        $.each(data.Result.Incidents, function (index, item) {
+                            html += '                <tr>';
+                            html += '                    <td>' + item.ReceivedCaseDate + '</td>';
+                            html += '                    <td>' + item.PwaIncidentNo + '</td>';
+                            html += '                    <td>' + item.RequestCategory + '</td>';
+                            html += '                </tr>';
+                        });
+
+                    }
+                    html += '     </table>';
+                    $('#divResult').append(html);
+
+                    $('#divResult  table').DataTable({ "searching": false, "bLengthChange": false, "pageLength": 5 });
+
+                    PwaManager.PwaWaiting(false);
+
+                    if (data.Result != null && data.Result.Incidents != null && data.Result.Incidents.length > 0) {
+                        $.each(data.Result.Incidents, function (index, item) {
+                            if (item.CaseLatitude != null && item.CaseLatitude != "" &&
+                                item.CaseLongtitude != null && item.CaseLongtitude != ""
+                            ) {
+                                L.marker([item.CaseLatitude * 1, item.CaseLongtitude * 1], { icon: incidentMaker }).addTo(map)
+                                    .bindPopup(`<b>เลขที่รับแจ้ง :  ${item.PwaIncidentNo}</b><br /><b>สาเหตุ :  ${item.RequestCategory}</b><br /><b>รายละเอียด :  ${item.RequestCategorySubject}</b>`).openPopup();
+                            }
+                        });
+
+
+                    }
+
+
+
+                }
+            });
+        }
+    }
+
+    PageController.init();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</script>

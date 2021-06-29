@@ -1,0 +1,842 @@
+﻿
+@using Pwa.FrameWork.Dao.EF.Smart1662;
+@using Pwa.Web.Controllers;
+@{
+
+    var controller = ((BaseController)ViewContext.Controller);
+
+    var menList = controller.GetMenu();
+
+    var versionString = "v001";
+
+}
+
+
+    <!DOCTYPE html>
+    <html classอ="no-js css-menubar" lang="en">
+
+    <!-- Mirrored from getbootstrapadmin.com/remark/base/pages/user.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 28 Oct 2018 11:17:35 GMT -->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+        <meta name="description" content="bootstrap admin template">
+        <meta name="author" content="">
+
+        <title>@ViewBag.Title</title>
+
+        <link rel="apple-touch-icon" href="~/Content/assets/images/apple-touch-icon.png">
+        <link rel="shortcut icon" href="~/Content/assets/images/favicon.ico">
+        @Styles.Render("~/Content/css");
+        @Styles.Render("~/Content/Pages");
+
+        <link href="~/Content/assets/vendor/bootstrap-datepicker/bootstrap-datepicker.min599c.css" rel="stylesheet" />
+        <link href="~/Content/assets/vendor/tablesaw/tablesaw.min599c.css" rel="stylesheet" />
+        <link href="~/Content/assets/vendor/icheck/icheck.min599c.css?ver=1.0" rel="stylesheet" />
+        <link href="~/Content/assets/css/jquery.dataTables.min.css?ver=1.0" rel="stylesheet" />
+
+        <link href="~/Content/assets/vendor/clockpicker/clockpicker.min599c.css?ver=1.0" rel="stylesheet" />
+        <link href="~/Content/assets/vendor/bootstrap-sweetalert/sweetalert.min599c.css" rel="stylesheet" />
+
+        <!-- Map -->
+        <link href="~/Content/assets/map/css/leaflet.css" rel="stylesheet" />
+        <link href="~/Content/assets/map/css/leaflet.draw.css" rel="stylesheet" />
+        <link href="~/Content/assets/map/css/leaflet-search.src.css?ver=1.0" rel="stylesheet" />
+        <link href="~/Content/assets/vendor/bootstrap-markdown/bootstrap-markdown.min599c.css" rel="stylesheet" />
+        <link href="~/Content/assets/vendor/select2/select2.min599c.css?ver=1.0" rel="stylesheet" />
+
+        <!--[if lt IE 9]>
+    <script src="~/Content/assets/vendor/html5shiv/html5shiv.min.js?v4.0.2"></script>
+    <![endif]-->
+        <!--[if lt IE 10]>
+    <script src="~/Content/assets/vendor/media-match/media.match.min.js?v4.0.2"></script>
+    <script src="~/Content/assets/vendor/respond/respond.min.js?v4.0.2"></script>
+    <![endif]-->
+        <!-- Scripts -->
+
+        <style type="text/css">
+            .alert {
+                position: absolute;
+                z-index: 1400;
+                bottom: 2%;
+                margin: 0px auto;
+                text-align: center;
+                display: none;
+                min-width: 200px;
+            }
+
+            .loader-overlay {
+                opacity: 0.9;
+            }
+
+            .invisible {
+                position: absolute
+            }
+
+            label.file-upload input[type=file] {
+                visibility: hidden;
+                top: 0;
+                right: 0;
+                height: 0px;
+                width: 0px;
+                min-width: 100%;
+                min-height: 100%;
+                font-size: 100px;
+                text-align: right;
+                filter: alpha(opacity=0);
+                opacity: 0;
+                outline: 0;
+                background: #fff;
+                cursor: inherit;
+                display: block;
+            }
+
+            .thumbnail {
+                height: 45px;
+                width: auto;
+            }
+
+
+
+
+            .autocomplete {
+                /*the container must be positioned relative:*/
+                position: relative;
+                /*display: inline-block;*/
+            }
+
+            .autocomplete-items {
+                position: absolute;
+                border: 1px solid #d4d4d4;
+                border-bottom: none;
+                border-top: none;
+                z-index: 1700;
+                /*position the autocomplete items to be the same width as the container:*/
+                top: 100%;
+                left: 0;
+                right: 0;
+            }
+
+                .autocomplete-items div {
+                    padding: 10px;
+                    cursor: pointer;
+                    background-color: #fff;
+                    border-bottom: 1px solid #d4d4d4;
+                }
+
+                    .autocomplete-items div:hover {
+                        /*when hovering an item:*/
+                        background-color: #e9e9e9;
+                    }
+
+            .autocomplete-active {
+                /*when navigating through the items using the arrow keys:*/
+                background-color: DodgerBlue !important;
+                color: #ffffff;
+            }
+
+            .error {
+                color: red;
+                font-weight: bold;
+            }
+        </style>
+        <script src="~/Content/assets/vendor/breakpoints/breakpoints.min599c.js?v4.0.2"></script>
+
+        <script>
+            Breakpoints();
+        </script>
+
+        <script src="~/Content/assets/vendor/babel-external-helpers/babel-external-helpers599c.js?v4.0.2">
+        </script>
+        <script src="~/Content/assets/vendor/jquery/jquery.min599c.js?v4.0.23"></script>
+        <script src="~/Content/assets/vendor/icheck/icheck.min599c.js"></script>
+        <script src="~/Content/assets/vendor/popper-js/umd/popper.min599c.js?v4.0.2"></script>
+        <script src="~/Content/assets/vendor/bootstrap/bootstrap.min599c.js?v4.0.2"></script>
+        <script src="~/Content/assets/vendor/datatables.net/jquery.dataTables599c.js"></script>
+        <script src="~/Content/assets/vendor/animsition/animsition.min599c.js?v4.0.2"></script>
+        <script src="~/Content/assets/vendor/mousewheel/jquery.mousewheel599c.js?v4.0.2"></script>
+        <script src="~/Content/assets/vendor/asscrollbar/jquery-asScrollbar.min599c.js?v4.0.2"></script>
+        <script src="~/Content/assets/vendor/asscrollable/jquery-asScrollable.min599c.js?v4.0.2"></script>
+        <script src="~/Content/assets/vendor/ashoverscroll/jquery-asHoverScroll.min599c.js?v4.0.2"></script>
+        <script src="~/Content/assets/vendor/bootstrap-sweetalert/sweetalert.min599c.js?v4.0.2"></script>
+
+        <!-- Plugins -->
+
+        <script src="~/Content/assets/vendor/intro-js/intro.min599c.js?v4.0.2"></script>
+        <script src="~/Content/assets/vendor/screenfull/screenfull599c.js?v4.0.2"></script>
+        <script src="~/Content/assets/vendor/slidepanel/jquery-slidePanel.min599c.js?v4.0.2"></script>
+        <script src="~/Content/assets/vendor/chart-js/Chart.min599c.js?v4.0.2"></script>
+
+        <!-- Plugins For This Page -->
+        <script src="~/Content/assets/vendor/slidepanel/jquery-slidePanel.min599c.js?v4.0.2"></script>
+        <script src="~/Content/assets/vendor/aspaginator/jquery-asPaginator.min599c.js?v4.0.2"></script>
+        <script src="~/Content/assets/vendor/jquery-placeholder/jquery.placeholder599c.js?v4.0.2"></script>
+        <script src="~/Content/assets/vendor/bootbox/bootbox.min599c.js?v4.0.2"></script>
+        <script src="~/Content/assets/vendor/bootstrap-select/bootstrap-select.min599c.js?ver=131"></script>
+
+        <!-- Scripts -->
+        <script src="~/Content/assets/js/Component.min599c.js?v4.0.2"></script>
+        <script src="~/Content/assets/js/Plugin.min599c.js?v4.0.2"></script>
+        <script src="~/Content/assets/js/Base.min599c.js?v4.0.2"></script>
+        <script src="~/Content/assets/js/Config.min599c.js?v4.0.2"></script>
+
+        <script src="~/Content/assets/js/Section/Menubar.min599c.js?v4.0.2"></script>
+        <script src="~/Content/assets/js/Section/GridMenu.min599c.js?v4.0.2"></script>
+        <script src="~/Content/assets/js/Section/Sidebar.min599c.js?v4.0.2"></script>
+        <script src="~/Content/assets/js/Section/PageAside.min599c.js?v4.0.2"></script>
+        <script src="~/Content/assets/js/Plugin/menu.min599c.js?v4.0.2"></script>
+        <script src="~/Content/assets/vendor/switchery/switchery.min599c.js"></script>
+        <!-- Config -->
+        <script src="~/Content/assets/js/config/colors.min599c.js?v4.0.2"></script>
+        <script src="~/Content/assets/js/config/tour.min599c.js?v4.0.2"></script>
+        <script src="~/Content/assets/vendor/icheck/icheck.min599c.js"></script>
+
+        <script src="~/Content/assets/vendor/bootstrap-datepicker/bootstrap-datepicker.min599c.js?ver=1.0"></script>
+        <script src="~/Content/assets/vendor/tablesaw/tablesaw.jquery599c.js"></script>
+        <script src="~/Content/assets/vendor/clockpicker/bootstrap-clockpicker.min599c.js"></script>
+        <script src="~/Content/assets/js/Plugin/clockpicker.min599c.js"></script>
+
+        <script src="~/Content/assets/vendor/select2/select2.min599c.js"></script>
+
+
+
+        <script data-require="marked" data-semver="0.3.1" src="http://cdnjs.cloudflare.com/ajax/libs/marked/0.3.1/marked.js"></script>
+        <script src="https://cdn.rawgit.com/toopay/bootstrap-markdown/master/js/bootstrap-markdown.js"></script>
+        <script src="~/Scripts/autocomplete.js?ver=1.999449944"></script>
+
+
+        <!-- Map -->
+        <script src="~/Content/assets/map/js/leaflet.js"></script>
+        <script src="~/Content/assets/map/js/leaflet.draw.js"></script>
+        <script src="~/Content/assets/map/js/leaflet-search.src.js"></script>
+        <script src="~/Scripts/numeral2.6.min.js"></script>
+
+
+        <script type="text/javascript">
+            var WMSUrl = "http://110.76.152.114:8080/geoserver/PG_WEBGIS/wms?";
+
+
+            function getBaseUrl() {
+                var location = document.location + '';
+
+                if (location.toLowerCase().indexOf('119.59.115.68/smart1662') > 0) {
+                    return 'http://119.59.115.68/smart1662/';
+                } else if (location.toLowerCase().indexOf('www.smart1662.arm999.com') > 0) {
+                    return 'http://www.smart1662.arm999.com/';
+                } else if (location.toLowerCase().indexOf('smart1662.arm999.com') > 0) {
+                    return 'http://smart1662.arm999.com/';
+                } else {
+                    return 'http://localhost:26189/';
+                }
+
+
+
+            }
+
+
+
+
+        </script>
+
+        @RenderSection("Scripts", false/*required*/)
+        <script>
+            var mapApi = {
+                getServerPath: function () {
+                    /**/
+                    return 'http://localhost:26189/';
+                    /**/
+                    // return '';
+                }
+            }
+            Config.set('assets', '~/Content/assets');
+        </script>
+
+
+
+    </head>
+    <body class="animsition  dashboard site-menubar-fold">
+        <!--[if lt IE 8]>
+        <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+
+
+        <nav class="site-navbar navbar navbar-default navbar-fixed-top navbar-mega navbar-expand-md"
+             role="navigation">
+
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggler hamburger hamburger-close navbar-toggler-left hided"
+                        data-toggle="menubar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="hamburger-bar"></span>
+                </button>
+                <button type="button" class="navbar-toggler collapsed" data-target="#site-navbar-collapse"
+                        data-toggle="collapse">
+                    <i class="icon wb-more-horizontal" aria-hidden="true"></i>
+                </button>
+                <div class="navbar-brand navbar-brand-center site-gridmenu-toggle" data-toggle="gridmenu">
+                    <img class="navbar-brand-logo" src="~/Content/assets/images/logo.png" title="">
+                    <span class="navbar-brand-text hidden-xs-down"> </span>
+                </div>
+                <button type="button" class="navbar-toggler collapsed" data-target="#site-navbar-search"
+                        data-toggle="collapse">
+                    <span class="sr-only">Toggle Search</span>
+                    <i class="icon wb-search" aria-hidden="true"></i>
+                </button>
+            </div>
+
+            <div class="navbar-container container-fluid">
+                <!-- Navbar Collapse -->
+                <div class="collapse navbar-collapse navbar-collapse-toolbar" id="site-navbar-collapse">
+                    <!-- Navbar Toolbar -->
+                    <ul class="nav navbar-toolbar">
+                        <li class="nav-item hidden-float" id="toggleMenubar">
+                            <a class="nav-link" data-toggle="menubar" href="#" role="button">
+                                <i class="icon hamburger hamburger-arrow-left">
+                                    <span class="sr-only">Toggle menubar</span>
+                                    <span class="hamburger-bar"></span>
+                                </i>
+                            </a>
+                        </li>
+                        <li class="nav-item hidden-sm-down" id="toggleFullscreen">
+                            <a class="nav-link icon icon-fullscreen" data-toggle="fullscreen" href="#" role="button">
+                                <span class="sr-only">Toggle fullscreen</span>
+                            </a>
+                        </li>
+                        <li class="nav-item hidden-float">
+                            <a class="nav-link icon wb-search" data-toggle="collapse" href="#" data-target="#site-navbar-search"
+                               role="button">
+                                <span class="sr-only">Toggle Search</span>
+                            </a>
+                        </li>
+
+                    </ul>
+                    <!-- End Navbar Toolbar -->
+                    <!-- Navbar Toolbar Right -->
+                    <ul class="nav navbar-toolbar navbar-right navbar-toolbar-right">
+                       
+
+                        <li class="nav-item dropdown">
+                            <a class="nav-link navbar-avatar" data-toggle="dropdown" href="#" aria-expanded="false"
+                               data-animation="scale-up" role="button">
+                                <i class="icon wb-user"></i>
+                                <span class="avatar avatar-online">
+
+                                    <i></i>
+                                </span>
+                            </a>
+                            <div class="dropdown-menu" role="menu">
+                                <a class="dropdown-item" href="javascript:void(0)" role="menuitem"><i class="icon wb-user" aria-hidden="true"></i> @(controller.CurrentUser != null ? controller.CurrentUser.UserLogin + "(" + controller.CurrentUser.RoleName + ")" : "Profile")</a>
+                                <!-- <a class="dropdown-item" href="javascript:void(0)" role="menuitem"><i class="icon wb-settings" aria-hidden="true"></i> Settings</a>-->
+                                <div class="dropdown-divider" role="presentation"></div>
+                                <a href="@Url.Action("Login", "User")" class="dropdown-item" href="javascript:void(0)" role="menuitem"><i class="icon wb-power" aria-hidden="true"></i> Logout</a>
+                            </div>
+                        </li>
+
+                        <li class="nav-item dropdown">
+                            <a class="nav-link" data-toggle="dropdown" href="javascript:void(0)" title="Messages"
+                               aria-expanded="false" data-animation="scale-up" role="button">
+                                <i class="icon wb-envelope" aria-hidden="true"></i>
+                                <span class="badge badge-pill badge-info up">3</span>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right dropdown-menu-media" role="menu">
+                                <div class="dropdown-menu-header" role="presentation">
+                                    <h5>MESSAGES</h5>
+                                    <span class="badge badge-round badge-info">New 3</span>
+                                </div>
+
+                                <div class="list-group" role="presentation">
+                                    <div data-role="container">
+                                        <div data-role="content">
+                                            <a class="list-group-item" href="javascript:void(0)" role="menuitem">
+                                                <div class="media">
+                                                    <div class="pr-10">
+
+                                                    </div>
+                                                    <div class="media-body">
+                                                        <h6 class="media-heading">Mary Adams</h6>
+                                                        <div class="media-meta">
+                                                            <time datetime="2018-06-17T20:22:05+08:00">30 minutes ago</time>
+                                                        </div>
+                                                        <div class="media-detail">Anyways, i would like just do it</div>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                            <a class="list-group-item" href="javascript:void(0)" role="menuitem">
+                                                <div class="media">
+                                                    <div class="pr-10">
+
+                                                    </div>
+                                                    <div class="media-body">
+                                                        <h6 class="media-heading">Caleb Richards</h6>
+                                                        <div class="media-meta">
+                                                            <time datetime="2018-06-17T12:30:30+08:00">12 hours ago</time>
+                                                        </div>
+                                                        <div class="media-detail">I checheck the document. But there seems</div>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                            <a class="list-group-item" href="javascript:void(0)" role="menuitem">
+                                                <div class="media">
+                                                    <div class="pr-10">
+
+                                                    </div>
+                                                    <div class="media-body">
+                                                        <h6 class="media-heading">June Lane</h6>
+                                                        <div class="media-meta">
+                                                            <time datetime="2018-06-16T18:38:40+08:00">2 days ago</time>
+                                                        </div>
+                                                        <div class="media-detail">Lorem ipsum Id consectetur et minim</div>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                            <a class="list-group-item" href="javascript:void(0)" role="menuitem">
+                                                <div class="media">
+                                                    <div class="pr-10">
+
+                                                    </div>
+                                                    <div class="media-body">
+                                                        <h6 class="media-heading">Edward Fletcher</h6>
+                                                        <div class="media-meta">
+                                                            <time datetime="2018-06-15T20:34:48+08:00">3 days ago</time>
+                                                        </div>
+                                                        <div class="media-detail">Dolor et irure cupidatat commodo nostrud nostrud.</div>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="dropdown-menu-footer" role="presentation">
+                                    <a class="dropdown-menu-footer-btn" href="javascript:void(0)" role="button">
+                                        <i class="icon wb-settings" aria-hidden="true"></i>
+                                    </a>
+                                    <a class="dropdown-item" href="javascript:void(0)" role="menuitem">
+                                        See all messages
+                                    </a>
+                                </div>
+                            </div>
+                        </li>
+                        <!-- <li class="nav-item" id="toggleChat">
+                      <a class="nav-link" data-toggle="site-sidebar" href="javascript:void(0)" title="Chat"
+                        data-url="../site-sidebar.tpl">
+                          <i class="icon wb-chat" aria-hidden="true"></i>
+                        </a>
+                    </li>-->
+                    </ul>
+                    <!-- End Navbar Toolbar Right -->
+                </div>
+                <!-- End Navbar Collapse -->
+                <!-- Site Navbar Seach -->
+                <div class="collapse navbar-search-overlap" id="site-navbar-search">
+                    <form role="search">
+                        <div class="form-group">
+                            <div class="input-search">
+                                <i class="input-search-icon wb-search" aria-hidden="true"></i>
+                                <input type="text" class="form-control" name="site-search" placeholder="Search...">
+                                <button type="button" class="input-search-close icon wb-close" data-target="#site-navbar-search"
+                                        data-toggle="collapse" aria-label="Close"></button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <!-- End Site Navbar Seach -->
+            </div>
+        </nav>
+
+
+        <!--Left Menu-->
+        <div class="site-menubar">
+            <div class="site-menubar-body">
+                <div>
+                    <div>
+
+                        <ul class="site-menu" data-plugin="menu">
+                            @Html.Partial("_lyMenu", menList)
+
+                        </ul>
+
+                        <div class="site-menubar-section">
+                            <!--<h5>
+              Milestone
+              <span class="float-right">30%</span>
+            </h5>
+            <div class="progress progress-xs">
+              <div class="progress-bar active" style="width: 30%;" role="progressbar"></div>
+            </div>
+            <h5>
+              Release
+              <span class="float-right">60%</span>
+            </h5>
+            <div class="progress progress-xs">
+              <div class="progress-bar progress-bar-warning" style="width: 60%;" role="progressbar"></div>
+            </div>-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="site-menubar-footer">
+                <a href="javascript: void(0);" class="fold-show" data-placement="top" data-toggle="tooltip"
+                   data-original-title="Settings">
+                    <span class="icon wb-settings" aria-hidden="true"></span>
+                </a>
+                <a href="javascript: void(0);" data-placement="top" data-toggle="tooltip" data-original-title="Lock">
+                    <span class="icon wb-eye-close" aria-hidden="true"></span>
+                </a>
+                <a href="@Url.Action("Login", "User")" data-placement="top" data-toggle="tooltip" data-original-title="Logout">
+                    <span class="icon wb-power" aria-hidden="true"></span>
+                </a>
+            </div>
+        </div>
+
+        <!--End Left menu-->
+
+        <div class="site-gridmenu">
+            <div>
+                <div>
+                    <ul>
+                        <li>
+                            <a href="../apps/mailbox/mailbox.html">
+                                <i class="icon wb-envelope"></i>
+                                <span>Mailbox</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="../apps/calendar/calendar.html">
+                                <i class="icon wb-calendar"></i>
+                                <span>Calendar</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="../apps/contacts/contacts.html">
+                                <i class="icon wb-user"></i>
+                                <span>Contacts</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="../apps/media/overview.html">
+                                <i class="icon wb-camera"></i>
+                                <span>Media</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="../apps/documents/categories.html">
+                                <i class="icon wb-order"></i>
+                                <span>Documents</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="../apps/projects/projects.html">
+                                <i class="icon wb-image"></i>
+                                <span>Project</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="../apps/forum/forum.html">
+                                <i class="icon wb-chat-group"></i>
+                                <span>Forum</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="../index-2.html">
+                                <i class="icon wb-dashboard"></i>
+                                <span>Dashboard</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="page ">
+            <div class="page-content container-fluid">
+
+                @RenderBody()
+            </div>
+        </div>
+        <!-- Footer -->
+        <footer class="site-footer">
+            <div class="site-footer-legal">© 2018 <a href="#">Ai Tech</a></div>
+            <div class="site-footer-right">
+                @Html.Raw(versionString)
+            </div>
+        </footer>
+
+        <!-- Page -->
+        <script src="~/Content/assets/js/Site.min599c.js?v4.0.22"></script>
+        <script src="~/Content/assets/js/Plugin/asscrollable.min599c.js?v4.0.2"></script>
+        <script src="~/Content/assets/js/Plugin/slidepanel.min599c.js?v4.0.2"></script>
+        <script src="~/Content/assets/js/Plugin/icheck.min599c.js"></script>
+        <script src="~/Content/assets/js/Plugin/switchery.min599c.js"></script>
+        <script src="~/Content/assets/js/Plugin/sticky-header.min599c.js?v4.0.2"></script>
+        <script src="~/Content/assets/js/Plugin/action-btn.min599c.js?v4.0.23"></script>
+        <script src="~/Content/assets/js/Plugin/asselectable.min599c.js?v4.0.2"></script>
+        <script src="~/Content/assets/js/Plugin/editlist.min599c.js?v4.0.2"></script>
+        <script src="~/Content/assets/js/Plugin/aspaginator.min599c.js?v4.0.2"></script>
+        <script src="~/Content/assets/js/Plugin/animate-list.min599c.js?v4.0.2"></script>
+        <script src="~/Content/assets/js/Plugin/jquery-placeholder.min599c.js?v4.0.2"></script>
+        <script src="~/Content/assets/js/Plugin/material.min599c.js?v4.0.2"></script>
+        <script src="~/Content/assets/js/Plugin/selectable.min599c.js?v4.0.2"></script>
+        <script src="~/Content/assets/js/Plugin/bootbox.min599c.js?v4.0.2"></script>
+        <script src="~/Scripts/file-upload.js"></script>
+        <script src="~/Content/assets/js/BaseApp.min599c.js?v4.0.2"></script>
+
+        <!-- Page -->
+        <!-- Core  -->
+
+        <script>
+
+            var Site = window.Site;
+
+            var ComplaintMenu = '#Complaint'
+            var IncidentMenu = '#Incident'
+            $(document).ready(function () {
+                Site.run();
+                window.setTimeout(function () {
+                    Waiting(false);
+                }, 1000);
+
+
+            });
+
+
+
+
+
+        </script>
+
+
+
+
+        <!-- Google Analytics -->
+        <script>
+
+
+
+
+            (function (i, s, o, g, r, a, m) {
+                i['GoogleAnalyticsObject'] = r;
+                i[r] = i[r] || function () {
+                    (i[r].q = i[r].q || []).push(arguments)
+                }, i[r].l = 1 * new Date();
+                a = s.createElement(o),
+                    m = s.getElementsByTagName(o)[0];
+                a.async = 1;
+                a.src = g;
+                //      m.parentNode.insertBefore(a, m)
+            })(window, document, 'script', 'www.google-analytics.com/analytics.js',
+                'ga');
+
+            ga('create', 'UA-65522665-1', 'auto');
+            ga('send', 'pageview');
+
+
+
+
+
+            function isNumber(evt) {
+
+
+   
+                evt = (evt) ? evt : window.event;
+                var charCode = (evt.which) ? evt.which : evt.keyCode;
+                if ((charCode > 31 && charCode < 48) || charCode > 57) {
+                    if (charCode!=46)
+                    return false;
+                }
+                return true;
+            }
+
+
+            function hideAlert() {
+                window.setTimeout(function () {
+                    $(".alert").fadeOut(300)
+                }, 3000);
+            }
+
+            function toggleAlert(pass, msg) {
+                $(".alert").text(msg);
+                if (pass) {
+                    $(".alert").removeClass("alert-danger").addClass("alert-success");
+                } else {
+                    $(".alert").removeClass("alert-success").addClass("alert-danger");
+                }
+                $(".alert").fadeIn();
+                hideAlert();
+                return false; // Keep close.bs.alert event from removing from DOM
+            }
+
+
+
+
+            var PwaManager = {
+                TableBinding: function (element, jsonResult, cols) {
+                    element.DataTable({
+                        data: jsonResult,
+                        columns: cols
+
+                    });
+                },
+                ConvertToFloating: function (data) {
+                    var result =0;
+
+                    try {
+                        if (!isNaN(parseFloat(data))) 
+                        result =parseFloat(data);
+                    }
+                    catch (e) {
+                        result =0; // default ??
+                    }
+
+                    return result;
+
+                },
+                ConvertToCurrentcy: function (data) {
+                    var result = 0;
+
+                    try {
+                      //  data = data.replace(",","");
+                        if (!isNaN(parseFloat(data)))
+                            result = parseFloat(data);
+                    }
+                    catch (e) {
+                        result =  0; // default ??
+                    }
+
+
+                    return numeral(result).format('0,0.00');
+                },
+                PwaConfirm: function (title, text, callback) {
+                    var isOk = false;
+                    swal({
+                        title: title,
+                        text: text,
+                        type: "warning",
+                        showCancelButton: true,
+                        confirmButtonClass: "btn-warning",
+                        confirmButtonText: 'Yes',
+                        cancelButtonText: "No",
+                        closeOnConfirm: false,
+                        closeOnCancel: false
+                    },
+                        function (isConfirm) {
+
+                            callback(isConfirm)
+                        });
+
+                },
+                PwaPost: function (url, dataJson, fnSuccess, fnFailed) {
+
+
+                    $.post(url, dataJson, fnSuccess).fail(fnFailed);
+                },
+                PwaPostFormData: function (url, dataJson, fnSuccess, fnFailed) {
+
+
+                    $.ajax({
+                        type: 'POST',
+                        url: url,
+                        data: dataJson,
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                        success: function (data) {
+
+                            fnSuccess(data);
+                            console.log(data);
+
+                        },
+                        error: function (XMLHttpRequest, textStatus, errorThrown) {
+                            fnSuccess({ Status: 'Failed', Message: errorThrown });
+                        }
+                    });
+                },
+                PwaPostAsync: function (url, dataJson, fnSuccess, fnFailed) {
+                    $.ajax({
+                        type: 'POST',
+                        url: url,
+                        data: dataJson,
+                        cache: false,
+                        async: true,
+                        //  dataType: 'json',
+                        traditional: true,
+                        success: function (data) {
+
+                            fnSuccess(data);
+                            console.log(data);
+
+                        },
+                        error: function (XMLHttpRequest, textStatus, errorThrown) {
+                            fnSuccess({ Status: 'Failed', Message: errorThrown });
+                        }
+                    });
+                },
+                PwaPostJsonAsync: function (url, dataJson, fnSuccess, fnFailed) {
+                    $.ajax({
+                        type: 'POST',
+                        url: url,
+                        data: dataJson,
+                        cache: false,
+                        async: true,
+                          dataType: 'json',
+                        traditional: true,
+                        success: function (data) {
+
+                            fnSuccess(data);
+                            console.log(data);
+
+                        },
+                        error: function (XMLHttpRequest, textStatus, errorThrown) {
+                            fnSuccess({ Status: 'Failed', Message: errorThrown });
+                        }
+                    });
+                },
+                PwaWaiting: function (visible) {
+                    if (visible) {
+                        $("body").animsition({
+                            inClass: "fade-in",
+                            outClass: "fade-out",
+                            inDuration: 800,
+                            outDuration: 500,
+                            loading: !0,
+                            loadingClass: "loader-overlay",
+                            loadingParentElement: "html",
+                            loadingInner: '\n      <div class="loader-content">\n        <div class="loader-index">\n          <div></div>\n          <div></div>\n          <div></div>\n          <div></div>\n          <div></div>\n          <div></div>\n        </div>\n      </div>',
+                            onLoadEvent: !0
+                        })
+                    } else {
+
+                        $(".loader-overlay").fadeOut().remove()
+                    }
+                },
+                PwaSelect2: function LoadDropDownListTemp(objControl, itemList, SelectValue) {
+                    $(objControl).empty();
+                    $(objControl).append("<option value=''>Please Select</option>");
+                    $.each(itemList, function (index, item) {
+                        $(objControl).append("<option value='" + item.Value + "'" + ((SelectValue == item.Value ? "selected" : "")) + ">" + item.Text + "</option>");
+
+                        // objControl.append("<option value='" + item.Value + "'>" + item.Text + "</option>");
+                    });
+
+                    $(objControl).select2(
+                        {
+                            placeholder: 'กรุณาเลือก'
+                        }
+                    );
+                },
+                PwaAutoComplete: function (jsonElement, jsonObjs, callback, icon) {
+                    autocomplete2(jsonElement, jsonObjs, 8, callback, icon);
+                },
+                PwaButonAutoComplete: function (jsonElement, jsonObjs, callback, icon) {
+                    autocomplete3(jsonElement, jsonObjs, 8, callback, icon);
+                }
+
+            }
+
+
+        </script>
+    </body>
+
+
+    <!-- Mirrored from getbootstrapadmin.com/remark/base/pages/user.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 28 Oct 2018 11:17:39 GMT -->
+</html>

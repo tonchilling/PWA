@@ -1,0 +1,335 @@
+﻿@using Pwa.FrameWork.Dto;
+@{
+    ViewBag.Title = "Account";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    List<DropDownlistDto> objSysRoles = (List<DropDownlistDto>
+)ViewData["objSysRole"];
+}
+
+<style>
+    input,
+    select,
+    textarea {
+
+    }
+
+    .popover {
+        min-width: 500px;
+
+    }
+
+</style>
+<div class="panel panel-primary panel-line">
+
+    <!-- Contacts Content Header -->
+    <div class="panel-heading">
+        <h1 class="panel-title">ข้อมูลระบบ  > ผู้ใช้งาน</h1>
+        <div class="page-header-actions">
+            <form></form>
+        </div>
+    </div>
+
+    <!-- Contacts Content -->
+    <div class="panel-body">
+
+        <!-- Actions -->
+        <div class="page-content-actions">
+
+            <table class="table table-hover   tblDisplay" id="tblDisplay" data-plugin="animateList" data-animate="fade" data-child="tr"
+                   data-selectable="selectable">
+                <thead>
+                    <tr>
+                        <th>รหัสพนักงาน</th>
+                        <th>ชื่อผู้ใช้งาน</th>
+                        <th>กลุ่มผุ้ใช้งาน</th>
+                        <th>ชื่อบัญชี</th>
+                        <th>สถานะ</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="InputForm" aria-hidden="true" aria-labelledby="InputForm"
+     role="dialog">
+    <div class="modal-dialog modal-primary  modal-simple modal-lg">
+        <div class="modal-content">
+            <div class="modal-header ">
+                <button type="button" class="close" aria-hidden="true" data-dismiss="modal">×</button>
+                <h4 class="modal-title">บันทึก</h4>
+            </div>
+            <div class="modal-body" style="background-color:#f1f4f5;padding-top:10px">
+                <div class="panel panel-primary panel-line">
+                    <div class="panel-heading">
+                        <div class="panel-title">ผู้ใช้งาน</div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-6 col-lg-6">
+                                <div class="input-group form-group ">
+                                    <input type="text" class="form-control" id="txtEmpCode" name="txtEmpCode" placeholder="รหัสพนักงาน" />
+                                    <div class="input-group-append">
+                                        <button class="btn  btn-outline btn-success btnFindEmployee ">      ...</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-2 col-lg-2">
+                                <div class="form-group">
+
+                                    <div class="float-left mr-20">
+                                        <input type="checkbox" id="chkActive" name="inputiCheckBasicCheckboxes"
+                                               data-color="#17b3a3" class="switchery js-switch" checked />
+                                    </div>
+                                    <label class="pt-3" for="inputBasicOn">ใช้งาน</label>
+
+                                </div>
+
+                            </div>
+                            <div class="col-md-3 col-lg-3">
+                                <div class="form-group">
+
+                                    <div class="float-left mr-20">
+                                        <input type="checkbox" id="chkActive" name="inputiCheckBasicCheckboxes"
+                                               data-color="#17b3a3" class="switchery js-switch" checked />
+                                    </div>
+                                    <label class="pt-3" for="inputBasicOn">Out Source</label>
+
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 col-lg-6">
+                                <div class="form-group ">
+                                    <input type="text" class="form-control" id="txtFName" name="txtFName" placeholder="ชื่อ" />
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-6">
+                                <div class="form-group ">
+                                    <input type="text" class="form-control" id="txtLName" name="txtLName" placeholder="นามสกุล" />
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 col-lg-6">
+                                <div class="form-group ">
+                                    <input type="text" class="form-control" id="txtEmail" name="txtEmail" placeholder="Email" />
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 col-lg-6">
+                                <div class="form-group">
+
+                                    <select class="selectpicker form-control ddlSysRole" id="ddlSysRole">
+                                        <option value="">กลุ่มผู้ใช้งาน</option>
+                                        @foreach (DropDownlistDto obj in objSysRoles)
+                                        {
+                                            <option value="@obj.Value">@obj.Text</option>
+                                        }
+                                    </select>
+
+                                </div>
+                            </div>
+                         
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 col-lg-6">
+                                <div class="form-group ">
+                                    <input type="password" class="form-control" id="txtPassword" name="txtPassword" placeholder="รหัสผ่าน" />
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-6">
+                                <div class="form-group ">
+                                    <input type="password" class="form-control" id="txtConfirmPassword" name="txtConfirmPassword" placeholder="ยืนยันรหัสผ่าน" />
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-outline btn-primary btnSave" data-dismiss="modal" type="submit">บันทึก</button>
+                <a class="btn btn-outline  btn-default" data-dismiss="modal" href="javascript:void(0)">ยกเลิก</a>
+            </div>
+        </div>
+        </div>
+    </div>
+
+
+<div class="modal fade" id="frmEmployee" aria-hidden="true" aria-labelledby="frmEmployee"
+     role="dialog">
+    <div class="modal-dialog modal-primary  modal-simple modal-lg">
+        <div class="modal-content">
+            <div class="modal-header ">
+                <button type="button" class="close" aria-hidden="true" data-dismiss="modal">×</button>
+                <h4 class="modal-title">บันทึก</h4>
+            </div>
+            <div class="modal-body" style="background-color:#f1f4f5;padding-top:10px">
+                <div class="panel panel-primary panel-line">
+                    <div class="panel-heading">
+                        <div class="panel-title">ผู้ใช้งาน</div>
+                    </div>
+                    <div class="panel-body">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+                        <script>
+
+        var pageManager = {
+        init: function () {
+
+    $(document).ready(function () {
+
+        pageManager.LoadData();
+
+            });
+
+            $(document).on("click", ".popover-header,.btnClose", function () {
+                $(this).closest(".popover").popover('hide');
+            });
+
+            $(document).on("click", ".btnEdit", function () {
+
+                pageManager.EditMode($(this).closest("tr").attr("id"));
+
+            });
+            $(document).on("click", ".btnAdd", function () {
+                $("#InputForm").modal({ backdrop: 'static', keyboard: false });
+            });
+
+            $(document).on("click", ".btnFindEmployee", function () {
+
+             
+                var eleSelect = $(this);
+                var html = '<div class="row"> ';
+                html += '<div class="col-md-12">';
+                html += '<table class="table table-hover   tblSelectEmp" id="tblSelectEmp">';
+                html += '<thead>';
+                html += '<tr>';
+                html += '<th></th>';
+                html += '<th>รหัสพนักงาน</th>';
+                html += '<th>ชื่อพนักงาน</th>';
+                html += '<th>ตำนแหน่ง</th>';
+                html += '</tr>';
+                html += '</thead>';
+                html += '<tbody>';
+                html += '<tr>';
+                html += '<td><button class="btn  btn-outline btn-success btnSelectEmp">เลือก </button></td>';
+                html += '<td>E000001</td>';
+                html += '<td>xxxxx</td>';
+                html += '<td>xxxx</td>';
+                html += '</tr>';
+                html += '</tbody>';
+                html += '</table>';
+                html += '</div>';
+                html += '</div>';
+                html += '<div class="row">';
+                html += '<div class="col-md-12">';
+                html += '<button class="btn  btn-outline btn-danger btnClose pull-right">ปิด </button>';
+                html += '</div>';
+                html += '</div>';
+            
+
+              
+               // eleSelect.removeAttr("data-content");
+           /*     eleSelect.attr("data-content", html)
+                eleSelect.attr("data-html","true")
+                eleSelect.attr("title", "เลือกพนักงาน")
+              $("[data-toggle=popover]").popover({ container: 'body' });
+
+                eleSelect.popover('hide');
+
+                eleSelect.popover('show');
+
+                $(".tblSelectEmp").DataTable();
+          */
+
+                eleSelect.popover({
+                    html: true,
+                    trigger: 'manual',
+                    container: 'body',
+                  //  placement: 'top',
+                    content: function () {
+                        return html;
+                    },
+                });
+
+             
+                eleSelect.popover('show')
+                $(".tblSelectEmp").DataTable();
+
+                return false;
+            });
+
+            
+            },
+              LoadData: function () {
+
+         /*         $('#toggle-two').bootstrapToggle({
+                      on: 'Enabled',
+                      off: 'Disabled'
+                  });*/
+
+               PwaManager.PwaPost('@Url.Action("GetAccounts", new { controller = "User" })', null, GetSucces,GetError);
+
+            },
+            EditMode: function (id) {
+                PwaManager.PwaPost('@Url.Action("GetAccountById", new { controller = "User" })', { "AccountId": id }, function (data) {
+
+                    $("#txtEmpCode").val(data.EmpCode);
+                    $("#txtFName").val(data.AccountFirstName);
+                    $("#txtLName").val(data.AccountLastName);
+                    $("#txtEmail").val(data.AccountEmail);
+                    $("#ddlSysRole").val(data.RoleId).selectpicker('refresh');
+
+
+                    $("#chkActive").prop("checked", (data.FlagStatus=="1"));
+                    $("#InputForm").modal({ backdrop: 'static', keyboard: false });
+                });
+            }
+    }
+
+
+    function GetError(error) {
+        alert('fail:');
+    }
+
+    function GetSucces(jsonData) {
+        var tbBodyDisplay = $("#tblDisplay tbody");
+        var tr = "";
+        tbBodyDisplay.empty();
+        $.each(jsonData, function (index, item) {
+            tr = '<tr id="' + item.AccountId + '">';
+            tr += '<td>' + (item.EmpCode) + '</td>';
+            tr += '<td>' + (item.UserLogin) + '</td>';
+            tr += '<td>' + (item.RoleName) + '</td>';
+            tr += '<td>' + (item.AccountFirstName + ' ' + item.AccountLastName) + '</td>';
+            tr += '<td>' + (item.FlagStatus=="1"?"ปกติ" : "ยกเลิก") + '</td>';
+            tr += '<td><button type="button" class="btn btn-floating btn-success btn-sm btnEdit"><i class="icon wb-pencil" aria-hidden="true"></i></button></td>';
+            tr += '<td><button type="button" class="btn btn-floating btn-danger btn-sm btnDelete"><i class="icon wb-close" aria-hidden="true"></i></button></td>';
+            tr += '</tr>';
+            tbBodyDisplay.append(tr);
+
+
+        });
+
+        $("#tblDisplay").DataTable();
+
+    }
+
+
+    pageManager.init();
+
+                        </script>
